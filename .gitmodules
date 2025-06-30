@@ -1,0 +1,8 @@
+[submodule "src/amr_sensors/Xsens_MTi_ROS_Driver_and_Ntrip_Client"]
+	path = src/amr_sensors/Xsens_MTi_ROS_Driver_and_Ntrip_Client
+	url = https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client.git
+	branch = ros2
+[submodule "src/amr_sensors/sick_scan_xd"]
+	path = src/amr_sensors/sick_scan_xd
+	url = https://github.com/SICKAG/sick_scan_xd.git
+	branch = master
