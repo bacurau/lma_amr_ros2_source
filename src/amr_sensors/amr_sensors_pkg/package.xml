@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<<<<<<< Updated upstream
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>amr_sensors_pkg</name>
@@ -12,6 +13,24 @@
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
+=======
+<package format="3">
+  <name>amr_sensors</name>
+  <version>1.0.2</version>
+  <description>ROS 2.0 driver for Xsens MTi IMU sensors</description>
+  <maintainer email="support@movella.com">Movella</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>xsens_mti_ros2_driver</build_depend>
+  
+  <exec_depend>xsens_mti_ros2_driver</exec_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+  
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+>>>>>>> Stashed changes
   <export>
     <build_type>ament_cmake</build_type>
   </export>
