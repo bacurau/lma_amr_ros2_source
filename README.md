@@ -15,11 +15,13 @@ This module handles integration and configuration of LiDAR and IMU sensors for a
 
 ### 🔧 Build Instructions
 
+In the current version, the sick_scan_xd was added as a submodule to the project. 
+
 1. **Add the Driver as a Submodule**
    ```bash
    cd ./lma_amr_ros2_source/src/amr_sensors
    git submodule add https://github.com/SICKAG/sick_scan_xd
-   cd ../../../
+   cd ../../
    ```
 
    > 📝 Only required during first-time setup or reinstallation.
@@ -64,7 +66,7 @@ Additional configurable options:
 - `angle_min`, `angle_max`
 - `add_transform_xyz_rpy`, etc.
 
-> ⚠️ Each device (front/back) must have its own launch configuration, we unique IP addresses and topic names.
+> ⚠️ Each device (front/back) must have its own launch configuration, with unique IP addresses and topic names.
 
 #### 📁 Project Launch Files
 - `src/amr_sensors/launch/sick_front.launch`
@@ -117,7 +119,7 @@ lma_amr_ros2_source/
 |    │   └── xsens_mti_node.yaml
 |    ├── Xsens_MTi_ROS_Driver_and_Ntrip_Client/ ← Git submodule
 |    └── sick_scan_xd/ ← Git submodule
-
+```
 ---
 
 ## ✅ Notes
