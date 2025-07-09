@@ -68,7 +68,8 @@ Additional configurable options:
 
 > ⚠️ Each device (front/back) must have its own launch configuration, with unique IP addresses and topic names.
 
-#### 📁 Project Launch Files
+The current project configuration files are located at:
+
 - `src/amr_sensors/launch/sick_front.launch`
 - `src/amr_sensors/launch/sick_back.launch`
 
