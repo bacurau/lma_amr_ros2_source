@@ -6,24 +6,19 @@ import os
 def generate_launch_description():
 
     ld = LaunchDescription()
-    sick_scan_pkg_prefix = get_package_share_directory('amr_sensors')
-    launch_file_path_back = os.path.join(sick_scan_pkg_prefix, 'launch/sick_back.launch') 
-    launch_file_path_front = os.path.join(sick_scan_pkg_prefix, 'launch/sick_front.launch') 
-    node_arguments_back=[launch_file_path_back]
-    node_arguments_front=[launch_file_path_front]
 
     sick_back = Node(
             package='sick_scan_xd',
             executable='sick_generic_caller',
             output='screen',
-            arguments=node_arguments_back
+            arguments=[os.path.join(get_package_share_directory('amr_sensors'), 'launch/sick_back.launch')] 
     )
 
     sick_front = Node(
             package='sick_scan_xd',
             executable='sick_generic_caller',
             output='screen',
-            arguments=node_arguments_front
+            arguments=[os.path.join(get_package_share_directory('amr_sensors'), 'launch/sick_front.launch')] 
     )
 
     ld.add_action(sick_back)
