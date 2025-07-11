@@ -6,3 +6,9 @@
 	path = src/amr_sensors/sick_scan_xd
 	url = https://github.com/SICKAG/sick_scan_xd.git
 	branch = master
+[submodule "src/amr_sensors/marvelmind_ros2_upstream"]
+	path = src/amr_sensors/marvelmind_ros2_upstream
+	url = https://github.com/MarvelmindRobotics/marvelmind_ros2_upstream.git
+[submodule "src/amr_sensors/marvelmind_ros2_msgs_upstream"]
+	path = src/amr_sensors/marvelmind_ros2_msgs_upstream
+	url = https://github.com/MarvelmindRobotics/marvelmind_ros2_msgs_upstream.git

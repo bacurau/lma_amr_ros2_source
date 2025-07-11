@@ -1,15 +1,14 @@
 # AMR Sensors - ROS 2 Driver Integration
 
-This module handles integration and configuration of LiDAR and IMU sensors for autonomous mobile robot (AMR) platforms using ROS 2 (Jazzy).
+This module handles integration and configuration of LiDAR, IMU and Marvelmind Ultrassonic Beacons for autonomous mobile robot (AMR) platforms using ROS 2 (Jazzy).
 
----
 
 ## 📦 Included Drivers
 
 - **SICK LiDAR**: via [`sick_scan_xd`](https://github.com/SICKAG/sick_scan_xd)
 - **XSENS IMU**
-
----
+- **Marvelmind**: via [`marvelmind_ros2_upstream`](https://github.com/MarvelmindRobotics/marvelmind_ros2_upstream)
+                      [`marvelmind_ros2_msgs_upstream`](https://github.com/MarvelmindRobotics/marvelmind_ros2_msgs_upstream)
 
 ## 🛰️ SICK LiDAR Driver (`sick_scan_xd`)
 
@@ -35,7 +34,6 @@ In the current version, the sick_scan_xd was added as a submodule to the project
      --cmake-args " -DROS_VERSION=2" " -DLDMRS=0" \
      --event-handlers console_direct+
    ```
----
 
 ### ⚙️ Configuration
 
@@ -73,8 +71,6 @@ The current project configuration files are located at:
 - `src/amr_sensors/launch/sick_front.launch`
 - `src/amr_sensors/launch/sick_back.launch`
 
----
-
 ### 🚀 Launching Both LiDAR Devices
 
 Use the provided launch file to start both front and back devices:
@@ -85,7 +81,6 @@ ros2 launch amr_sensors lidar.launch.py
 
 This internally invokes the `sick_generic_caller` node using both launch configurations.
 
----
 
 ## 🧭 XSENS IMU Driver
 
@@ -98,7 +93,13 @@ sudo apt install ros-jazzy-mavros-msgs
 
 These packages are needed for NMEA and MAVROS-compatible IMU data parsing.
 
----
+
+## Marvelmind Driver
+
+### Tutorial
+
+[Installation guide for Marvelmind Beacons](https://marvelmind.com/downloads/marvelmind_ROS2.pdf)
+
 
 ## 📂 Repository Structure
 
