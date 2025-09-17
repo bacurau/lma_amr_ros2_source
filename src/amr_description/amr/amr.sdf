@@ -1,0 +1,1262 @@
+<sdf version='1.7'>
+  <model name='Amr'>
+    <link name='Base_Link'>
+      <inertial>
+        <pose>0.001146 -0.000285 0.281592 0 -0 0</pose>
+        <mass>89.323</mass>
+        <inertia>
+          <ixx>19.1149</ixx>
+          <ixy>-1.91693</ixy>
+          <ixz>-0.00788105</ixz>
+          <iyy>31.6798</iyy>
+          <iyz>0.00246327</iyz>
+          <izz>30.0072</izz>
+        </inertia>
+      </inertial>
+      <collision name='Base_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Base_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Botton_Ultrasonic_Sensor_Link_collision_1'>
+        <pose>-0.72542 -0.00032 0.11209 0 0 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Botton_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <!-- <collision name='Base_Link_fixed_joint_lump__Camera_ZED_Link_collision_2'>
+        <pose>0.73018 0.00018 0.31805 -1.5708 -0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Camera_ZED_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision> -->
+      <collision name='Base_Link_fixed_joint_lump__Front_Ultrasonic_Sensor_Link_collision_3'>
+        <pose>0.71919 -0.00032 0.11209 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Front_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__IMU_MTI_670_Link_collision_4'>
+        <pose>0 0 0.087925 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/IMU_MTI_670_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Left_Bottom_Lidar_Link_collision_5'>
+        <pose>-0.71592 -0.31073 0.10293 0 0 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Left_Bottom_Marvel2_Link_collision_6'>
+        <pose>-0.69175 -0.36222 1.3186 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Marvel2_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Left_Bottom_Side_Lidar_Link_collision_7'>
+        <pose>-0.62957 -0.42312 0.10293 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Left_Front_IIDRE2_Link_collision_8'>
+        <pose>0.68615 -0.39732 1.3096 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_IIDRE2_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Left_Front_Lidar_Link_collision_9'>
+        <pose>0.70968 -0.3117 0.10293 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Left_Front_Side_Lidar_Link_collision_10'>
+        <pose>0.62214 -0.42312 0.10293 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+<!-- This crashes gazebo -->
+      <!-- <collision name='Base_Link_fixed_joint_lump__Left_Side_Ultrasonic_Sensor_Link_collision_11'>
+        <pose>-0.003118 -0.43262 0.23305 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Side_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision> -->
+      <collision name='Base_Link_fixed_joint_lump__Right_Bottom_IIDRE1_Link_collision_12'>
+        <pose>-0.69172 0.39668 1.3096 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_IIDRE1_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Right_Bottom_Lidar_Link_collision_13'>
+        <pose>-0.71592 0.31119 0.10293 0 0 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Right_Bottom_Side_Lidar_Link_collision_14'>
+        <pose>-0.62861 0.42248 0.10293 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Right_Front_Lidar_Link_collision_15'>
+        <pose>0.70968 0.31033 0.10293 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Right_Front_Marvel1_Link_collision_16'>
+        <pose>0.68635 0.36168 1.3186 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Marvel1_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Right_Front_Side_Lidar_Link_collision_17'>
+        <pose>0.62327 0.42248 0.10293 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <!-- This crashes gazebo -->
+      <!-- <collision name='Base_Link_fixed_joint_lump__Right_Side_Ultrasonic_Sensor_Link_collision_18'>
+        <pose>-0.003118 0.43196 0.23305 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Side_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision> -->
+      <collision name='Base_Link_fixed_joint_lump__Velodyne_Botton_D_Link_collision_19'>
+        <pose>-0.7581 -0.4653 0.23012 0 0 -2.3562</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Velodyne_Botton_D_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='Base_Link_fixed_joint_lump__Velodyne_Front_D_Link_collision_20'>
+        <pose>0.7517 0.46465 0.23012 0 -0 0.7854</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Velodyne_Front_D_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Base_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Base_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Botton_Ultrasonic_Sensor_Link_visual_1'>
+        <pose>-0.72542 -0.00032 0.11209 0 0 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Botton_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <!-- <visual name='Base_Link_fixed_joint_lump__Camera_ZED_Link_visual_2'>
+        <pose>0.73018 0.00018 0.31805 -1.5708 -0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Camera_ZED_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual> -->
+      <visual name='Base_Link_fixed_joint_lump__Front_Ultrasonic_Sensor_Link_visual_3'>
+        <pose>0.71919 -0.00032 0.11209 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Front_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__IMU_MTI_670_Link_visual_4'>
+        <pose>0 0 0.087925 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/IMU_MTI_670_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Left_Bottom_Lidar_Link_visual_5'>
+        <pose>-0.71592 -0.31073 0.10293 0 0 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Left_Bottom_Marvel2_Link_visual_6'>
+        <pose>-0.69175 -0.36222 1.3186 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Marvel2_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Left_Bottom_Side_Lidar_Link_visual_7'>
+        <pose>-0.62957 -0.42312 0.10293 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Left_Front_IIDRE2_Link_visual_8'>
+        <pose>0.68615 -0.39732 1.3096 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_IIDRE2_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Left_Front_Lidar_Link_visual_9'>
+        <pose>0.70968 -0.3117 0.10293 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Left_Front_Side_Lidar_Link_visual_10'>
+        <pose>0.62214 -0.42312 0.10293 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <!-- This crashes gazebo -->
+      <!-- <visual name='Base_Link_fixed_joint_lump__Left_Side_Ultrasonic_Sensor_Link_visual_11'>
+        <pose>-0.003118 -0.43262 0.23305 0 0 -1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Side_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual> -->
+      <visual name='Base_Link_fixed_joint_lump__Right_Bottom_IIDRE1_Link_visual_12'>
+        <pose>-0.69172 0.39668 1.3096 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_IIDRE1_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Right_Bottom_Lidar_Link_visual_13'>
+        <pose>-0.71592 0.31119 0.10293 0 0 -3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Right_Bottom_Side_Lidar_Link_visual_14'>
+        <pose>-0.62861 0.42248 0.10293 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Right_Front_Lidar_Link_visual_15'>
+        <pose>0.70968 0.31033 0.10293 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Right_Front_Marvel1_Link_visual_16'>
+        <pose>0.68635 0.36168 1.3186 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Marvel1_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Right_Front_Side_Lidar_Link_visual_17'>
+        <pose>0.62327 0.42248 0.10293 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Side_Lidar_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <!-- This crashes gazebo -->
+      <!-- <visual name='Base_Link_fixed_joint_lump__Right_Side_Ultrasonic_Sensor_Link_visual_18'>
+        <pose>-0.003118 0.43196 0.23305 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Side_Ultrasonic_Sensor_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual> -->
+      <visual name='Base_Link_fixed_joint_lump__Velodyne_Botton_D_Link_visual_19'>
+        <pose>-0.7581 -0.4653 0.23012 0 0 -2.3562</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Velodyne_Botton_D_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Velodyne_Botton_D_Link_visual_20'>
+        <pose>-0.753 0.460 0.23012 0 0 2.3706</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Velodyne_Botton_D_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Velodyne_Front_D_Link_visual_20'>
+        <pose>0.7517 0.46465 0.23012 0 -0 3.1415926</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Velodyne_Front_D_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='Base_Link_fixed_joint_lump__Velodyne_Front_D_Link_visual_21'>
+        <pose>0.7517 -0.46465 0.23012 0 -0 -1.0015926</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Velodyne_Front_D_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <!--Front Velodyne-->
+      <sensor name="sensor_ray_front" type="gpu_lidar">
+        <!-- <pose>0.7517 0.46465 0.23012 0 -0 3.1415926</pose> -->
+        <!--pose>0.75482 0.46497 0.25657 0 -0 3.1415926</pose-->
+        <pose>0.743 0.483 0.25657 0 -0 3.1415926</pose>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>200</samples>
+              <resolution>1.0</resolution>
+              <!-- <min_angle>-1.57</min_angle>
+              <max_angle>3.14</max_angle> -->
+              <min_angle>1.57079</min_angle>
+              <max_angle>6.2831</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.40</min>
+            <max>20.0</max>
+          </range>
+        </lidar>
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <update_rate>20.0</update_rate>
+        <topic>scan_front</topic>
+        <gz_frame_id>Velodyne_Front_Left_D_Link</gz_frame_id>
+      </sensor>
+
+      <!--Front Velodyne-->
+      <sensor name="sensor_ray_front_right" type="gpu_lidar">
+        <!-- <pose>0.7517 0.46465 0.23012 0 -0 3.1415926</pose> -->
+        <!--pose>0.75482 0.46497 0.25657 0 -0 3.1415926</pose-->
+        <pose>0.742 -0.478 0.23012 0 -0 1.5706</pose>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>200</samples>
+              <resolution>1.0</resolution>
+              <!-- <min_angle>-1.57</min_angle>
+              <max_angle>3.14</max_angle> -->
+              <min_angle>1.57079</min_angle>
+              <max_angle>6.2831</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.40</min>
+            <max>20.0</max>
+          </range>
+        </lidar>
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <update_rate>20.0</update_rate>
+        <topic>scan_front_right</topic>
+        <gz_frame_id>Velodyne_Front_Right_D_Link</gz_frame_id>
+       
+      </sensor>
+
+      <!-- Rear Velodyne -->
+      <sensor name="sensor_ray_rear" type="gpu_lidar">
+        <!--pose>-0.7581 -0.4653 0.23012 0 0 0</pose-->
+        <pose>-0.753 0.460 0.23012 0 0 -1.5706</pose>
+        <!-- <pose>-0.754984 -0.464984 0.25657 0 0 0</pose> -->
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>400</samples>
+              <resolution>1.0</resolution>
+              <min_angle>1.57079</min_angle>
+              <max_angle>6.2831</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.10</min>
+            <max>100.0</max>
+          </range>
+        </lidar>
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <update_rate>20.0</update_rate>
+        <topic>scan_back</topic>
+        <gz_frame_id>Velodyne_Back_Left_D_Link</gz_frame_id>
+      </sensor>
+
+
+
+
+
+
+      <!-- <sensor name="GPS" type="gps">
+        <always_on>true</always_on>
+        <update_rate>30</update_rate>
+        <gps>
+          <position_sensing>
+            <horizontal>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </horizontal>
+            <vertical>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </vertical>
+          </position_sensing>
+        </gps>
+        <plugin name="gps_plugin" filename="libgazebo_ros_gps_sensor.so">
+          <ros>
+            <argument>~/out:=gps_data</argument>
+          </ros>
+        </plugin>
+      </sensor> -->
+
+    </link>
+    <joint name='Left_Bottom_Beaver_Support_Joint' type='revolute'>
+      <pose relative_to='Base_Link'>-0.51312 -0.24632 0.14825 0 -0 0</pose>
+      <parent>Base_Link</parent>
+      <child>Left_Bottom_Beaver_Support_Link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Left_Bottom_Beaver_Support_Link'>
+      <pose relative_to='Left_Bottom_Beaver_Support_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.00906 2e-06 -0.024695 0 -0 0</pose>
+        <mass>0.0481554</mass>
+        <inertia>
+          <ixx>4.836e-05</ixx>
+          <ixy>1.83618e-09</ixy>
+          <ixz>-1.71835e-05</ixz>
+          <iyy>5.49517e-05</iyy>
+          <iyz>1.0644e-09</iyz>
+          <izz>2.50264e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Left_Bottom_Beaver_Support_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Left_Bottom_Beaver_Support_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Left_Bottom_Beaver_Wheel_Joint' type='revolute'>
+      <pose relative_to='Left_Bottom_Beaver_Support_Link'>-0.047502 0 -0.098251 0 -0 0</pose>
+      <parent>Left_Bottom_Beaver_Support_Link</parent>
+      <child>Left_Bottom_Beaver_Wheel_Link</child>
+      <axis>
+        <xyz>0.000132 1 0</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Left_Bottom_Beaver_Wheel_Link'>
+      <pose relative_to='Left_Bottom_Beaver_Wheel_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0.00145 0 -0 0</pose>
+        <mass>0.153627</mass>
+        <inertia>
+          <ixx>9.92232e-05</ixx>
+          <ixy>1.17606e-08</ixy>
+          <ixz>-7.86056e-21</ixz>
+          <iyy>0.000188468</iyy>
+          <iyz>1.12981e-20</iyz>
+          <izz>9.92232e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Left_Bottom_Beaver_Wheel_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+            </ode>
+          </friction>
+          <contact>
+              <ode>
+                <max_vel>10</max_vel>
+                <min_depth>0.03</min_depth>
+              </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Left_Bottom_Beaver_Wheel_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Bottom_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Left_Front_Beaver_Support_Joint' type='revolute'>
+      <pose relative_to='Base_Link'>0.50688 -0.24632 0.14825 0 -0 0</pose>
+      <parent>Base_Link</parent>
+      <child>Left_Front_Beaver_Support_Link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Left_Front_Beaver_Support_Link'>
+      <pose relative_to='Left_Front_Beaver_Support_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.00906 6e-06 -0.023245 0 -0 0</pose>
+        <mass>0.0481554</mass>
+        <inertia>
+          <ixx>4.836e-05</ixx>
+          <ixy>-3.93419e-09</ixy>
+          <ixz>1.71835e-05</ixz>
+          <iyy>5.49517e-05</iyy>
+          <iyz>1.39766e-08</iyz>
+          <izz>2.50264e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Left_Front_Beaver_Support_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Left_Front_Beaver_Support_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Left_Front_Beaver_Wheel_Joint' type='revolute'>
+      <pose relative_to='Left_Front_Beaver_Support_Link'>0.047493 3.5e-05 -0.098251 0 -0 0</pose>
+      <parent>Left_Front_Beaver_Support_Link</parent>
+      <child>Left_Front_Beaver_Wheel_Link</child>
+      <axis>
+        <xyz>0.000744 -1 0</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Left_Front_Beaver_Wheel_Link'>
+      <pose relative_to='Left_Front_Beaver_Wheel_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>9e-06 0 0 0 -0 0</pose>
+        <mass>0.153627</mass>
+        <inertia>
+          <ixx>9.92233e-05</ixx>
+          <ixy>-6.63571e-08</ixy>
+          <ixz>-5.73727e-21</ixz>
+          <iyy>0.000188468</iyy>
+          <iyz>1.09207e-20</iyz>
+          <izz>9.92232e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Left_Front_Beaver_Wheel_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+            </ode>
+          </friction>
+          <contact>
+              <ode>
+                <max_vel>10</max_vel>
+                <min_depth>0.03</min_depth>
+              </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Left_Front_Beaver_Wheel_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Front_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Left_Motor_Wheel_Joint' type='revolute'>
+      <pose relative_to='Base_Link'>-5.2e-05 -0.3746 0.095 0 -0 0</pose>
+      <parent>Base_Link</parent>
+      <child>Left_Motor_Wheel_Link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Left_Motor_Wheel_Link'>
+      <pose relative_to='Left_Motor_Wheel_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>2e-06 -8.3e-05 -1e-06 0 -0 0</pose>
+        <mass>1.12665</mass>
+        <inertia>
+          <ixx>0.00347631</ixx>
+          <ixy>-5.08113e-08</ixy>
+          <ixz>-5.69038e-09</ixz>
+          <iyy>0.00648976</iyy>
+          <iyz>1.4165e-08</iyz>
+          <izz>0.00347629</izz>
+        </inertia>
+      </inertial>
+      <collision name='Left_Motor_Wheel_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Motor_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+            </ode>
+          </friction>
+          <contact>
+              <ode>
+                <max_vel>10</max_vel>
+                <min_depth>0.03</min_depth>
+              </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Left_Motor_Wheel_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Left_Motor_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.2 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </link>
+    <joint name='Right_Botton_Beaver_Support_Joint' type='revolute'>
+      <pose relative_to='Base_Link'>-0.51312 0.24568 0.14825 0 -0 0</pose>
+      <parent>Base_Link</parent>
+      <child>Right_Botton_Beaver_Support_Link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Right_Botton_Beaver_Support_Link'>
+      <pose relative_to='Right_Botton_Beaver_Support_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.00906 2.9e-05 -0.024695 0 -0 0</pose>
+        <mass>0.0481554</mass>
+        <inertia>
+          <ixx>4.83601e-05</ixx>
+          <ixy>2.15609e-08</ixy>
+          <ixz>-1.71834e-05</ixz>
+          <iyy>5.49517e-05</iyy>
+          <iyz>5.2481e-08</iyz>
+          <izz>2.50264e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Right_Botton_Beaver_Support_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Botton_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Right_Botton_Beaver_Support_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Botton_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Right_Bottom_Beaver_Wheel_Joint' type='revolute'>
+      <pose relative_to='Right_Botton_Beaver_Support_Link'>-0.047501 0.000148 -0.098251 0 -0 0</pose>
+      <parent>Right_Botton_Beaver_Support_Link</parent>
+      <child>Right_Bottom_Beaver_Wheel_Link</child>
+      <axis>
+        <xyz>0.003124 1 0</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Right_Bottom_Beaver_Wheel_Link'>
+      <pose relative_to='Right_Bottom_Beaver_Wheel_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0 0 -0.00145 0 -0 0</pose>
+        <mass>0.153627</mass>
+        <inertia>
+          <ixx>9.92241e-05</ixx>
+          <ixy>2.78801e-07</ixy>
+          <ixz>8.44309e-21</ixz>
+          <iyy>0.000188467</iyy>
+          <iyz>-6.81016e-21</iyz>
+          <izz>9.92232e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Right_Bottom_Beaver_Wheel_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+            </ode>
+          </friction>
+          <contact>
+              <ode>
+                <max_vel>10</max_vel>
+                <min_depth>0.03</min_depth>
+              </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Right_Bottom_Beaver_Wheel_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Bottom_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Right_Front_Beaver_Support_Joint' type='revolute'>
+      <pose relative_to='Base_Link'>0.50688 0.25067 0.14825 0 -0 0</pose>
+      <parent>Base_Link</parent>
+      <child>Right_Front_Beaver_Support_Link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Right_Front_Beaver_Support_Link'>
+      <pose relative_to='Right_Front_Beaver_Support_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.00906 -0.004984 -0.023245 0 -0 0</pose>
+        <mass>0.0481554</mass>
+        <inertia>
+          <ixx>4.836e-05</ixx>
+          <ixy>-8.11788e-09</ixy>
+          <ixz>1.71835e-05</ixz>
+          <iyy>5.49517e-05</iyy>
+          <iyz>2.48822e-08</iyz>
+          <izz>2.50264e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Right_Front_Beaver_Support_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='Right_Front_Beaver_Support_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Beaver_Support_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Right_Front_Beaver_Wheel_Joint' type='revolute'>
+      <pose relative_to='Right_Front_Beaver_Support_Link'>0.047501 -0.00493 -0.098251 0 -0 0</pose>
+      <parent>Right_Front_Beaver_Support_Link</parent>
+      <child>Right_Front_Beaver_Wheel_Link</child>
+      <axis>
+        <xyz>0.001378 -1 0</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Right_Front_Beaver_Wheel_Link'>
+      <pose relative_to='Right_Front_Beaver_Wheel_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>0.153627</mass>
+        <inertia>
+          <ixx>9.92234e-05</ixx>
+          <ixy>-1.22997e-07</ixy>
+          <ixz>-5.0126e-21</ixz>
+          <iyy>0.000188468</iyy>
+          <iyz>-1.29241e-20</iyz>
+          <izz>9.92232e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='Right_Front_Beaver_Wheel_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+            </ode>
+          </friction>
+          <contact>
+              <ode>
+                <max_vel>10</max_vel>
+                <min_depth>0.03</min_depth>
+              </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Right_Front_Beaver_Wheel_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Front_Beaver_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='Right_Motor_Wheel_Joint' type='revolute'>
+    <!-- <joint name='Right_Motor_Wheel_Joint' type='fixed'> -->
+      <pose relative_to='Base_Link'>-5.2e-05 0.3746 0.095 0 -0 0</pose>
+      <parent>Base_Link</parent>
+      <child>Right_Motor_Wheel_Link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <!-- <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity> -->
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='Right_Motor_Wheel_Link'>
+      <pose relative_to='Right_Motor_Wheel_Joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-2e-06 8.3e-05 0 0 -0 0</pose>
+        <mass>1.12665</mass>
+        <inertia>
+          <ixx>0.00347631</ixx>
+          <ixy>-5.20167e-08</ixy>
+          <ixz>-3.60185e-09</ixz>
+          <iyy>0.00648976</iyy>
+          <iyz>8.75829e-09</iyz>
+          <izz>0.00347629</izz>
+        </inertia>
+      </inertial>
+      <collision name='Right_Motor_Wheel_Link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Motor_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1</mu>
+              <mu2>1</mu2>
+            </ode>
+          </friction>
+          <contact>
+              <ode>
+                <max_vel>10</max_vel>
+                <min_depth>0.03</min_depth>
+              </ode>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Right_Motor_Wheel_Link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://amr/meshes/Right_Motor_Wheel_Link.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.2 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+      <topic>joint_states</topic>
+      <joint_name>Right_Motor_Wheel_Joint</joint_name> <!--motor direita-->
+      <joint_name>Left_Motor_Wheel_Joint</joint_name> <!--motor esquerda-->
+      
+    </plugin>
+
+    <plugin filename='gz-sim-diff-drive-system' name="gz::sim::systems::DiffDrive" >
+
+        <!-- wheels -->
+      <left_joint>Right_Motor_Wheel_Joint</left_joint>
+      <right_joint>Left_Motor_Wheel_Joint</right_joint>
+
+      <!-- kinematics -->
+      <wheel_separation>0.750</wheel_separation> <!--0.7462-->
+      <wheel_radius>0.100</wheel_radius>
+      <odom_publish_frequency>1</odom_publish_frequency>
+      <max_linear_acceleration>1</max_linear_acceleration>
+      <min_linear_acceleration>-1</min_linear_acceleration>
+      <max_angular_acceleration>2</max_angular_acceleration>
+      <min_angular_acceleration>-2</min_angular_acceleration>
+      <max_linear_velocity>0.5</max_linear_velocity>
+      <min_linear_velocity>-0.5</min_linear_velocity>
+      <max_angular_velocity>1</max_angular_velocity>
+      <min_angular_velocity>-1</min_angular_velocity>
+
+    </plugin>
+
+    <link name="IMU_MTI_670_Link">
+      <sensor name="snoopy_imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <topic>imu</topic>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-3</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-3</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>3e-3</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </link>
+    
+    <joint name="imu_joint" type="fixed">
+      <parent>Base_Link</parent>
+      <child>IMU_MTI_670_Link</child>
+      <pose>-0.032 0 0.068 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <!-- 3D Position Interface for Ground Truth -->
+    <!-- <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
+      <ros>
+        <remapping>/odom:=ground_truth</remapping>
+      </ros>
+      <body_name>Base_Link</body_name>
+      <frame_name>odom</frame_name>
+      <gaussianNoise>0.0</gaussianNoise> 
+      <update_rate>50</update_rate>
+      <xyz_offset>0 0 0</xyz_offset>
+      <rpy_offset>0 0 0</rpy_offset>
+      <gaussian_noise>0.0</gaussian_noise>
+    </plugin> -->
+
+
+    <!-- <static>1</static> -->
+  </model>
+</sdf>

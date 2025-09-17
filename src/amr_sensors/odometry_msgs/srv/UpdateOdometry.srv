@@ -1,0 +1,8 @@
+# Copyright (c) 2022 UNICAMP
+#
+# This work is licensed under the terms of XXX license.
+# Author: Natasha Sayuri Dias Nakashima
+
+geometry_msgs/PoseStamped pose
+---
+bool success
