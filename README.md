@@ -6,7 +6,7 @@ This module handles integration and configuration of LiDAR, IMU and Marvelmind U
 ## 📦 Included Drivers
 
 - **SICK LiDAR**: via [`sick_scan_xd`](https://github.com/SICKAG/sick_scan_xd)
-- **XSENS IMU**
+- **XSENS IMU** via [`Xsens_MTi_ROS_Driver_and_Ntrip_Client`](https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client)
 - **Marvelmind**: via [`marvelmind_ros2_upstream`](https://github.com/MarvelmindRobotics/marvelmind_ros2_upstream)
                       [`marvelmind_ros2_msgs_upstream`](https://github.com/MarvelmindRobotics/marvelmind_ros2_msgs_upstream)
 
