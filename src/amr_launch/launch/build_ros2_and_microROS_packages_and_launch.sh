@@ -7,6 +7,9 @@
 # Created: [YYYY-MM-DD]
 #===============================================================================
 
+## This script closes the vscode terminal if it is executed with source ./file.sh or . ./file.sh 
+# because of the command bash. It might no close on the first execution, but it can close on later executions.
+
 set -euo pipefail
 # set -x
 
