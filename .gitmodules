@@ -12,3 +12,7 @@
 [submodule "src/amr_sensors/marvelmind_ros2_msgs_upstream"]
 	path = src/amr_sensors/marvelmind_ros2_msgs_upstream
 	url = https://github.com/MarvelmindRobotics/marvelmind_ros2_msgs_upstream.git
+[submodule "src/amr_stm32/micro_ros_setup"]
+	path = src/amr_stm32/micro_ros_setup
+	url = https://github.com/micro-ROS/micro_ros_setup.git
+	branch = jazzy
