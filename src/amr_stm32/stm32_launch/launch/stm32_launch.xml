@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <node pkg="micro_ros_agent" exec="micro_ros_agent" name="micro_ros_agent" output="screen" args="serial --dev /dev/ttyACM0 -b 1500000" />
+    <node pkg="amr_serial" exec="reset_arm" name="reset_arm" output="screen"/>
+</launch>
+ 
+ 
+ 
+ 
+ 
+ <!-- <node pkg="micro_ros_agent" exec="micro_ros_agent" name="micro_ros_agent" output="screen" args="serial dev /dev/ttyACM0 -b 1500000" />  -->

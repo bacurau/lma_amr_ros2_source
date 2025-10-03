@@ -18,9 +18,9 @@ cd ../../../ # Navigate to the root of the workspace
 export ROS_DOMAIN_ID=25
 
 ##===================== Install dependencies =====================##
-sudo apt update && rosdep update
-rosdep install --from-paths src --ignore-src -y
-sudo apt-get install python3-pip
+#   sudo apt update && rosdep update
+#   rosdep install --from-paths src --ignore-src -y
+#   sudo apt-get install python3-pip
 
 ##===================== Build packages =====================##
 colcon build
@@ -43,5 +43,7 @@ bash -c "   . ./install/local_setup.bash &&
 
 ##===================== Launch the amr_launch file =====================##
 bash -c "   . ./install/local_setup.bash &&  
-            ros2 launch amr_launch amr_launch.py
-        "
+            ros2 launch stm32_launch stm32_launch.xml
+"
+ #           ros2 launch amr_launch amr_launch.py
+ #       "
