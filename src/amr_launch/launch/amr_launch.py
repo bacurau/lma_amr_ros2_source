@@ -11,27 +11,26 @@ from launch.substitutions import  PathJoinSubstitution
 
 def generate_launch_description():
 
-    sensors_package_share_dir = get_package_share_directory('amr_sensors')
-    description_package_share_dir = get_package_share_directory('amr_description')
-
-    sensors_launch_file_path = os.path.join(sensors_package_share_dir, 'launch', 'imu.launch.py')
-    urdf_file_path = os.path.join(description_package_share_dir, 'amr', 'urdf', 'amr.urdf')
-    
-   
-    sensors_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(sensors_launch_file_path)
-    )
-
     share_stm32_launch_path = FindPackageShare('stm32_launch')
-    reset_and_microRos_nodes_launch_file_path = PathJoinSubstitution([
+    stm32_launch_file_path = PathJoinSubstitution([
             share_stm32_launch_path, 
             'launch', 
             'stm32_launch.xml'
         ])
-    reset_and_microRos_nodes_launch_file = IncludeLaunchDescription(reset_and_microRos_nodes_launch_file_path)
+    stm32_launch_file = IncludeLaunchDescription(stm32_launch_file_path)
+
+    share_sensors_launch_path = FindPackageShare('amr_sensors')
+    sensors_launch_file_path = PathJoinSubstitution([
+            share_sensors_launch_path, 
+            'launch', 
+            'sensors_main_launch.py'
+        ])
+    sensors_launch_file = IncludeLaunchDescription(sensors_launch_file_path)
 
 
-
+    description_package_share_dir = get_package_share_directory('amr_description')
+    urdf_file_path = os.path.join(description_package_share_dir, 'amr', 'urdf', 'amr.urdf')
+    
     # create string variable with the contents of the urdf file
     with open(urdf_file_path, 'r') as f:
         urdf_xml = f.read()
@@ -48,6 +47,8 @@ def generate_launch_description():
 
     main_launch_description = LaunchDescription()
     main_launch_description.add_action(robot_state_publisher_node)
-    main_launch_description.add_action(reset_and_microRos_nodes_launch_file)
+    main_launch_description.add_action(sensors_launch_file)
+    main_launch_description.add_action(stm32_launch_file)
+    
     
     return main_launch_description

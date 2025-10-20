@@ -3,8 +3,7 @@
 # File: build_ros2_and_microROS_packages
 # Description: Builds ROS2 and micro-ROS packages for the AMR project and then runs
 # the launch file for the amr project.
-# Author: [Your Name]
-# Created: [YYYY-MM-DD]
+# Author: Ivan Diniz Dobbin
 #===============================================================================
 
 ## This script closes the vscode terminal if it is executed with source ./file.sh or . ./file.sh 
@@ -13,15 +12,15 @@
 set -euo pipefail
 # set -x
 
-cd ../../../ # Navigate to the root of the workspace
+# cd ../../../ # Navigate to the root of the workspace
 
 export ROS_DOMAIN_ID=25
 
 ##===================== Install dependencies =====================##
-#   sudo apt update && rosdep update
-#   rosdep install --from-paths src --ignore-src -y
-#   sudo apt-get install python3-pip
-
+    # sudo apt update && rosdep update
+    # rosdep install --from-paths src --ignore-src -y
+    # sudo apt-get install python3-pip
+    sudo apt-get install stlink-tools
 ##===================== Build packages =====================##
 colcon build
 
@@ -35,6 +34,7 @@ colcon build
 # https://micro.ros.org/docs/tutorials/core/first_application_linux/.
 # However, we just needed to create and build the agent, the firmware is not needed here.
 # The micro-ROS agent is run in the launch file amr_launch.py
+
 bash -c "   . ./install/local_setup.bash &&
             ros2 run micro_ros_setup create_agent_ws.sh &&             
             ros2 run micro_ros_setup build_agent.sh
@@ -43,7 +43,7 @@ bash -c "   . ./install/local_setup.bash &&
 
 ##===================== Launch the amr_launch file =====================##
 bash -c "   . ./install/local_setup.bash &&  
-            ros2 launch stm32_launch stm32_launch.xml
+            ros2 launch amr_launch amr_launch.py
 "
  #           ros2 launch amr_launch amr_launch.py
  #       "

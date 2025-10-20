@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <node pkg="micro_ros_agent" exec="micro_ros_agent" name="micro_ros_agent" output="screen" args="serial --dev /dev/ttyACM0 -b 1500000" />
-    <node pkg="amr_serial" exec="reset_arm" name="reset_arm" output="screen"/>
+    <!-- <node pkg="amr_serial" exec="reset_arm" name="reset_arm" output="screen"/> -->
+    <!-- Resets the board using the tools from stm32 -->
+    <!-- The 2 dashes before probe are together (st-info dashdashprobe), but comments in xml cannot have 2 dashes inside. -->
+    <!-- To find the serial number "st-info - -probe"-->
+    <executable cmd="st-flash --serial 001900263137511439383538 reset" />
 </launch>
- 
  
  
  
