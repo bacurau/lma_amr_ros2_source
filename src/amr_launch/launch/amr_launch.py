@@ -1,16 +1,15 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import IncludeLaunchDescription
 import os
 from ament_index_python.packages import get_package_share_directory
-from pathlib import Path
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import  PathJoinSubstitution
 
 
 def generate_launch_description():
 
+    # Find and include stm32 launch file
     share_stm32_launch_path = FindPackageShare('stm32_launch')
     stm32_launch_file_path = PathJoinSubstitution([
             share_stm32_launch_path, 
@@ -19,6 +18,7 @@ def generate_launch_description():
         ])
     stm32_launch_file = IncludeLaunchDescription(stm32_launch_file_path)
 
+    # Find and include sensors main launch file
     share_sensors_launch_path = FindPackageShare('amr_sensors')
     sensors_launch_file_path = PathJoinSubstitution([
             share_sensors_launch_path, 
@@ -27,7 +27,9 @@ def generate_launch_description():
         ])
     sensors_launch_file = IncludeLaunchDescription(sensors_launch_file_path)
 
-
+    # Find robot description urdf file, 
+    # Using os.path.join returns a string with the filepath,
+    # which is needed for reading the file.
     description_package_share_dir = get_package_share_directory('amr_description')
     urdf_file_path = os.path.join(description_package_share_dir, 'amr', 'urdf', 'amr.urdf')
     
@@ -35,6 +37,7 @@ def generate_launch_description():
     with open(urdf_file_path, 'r') as f:
         urdf_xml = f.read()
     
+    ## Create robot_state_publisher node
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -45,6 +48,8 @@ def generate_launch_description():
     )
 
 
+    ## Create launch description and add actions, each action is a launch file or a node and
+    ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
     main_launch_description.add_action(robot_state_publisher_node)
     main_launch_description.add_action(sensors_launch_file)
