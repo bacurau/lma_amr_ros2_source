@@ -26,6 +26,13 @@ using namespace lma;
 using namespace std::chrono_literals;
 using namespace scooby;
 
+/**
+ * \brief Constructor of Odometry class
+ * \details 1- Initializes member variables with default values or parameters from the ROS2 parameter server. <br>
+ *          2- Creates publishers for odometry, corrected odometry, joint states, and docking status. <br>
+ *          3- Creates subscriptions for IMU and joint state data. <br>
+ *          4- Sets up a service to update odometry based on external requests.
+ */
 Odometry::Odometry(
   std::shared_ptr<rclcpp::Node> &nh)
 : nh_(nh),
@@ -34,6 +41,10 @@ Odometry::Odometry(
   imu_angle_(0.0f)
 {
  
+
+  /**
+   * Initialize robot pose and velocity
+   */
   RCLCPP_INFO(nh_->get_logger(), "Init Odometry");
   robot_pose_[0]= 0.005;//0.005;//0.000 -2.8781 0.005; 
   robot_pose_[1]= -0.045;//-0.045;//0.005 -1.8797 0.005;1.981  0.005
@@ -44,6 +55,10 @@ Odometry::Odometry(
   last_theta = 0.0;
   count_imu=0;
   
+
+  /**
+   * Create parameters for the ros2 node. How are the parameters being used?
+   */
   nh_->declare_parameter("odometry.frame_id", "odom");
   nh_->declare_parameter("odometry.child_frame_id", "Base_Link");
 
@@ -57,6 +72,9 @@ Odometry::Odometry(
   // Fator de escala obtido a partir do erro identificado após 10 voltas para cada sentido. Erro: 18 graus. Fs = 18/3600
   //float fs = (1.00506 / 1.00211) * 1.0012;
 
+  /**
+   * Get the values of the parameters to set member variables
+   */
   nh_->get_parameter_or<double>("wheels.separation", wheels_separation_, 0.74361); // 0.74361 0.742188
   nh_->get_parameter_or<double>("wheels.radius_left", wheels_radius_left, 0.102873); 
   nh_->get_parameter_or<double>("wheels.radius_right", wheels_radius_right, 0.102759); 
@@ -80,6 +98,11 @@ Odometry::Odometry(
     "odometry.child_frame_id",
     child_frame_id_of_odometry_,
     std::string("Base_Link"));
+
+/**
+ * Create publishers for odometry, corrected odometry, joint states, and docking status.
+ * These publishers use qos 5, however the variable qos is not used here.
+ */
 
   // auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
   auto qos = rclcpp::QoS(rclcpp::SensorDataQoS());

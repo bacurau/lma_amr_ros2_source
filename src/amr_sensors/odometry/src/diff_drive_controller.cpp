@@ -21,6 +21,13 @@
 using namespace lma;
 using namespace scooby;
 
+
+  /**
+ * \brief Constructor of DiffDriveController class
+ * \details 1- Creates a shared pointer (DiffDriveController::nh_) that points do this class object. <br>
+ *          2- Define the time source as the topic /clock with use+sim_time. <br>
+ *          3- Creates an instance of the Odometry class that receives DiffDriveController::nh_ as a parameter.
+ */
 DiffDriveController::DiffDriveController()
 : Node("snoopy_odom", rclcpp::NodeOptions().use_intra_process_comms(true))
 {
@@ -31,7 +38,7 @@ DiffDriveController::DiffDriveController()
   //auto useSimTime = nh_->get_parameter( "use_sim_time" ).as_bool();
 
   odometry_ = std::make_unique<Odometry>(
-    nh_);
+    nh_); /*!< making odometry a unique pointer guarantees that only DiffDriveController::odometry_ will be able to access this object */
 
   RCLCPP_INFO(this->get_logger(), "Run!");
 }

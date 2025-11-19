@@ -25,10 +25,17 @@
 
 #include "scooby_node/odometry.hpp"
 
+
+
+
 namespace lma
 {
 namespace scooby
 {
+/**
+ * \brief The DiffDriveController class
+ * \details This class is responsible for initializing the ROS2 node and creating an instance of the Odometry class.
+ */
 class DiffDriveController : public rclcpp::Node
 {
  public:
@@ -36,8 +43,8 @@ class DiffDriveController : public rclcpp::Node
   virtual ~DiffDriveController(){};
 
  private:
-  std::shared_ptr<rclcpp::Node> nh_;
-  std::unique_ptr<Odometry> odometry_;
+  std::shared_ptr<rclcpp::Node> nh_; /*!< Shared pointer that points to this class object */
+  std::unique_ptr<Odometry> odometry_; /*!< Unique pointer that points to the Odometry class object */
 };
 } // scooby
 } // lma

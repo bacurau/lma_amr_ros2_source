@@ -25,7 +25,11 @@
 
 #include "scooby_node/diff_drive_controller.hpp"
 
-
+  /**
+   * \brief C++ main function
+   * \details Defines a buffer size for stdout, then creates a DiffDriveController object and spins it 
+   * as a node in ROS2 executor.
+   */
 int main(int argc, char *argv[])
 {
   setvbuf(stdout, NULL, _IONBF, BUFSIZ);
@@ -42,11 +46,12 @@ int main(int argc, char *argv[])
   //     scooby->get_wheels()->radius);
 
   auto diff_drive_controller =
-    std::make_shared<lma::scooby::DiffDriveController>();
+    std::make_shared<lma::scooby::DiffDriveController>(); /*!< Create object DiffDriveController in node format for ROS2*/
 
 
   //executor.add_node(scooby);
-  executor.add_node(diff_drive_controller);
+
+  executor.add_node(diff_drive_controller); /*!< Add node to executor*/
   executor.spin();
 
   rclcpp::shutdown();

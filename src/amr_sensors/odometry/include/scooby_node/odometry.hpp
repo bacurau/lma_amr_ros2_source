@@ -42,6 +42,10 @@ namespace lma
 {
 namespace scooby
 {
+/**
+ * \brief The Odometry class
+ * \details This class is responsible for calculating and publishing the robot odometry based on wheel encoder and IMU data???
+ */  
 class Odometry
 {
  public:
