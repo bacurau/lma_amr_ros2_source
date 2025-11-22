@@ -25,6 +25,19 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+# This launch files has many things, but it only uses 3 nodes: 
+# robot_state_publisher: This package allows you to publish the state of a robot to tf2. Once the state gets published, 
+#                        it is available to all components in the system that also use tf2.
+#                        The robot_state_publhiser is also done in the main launch, does it need to be here?
+# reset_arm_node: should be removed as the reset is made by stm32_launch.xml and does not need to be done with the reset_arm_node.
+#                 Also, the reset is done in the main launch and should not be done here.   
+# odom_node: This is the odometry node.
+# Launch variables:
+# use_sim_time
+# use_rviz
+# use_teleop
+# urdf_file
+# teleop_config 
 
 def generate_launch_description():
 

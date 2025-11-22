@@ -32,6 +32,7 @@ using namespace scooby;
  *          2- Creates publishers for odometry, corrected odometry, joint states, and docking status. <br>
  *          3- Creates subscriptions for IMU and joint state data. <br>
  *          4- Sets up a service to update odometry based on external requests.
+
  */
 Odometry::Odometry(
   std::shared_ptr<rclcpp::Node> &nh)
@@ -42,9 +43,8 @@ Odometry::Odometry(
 {
  
 
-  /**
-   * Initialize robot pose and velocity
-   */
+  // Initialize robot pose and velocity
+
   RCLCPP_INFO(nh_->get_logger(), "Init Odometry");
   robot_pose_[0]= 0.005;//0.005;//0.000 -2.8781 0.005; 
   robot_pose_[1]= -0.045;//-0.045;//0.005 -1.8797 0.005;1.981  0.005
@@ -56,9 +56,7 @@ Odometry::Odometry(
   count_imu=0;
   
 
-  /**
-   * Create parameters for the ros2 node. How are the parameters being used?
-   */
+  // Create parameters for the ros2 node. How are the parameters being used?
   nh_->declare_parameter("odometry.frame_id", "odom");
   nh_->declare_parameter("odometry.child_frame_id", "Base_Link");
 
@@ -72,9 +70,8 @@ Odometry::Odometry(
   // Fator de escala obtido a partir do erro identificado após 10 voltas para cada sentido. Erro: 18 graus. Fs = 18/3600
   //float fs = (1.00506 / 1.00211) * 1.0012;
 
-  /**
-   * Get the values of the parameters to set member variables
-   */
+  // Get the values of the parameters to set member variables
+  
   nh_->get_parameter_or<double>("wheels.separation", wheels_separation_, 0.74361); // 0.74361 0.742188
   nh_->get_parameter_or<double>("wheels.radius_left", wheels_radius_left, 0.102873); 
   nh_->get_parameter_or<double>("wheels.radius_right", wheels_radius_right, 0.102759); 
@@ -99,10 +96,10 @@ Odometry::Odometry(
     child_frame_id_of_odometry_,
     std::string("Base_Link"));
 
-/**
- * Create publishers for odometry, corrected odometry, joint states, and docking status.
- * These publishers use qos 5, however the variable qos is not used here.
- */
+
+ // Create publishers for odometry, corrected odometry, joint states, and docking status.
+ // These publishers use qos 5, however the variable qos is not used here.
+ 
 
   // auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
   auto qos = rclcpp::QoS(rclcpp::SensorDataQoS());
@@ -113,29 +110,34 @@ Odometry::Odometry(
 
   this->is_initialized = false;
 
+  
+  // Add TF2 broadcaster for odometry frame transformations???
+  
   tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(nh_);
 
   last_time=nh_->now();
-  use_imu_ = false;
+  use_imu_ = false; // why is imu not being used?
+  
+  // Create subscribers for imu and joint states. 
+  // Nov 21: Removed else, because it was not needed. In the if and else, the
+  // joint_state_sub_ was being created the same way. The if is needed to check
+  // if imu subscription will be created.
+  
   if (use_imu_)
   {
     imu_sub_ = nh_->create_subscription<sensor_msgs::msg::Imu>(
       "imu",
       qos,
       std::bind(&Odometry::imu_callback, this, std::placeholders::_1));
-    joint_state_sub_ = nh_->create_subscription<sensor_msgs::msg::JointState>(
-      "joint_states",
-      qos,
-      std::bind(&Odometry::joint_state_callback, this, std::placeholders::_1));
+  }
+  joint_state_sub_ = nh_->create_subscription<sensor_msgs::msg::JointState>(
+    "joint_states",
+    qos,
+    std::bind(&Odometry::joint_state_callback, this, std::placeholders::_1));
 
-  }
-  else
-  {
-    joint_state_sub_ = nh_->create_subscription<sensor_msgs::msg::JointState>(
-      "joint_states",
-      qos,
-      std::bind(&Odometry::joint_state_callback, this, std::placeholders::_1));
-  }
+  //
+  // I don't know what this commented code did. Should I delete it?
+   
   //initial_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
   //  "slam_odom_global", rclcpp::SystemDefaultsQoS(),
   //  std::bind(&Odometry::initialPoseReceived, this, std::placeholders::_1));
@@ -143,25 +145,49 @@ Odometry::Odometry(
   //this->startSlam();
  // publish(nh_->now());
 
+
+// Create a service to update odometry. 
+//  How calls this server to update it?
   update_odometry_server_ = nh_->create_service<odometry_msgs::srv::UpdateOdometry>(
     "motors_node/update_odometry", 
     std::bind(&Odometry::UpdateOdometry, this, std::placeholders::_1, std::placeholders::_2));
 }
 
+/**
+* \brief Callback function for initial pose messages
+* \details This function is called when the initial pose subscriber receives a message. <br>
+* 1- Calculates duration time since slam started, if the duration was shorter than 15 seconds or this->is_initialized is true, returns. <br>
+* 2- Takes the robot x and y pose from "msg" and put them in Odometry::robot_pose_ . <br>
+* 3- Creates a rotation matrix 3x3 based on the orientation. Orientation is a quarternion.<br>
+* 4- Gets euler angles from the rotation matrix, and put yaw in Odometry::robot_pose_ . <br>
+* 5- Stops slam. <br>
+* It is not being used right now. I do not know why.
+* Use "ros2 interface show nav_msgs/msg/Odometry" to find the structure of the message.
+*/
 void Odometry::initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg){
-  auto duration = rclcpp::Duration::from_nanoseconds( nh_->now().nanoseconds() - this->slam_initial_time.nanoseconds());
+  
+  // Calculate time since SLAM initialization
+  
+  auto duration = rclcpp::Duration::from_nanoseconds( nh_->now().nanoseconds() - this->slam_initial_time.nanoseconds()); /*!< The part with slam time is commented in the constructor. */
   double time = duration.seconds();
+
+// If odometry is already initialized or time since slam initialization is less than 15 seconds, return.
 
   //RCLCPP_INFO(nh_->get_logger(), "Time since slam initialization: [%f]", time);
   if ((this->is_initialized) || (time < 15)) return;
   //RCLCPP_INFO(nh_->get_logger(), "Inicializou odom!");
 
+
+// Set robot pose based on msg. Msg is a topic of the type nav_msgs/msg/Odometry.  
+// Takes the position x and y and insert in the robot_pose
   this->is_initialized = true;
   robot_pose_[0]=msg->pose.pose.position.x; 
   robot_pose_[1]=msg->pose.pose.position.y;
+// Creates a rotation matrix based on quarternions 
   tf2::Matrix3x3 mat(tf2::Quaternion(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y,
                                      msg->pose.pose.orientation.z, msg->pose.pose.orientation.w));
   double yaw, pitch, roll;
+  // Gets euler angles from the rotation matrix.
   mat.getEulerYPR(yaw, pitch, roll);
   robot_pose_[2]=yaw;
   //last_theta=0;

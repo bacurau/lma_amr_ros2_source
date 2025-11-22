@@ -108,7 +108,7 @@ class Odometry
   // w = rotational velocity [rad/s]
   double v_x,w_z;
 
-  std::array<double,3> robot_pose_;
+  std::array<double,3> robot_pose_; /*!< The robot pose is x,y and yaw.*/
   std::array<double,3> robot_vel_;
 };
 } // scooby
