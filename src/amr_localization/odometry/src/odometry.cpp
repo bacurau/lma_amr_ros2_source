@@ -149,7 +149,7 @@ Odometry::Odometry(
 // Create a service to update odometry. 
 //  How calls this server to update it?
   update_odometry_server_ = nh_->create_service<odometry_msgs::srv::UpdateOdometry>(
-    "motors_node/update_odometry", 
+    "odometry/update_odometry", 
     std::bind(&Odometry::UpdateOdometry, this, std::placeholders::_1, std::placeholders::_2));
 }
 
