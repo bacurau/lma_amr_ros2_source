@@ -27,6 +27,18 @@ def generate_launch_description():
         ])
     sensors_launch_file = IncludeLaunchDescription(sensors_launch_file_path)
 
+
+    # Find and include localization main launch file
+    share_localization_launch_path = FindPackageShare('amr_localization_launch')
+    localization_launch_file_path = PathJoinSubstitution([
+            share_localization_launch_path, 
+            'launch', 
+            'localization_main_launch.py'
+        ])
+    localization_launch_file = IncludeLaunchDescription(localization_launch_file_path)
+
+
+
     # Find robot description urdf file, 
     # Using os.path.join returns a string with the filepath,
     # which is needed for reading the file.
@@ -54,6 +66,7 @@ def generate_launch_description():
     main_launch_description.add_action(robot_state_publisher_node)
     main_launch_description.add_action(sensors_launch_file)
     main_launch_description.add_action(stm32_launch_file)
+    main_launch_description.add_action(localization_launch_file)
     
     
     return main_launch_description
