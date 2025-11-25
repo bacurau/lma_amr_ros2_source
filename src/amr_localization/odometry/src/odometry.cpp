@@ -147,7 +147,7 @@ Odometry::Odometry(
 
 
 // Create a service to update odometry. 
-//  How calls this server to update it?
+//  Who calls this server?
   update_odometry_server_ = nh_->create_service<odometry_msgs::srv::UpdateOdometry>(
     "odometry/update_odometry", 
     std::bind(&Odometry::UpdateOdometry, this, std::placeholders::_1, std::placeholders::_2));
@@ -161,8 +161,9 @@ Odometry::Odometry(
 * 3- Creates a rotation matrix 3x3 based on the orientation. Orientation is a quarternion.<br>
 * 4- Gets euler angles from the rotation matrix, and put yaw in Odometry::robot_pose_ . <br>
 * 5- Stops slam. <br>
-* It is not being used right now. I do not know why.
-* Use "ros2 interface show nav_msgs/msg/Odometry" to find the structure of the message.
+* Use "ros2 interface show nav_msgs/msg/Odometry" to find the structure of the message. <br>
+* \attention  is not being used right now. I do not know why.
+* 
 */
 void Odometry::initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg){
   
@@ -187,7 +188,7 @@ void Odometry::initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg){
   tf2::Matrix3x3 mat(tf2::Quaternion(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y,
                                      msg->pose.pose.orientation.z, msg->pose.pose.orientation.w));
   double yaw, pitch, roll;
-  // Gets euler angles from the rotation matrix.
+  // Gets euler angles from the rotation matrix and update yaw angle for the robot..
   mat.getEulerYPR(yaw, pitch, roll);
   robot_pose_[2]=yaw;
   //last_theta=0;
@@ -196,22 +197,35 @@ void Odometry::initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg){
   this->initial_pose_sub_.reset();
 }
 
+/**
+ * \brief Service callback to update odometry
+ * \details This function is called when the update_odometry service is requested. <br>
+ * 1- Updates the robot pose (x,y) based on the request message. <br>
+ * 2- Creates a rotation matrix based on the orientation quarternions from the request message. <br>
+ * 3- Gets euler angles from the rotation matrix and updates yaw angle for the robot. <br>
+ * 4- Passes time to Odometry::publish_corr, so it can publish the corrected odometry. <br>
+ * 5- Sets the response success to true and logs the response. <br>
+ * 6- Publishes a docking finished message. <br>
+ */
 void Odometry::UpdateOdometry(
   const std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Request> request,
   std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Response> response)
 {
+  // Update robot pose based on the request message
   robot_pose_[0]=request->pose.pose.position.x; 
   robot_pose_[1]=request->pose.pose.position.y;
-
+  // Creates a rotation matrix based on quarternions 
   tf2::Matrix3x3 mat(tf2::Quaternion(request->pose.pose.orientation.x, 
                                      request->pose.pose.orientation.y,
                                      request->pose.pose.orientation.z, 
                                      request->pose.pose.orientation.w));
 
   double yaw, pitch, roll;
+   // Gets euler angles from the rotation matrix and update yaw angle for the robot.
   mat.getEulerYPR(yaw, pitch, roll);
   robot_pose_[2]=yaw;
 
+  // construct odometry message and then publish it.
   publish_corr(last_time);
 
   response->success = true;
@@ -219,10 +233,18 @@ void Odometry::UpdateOdometry(
 
   std_msgs::msg::Bool is_docking_finished;
   is_docking_finished.data = true;
-
+  // publish docking finished message
   docking_finished_pub_->publish(std::move(is_docking_finished));
 }
 
+/**
+ * \brief Start SLAM process
+ * \details This function starts the SLAM process by launching a ROS2 launch file. <br>
+ * 1- Logs a message indicating that SLAM is starting. <br>
+ * 2- Records the current time as the SLAM initial time. <br>
+ * 3- Executes a system command to launch the SLAM process using a ROS2 launch file. <br>
+ * \attention It is not being used; I have not checked exactly what is in the launch file; and worse, the launch file does not exist. <br>
+ */
 void Odometry::startSlam()
 {
   RCLCPP_INFO(this->nh_->get_logger(), "Starting slam!");
@@ -231,6 +253,13 @@ void Odometry::startSlam()
   std::system("ros2 launch scooby snoopy_samsung_localization_launch.py &");
 }
 
+/**
+ * \brief Stop SLAM process
+ * \details This function stops the SLAM process by terminating the SLAM node. <br>
+ * 1- Logs a message indicating that SLAM is stopping. <br>
+ * 2- Executes a system command to kill the SLAM node process. <br>
+ * \attention It's called by Odometry::initialPoseReceived, however that function is not being used. <br>
+ */
 void Odometry::stopSlam()
 {
   RCLCPP_INFO(this->nh_->get_logger(), "Stopping slam!");
@@ -238,6 +267,12 @@ void Odometry::stopSlam()
   std::system("killall cartographer_node");
 }
 
+
+/**
+ * \brief IMU data callback
+ * \details A subscriber was created to the "imu" topic. Therefore, when a message is sent to "imu"
+ *  this callback function is called to update the imu through the Odometry::update_imu function. <br>
+ */
 void Odometry::imu_callback(const sensor_msgs::msg::Imu::SharedPtr imu_msg)
 {
   update_imu(imu_msg);
@@ -286,6 +321,19 @@ void Odometry::publishJointState(
   pub_->publish(std::move(msg2));
 }
 
+/**
+ * \brief Publish corrected odometry
+ * \details This function publishes the corrected odometry based on the current robot pose??? <br>
+ * 1- Creates a new odometry message and fills in the header information. <br>
+ * 2- Sets the robot's position and orientation in the odometry message. <br>
+ * 3- Sets the robot's linear velocity in x and the angular velocity in z in the odometry message to zero. <br>
+ * 4- Sets covariance values for pose and twist in the odometry message. <br>
+ * 5- Creates a transform message for the odometry frame. <br>
+ * 6- Publishes the corrected odometry message. <br>
+ * 7- If publishing TF is enabled, sends the transform using the TF broadcaster. <br>
+ * \attention This function should be merged with Odometry::publish to avoid code duplication, adding ifs and parameters to 
+ * change the behavior instead of duplicating the entire function. <br>
+ */
 void Odometry::publish_corr(const rclcpp::Time & now)
 {
   auto odom_msg = std::make_unique<nav_msgs::msg::Odometry>();
@@ -306,6 +354,7 @@ void Odometry::publish_corr(const rclcpp::Time & now)
   odom_msg->pose.pose.orientation.z = q.z();
   odom_msg->pose.pose.orientation.w = q.w();
 
+  // This sets the velocity to zero
   odom_msg->twist.twist.linear.x  = 0;
   odom_msg->twist.twist.angular.z = 0;
 
@@ -335,12 +384,22 @@ void Odometry::publish_corr(const rclcpp::Time & now)
   odom_tf.child_frame_id = child_frame_id_of_odometry_;
   odom_tf.header.stamp = now;
 
+  // According to https://cplusplus.com/reference/utility/move/ and https://www.geeksforgeeks.org/cpp/stdmove-in-utility-in-c-move-semantics-move-constructors-and-move-assignment-operators/
+  // It basically transfers the ownership of the object to the new owner, in this case, the publisher.
+  // After the move, the odom_msg pointer in this function is no longer valid and should not be used.
+  // Its faster than copying the object.
   corr_odom_pub_->publish(std::move(odom_msg));
 
  if (publish_tf_)
    tf_broadcaster_->sendTransform(odom_tf);
 }
-
+/**
+ * \brief Publish odometry
+ * \details This function publishes the odometry based on the current robot pose and velocity. <br>
+ * This functions is very similar to Odometry::publish_corr, but it also includes the robot's linear velocities
+ * in x and y, and angular velocity in z; and changes covariance values. <br>
+ * \attention Odometry::publish and Odometry::publish_corr should be merged, with parameters and ifs to change the behavior. <br>
+ */
 void Odometry::publish(const rclcpp::Time & now)
 {
   auto odom_msg = std::make_unique<nav_msgs::msg::Odometry>();
@@ -415,8 +474,35 @@ void Odometry::update_joint_state(
   last_joint_positions[1] = joint_state->position[1];
 }
 
+/**
+ * \brief Update IMU data
+ * \details This function updates the IMU angle and angular velocity based on the received IMU message. <br>
+ * 1- Calculates the IMU yaw angle using the orientation quarternions from the IMU message. <br>
+ * 2- Updates the IMU angular velocity in z from the IMU message. <br>
+ * 3- Updates the IMU timestamp from the IMU message. <br>
+ * \attention The formula used to calculate yaw from quarternions may not be correct, the formula is diffent from the standard for unit quarternions.
+ * For unit quarternions, <br>
+ * yaw = atan2(2.0*(x*y + w*z), 1 - 2.0*(y*y + z*z))<br>. Source https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles.
+ * Other way to convert quarternions to euler angles is shown below (used at Odometry::UpdateOdometry): <br>
+ * \code
+ * tf2::Matrix3x3 mat(tf2::Quaternion(
+ *     request->pose.pose.orientation.x,
+ *     request->pose.pose.orientation.y,
+ *     request->pose.pose.orientation.z,
+ *     request->pose.pose.orientation.w));
+ *
+ * double yaw, pitch, roll;
+ * // Gets euler angles from the rotation matrix and update yaw angle for the robot.
+ * mat.getEulerYPR(yaw, pitch, roll);
+ * robot_pose_[2] = yaw;
+ * \endcode
+ * 
+ */
 void Odometry::update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> &imu)
 {
+  // Gets yaw angle from quarternion, however I do not know if this formula is correct.
+  // For unit quarternions, yaw = atan2(2.0*(x*y + w*z), 1 - 2.0*(y*y + z*z))
+  // Source https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
   imu_angle_ = atan2f(
     imu->orientation.x*imu->orientation.y + imu->orientation.w*imu->orientation.z,
     0.5f - imu->orientation.y*imu->orientation.y - imu->orientation.z*imu->orientation.z);
