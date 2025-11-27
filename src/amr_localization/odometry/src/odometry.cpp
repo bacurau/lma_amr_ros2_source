@@ -135,16 +135,6 @@ Odometry::Odometry(
     qos,
     std::bind(&Odometry::joint_state_callback, this, std::placeholders::_1));
 
-  //
-  // I don't know what this commented code did. Should I delete it?
-   
-  //initial_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
-  //  "slam_odom_global", rclcpp::SystemDefaultsQoS(),
-  //  std::bind(&Odometry::initialPoseReceived, this, std::placeholders::_1));
-  
-  //this->startSlam();
- // publish(nh_->now());
-
 
 // Create a service to update odometry. 
 //  Who calls this server?
@@ -153,49 +143,6 @@ Odometry::Odometry(
     std::bind(&Odometry::UpdateOdometry, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-/**
-* \brief Callback function for initial pose messages
-* \details This function is called when the initial pose subscriber receives a message. <br>
-* 1- Calculates duration time since slam started, if the duration was shorter than 15 seconds or this->is_initialized is true, returns. <br>
-* 2- Takes the robot x and y pose from "msg" and put them in Odometry::robot_pose_ . <br>
-* 3- Creates a rotation matrix 3x3 based on the orientation. Orientation is a quarternion.<br>
-* 4- Gets euler angles from the rotation matrix, and put yaw in Odometry::robot_pose_ . <br>
-* 5- Stops slam. <br>
-* Use "ros2 interface show nav_msgs/msg/Odometry" to find the structure of the message. <br>
-* \attention  is not being used right now. I do not know why.
-* 
-*/
-void Odometry::initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg){
-  
-  // Calculate time since SLAM initialization
-  
-  auto duration = rclcpp::Duration::from_nanoseconds( nh_->now().nanoseconds() - this->slam_initial_time.nanoseconds()); /*!< The part with slam time is commented in the constructor. */
-  double time = duration.seconds();
-
-// If odometry is already initialized or time since slam initialization is less than 15 seconds, return.
-
-  //RCLCPP_INFO(nh_->get_logger(), "Time since slam initialization: [%f]", time);
-  if ((this->is_initialized) || (time < 15)) return;
-  //RCLCPP_INFO(nh_->get_logger(), "Inicializou odom!");
-
-
-// Set robot pose based on msg. Msg is a topic of the type nav_msgs/msg/Odometry.  
-// Takes the position x and y and insert in the robot_pose
-  this->is_initialized = true;
-  robot_pose_[0]=msg->pose.pose.position.x; 
-  robot_pose_[1]=msg->pose.pose.position.y;
-// Creates a rotation matrix based on quarternions 
-  tf2::Matrix3x3 mat(tf2::Quaternion(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y,
-                                     msg->pose.pose.orientation.z, msg->pose.pose.orientation.w));
-  double yaw, pitch, roll;
-  // Gets euler angles from the rotation matrix and update yaw angle for the robot..
-  mat.getEulerYPR(yaw, pitch, roll);
-  robot_pose_[2]=yaw;
-  //last_theta=0;
-
-  this->stopSlam();
-  this->initial_pose_sub_.reset();
-}
 
 /**
  * \brief Service callback to update odometry
@@ -206,6 +153,8 @@ void Odometry::initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg){
  * 4- Passes time to Odometry::publish_corr, so it can publish the corrected odometry. <br>
  * 5- Sets the response success to true and logs the response. <br>
  * 6- Publishes a docking finished message. <br>
+ * \param[in] request The request message containing the new pose to update the odometry. <br>
+ * \param[out] response The response message indicating success if the odometry was updated. <br>
  */
 void Odometry::UpdateOdometry(
   const std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Request> request,
@@ -238,38 +187,7 @@ void Odometry::UpdateOdometry(
 }
 
 /**
- * \brief Start SLAM process
- * \details This function starts the SLAM process by launching a ROS2 launch file. <br>
- * 1- Logs a message indicating that SLAM is starting. <br>
- * 2- Records the current time as the SLAM initial time. <br>
- * 3- Executes a system command to launch the SLAM process using a ROS2 launch file. <br>
- * \attention It is not being used; I have not checked exactly what is in the launch file; and worse, the launch file does not exist. <br>
- */
-void Odometry::startSlam()
-{
-  RCLCPP_INFO(this->nh_->get_logger(), "Starting slam!");
-  this->slam_initial_time = this->nh_->now();
-  //this->is_slam_init = true;
-  std::system("ros2 launch scooby snoopy_samsung_localization_launch.py &");
-}
-
-/**
- * \brief Stop SLAM process
- * \details This function stops the SLAM process by terminating the SLAM node. <br>
- * 1- Logs a message indicating that SLAM is stopping. <br>
- * 2- Executes a system command to kill the SLAM node process. <br>
- * \attention It's called by Odometry::initialPoseReceived, however that function is not being used. <br>
- */
-void Odometry::stopSlam()
-{
-  RCLCPP_INFO(this->nh_->get_logger(), "Stopping slam!");
-  //this->is_slam_init = false;
-  std::system("killall cartographer_node");
-}
-
-
-/**
- * \brief IMU data callback
+ * \brief "imu" topic data callback
  * \details A subscriber was created to the "imu" topic. Therefore, when a message is sent to "imu"
  *  this callback function is called to update the imu through the Odometry::update_imu function. <br>
  */
@@ -278,36 +196,44 @@ void Odometry::imu_callback(const sensor_msgs::msg::Imu::SharedPtr imu_msg)
   update_imu(imu_msg);
 }
 
+/**
+ * \brief "joint_states" topic data callback
+ * \details A subscriber was created to the "joint_states" topic.<br>
+ * 1- Calculate the duration since the last callback was called or since initialization with the contructor Odometry::Odometry(). <br>
+ * 2- Update the wheels joint states through the Odometry::update_joint_state function. <br>
+ * 3- Calculate the odometry based on the duration since last callback through the Odometry::calculate_odometry function. <br>
+ * 4- Publish the joint states through the Odometry::publishJointState function. <br>
+ * 5- Publish the odometry through the Odometry::publish function. <br>
+ * 6- Update the last_time member variable with the current time. <br>
+ * \param[in] joint_state_msg The joint state message containing the current joint positions and velocities. <br>
+ */
 void Odometry::joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state_msg)
 {
-  
-  rclcpp::Time timeARM =joint_state_msg->header.stamp;
-  //rclcpp::Time time = nh_->now();//joint_state_msg->header.stamp;
+
+ // 1- Calculate the duration since the last callback was called or since initialization with the contructor Odometry::Odometry().
   rclcpp::Time time = joint_state_msg->header.stamp;
   auto duration = rclcpp::Duration::from_nanoseconds(time.nanoseconds() - last_time.nanoseconds());
-  //RCLCPP_INFO(nh_->get_logger(), "x : %d, y : %d", joint_state_msg->header.stamp.sec*1000000000 +joint_state_msg->header.stamp.nanosec - last_time.nanoseconds() , 0.0f );
+  
+  // 2- Update the wheels joint states.
   update_joint_state(joint_state_msg);
 
+  // 3- Calculate the odometry based on the duration since last callback.
   calculate_odometry(duration);
 
-  //Call Joint state publisher
+  //4- Call Joint state publisher
   publishJointState(time,joint_state_msg);
-
-  
- publish(time);
-//  rclcpp::Time timeEND=nh_->now();
-//  rclcpp::Duration duration2(timeARM.nanoseconds() - time.nanoseconds());
-//  rclcpp::Duration duration3(timeEND.nanoseconds() -time.nanoseconds());
-
-
-//  std::cout<<duration2.seconds()<<","<<duration3.seconds()
-//           <<","<<duration.seconds()<<std::endl;
-
+  //5- Call Odometry publisher
+  publish(time);
   last_time = time;
 }
 
 
-
+/**
+ * \brief Publish wheel joint states
+ * \details This functions publishes the wheel joint state based on the received joint state message (msg). <br>
+ * \param[in] now The new time to be used in the header of the joint state message to be published. <br>
+ * \param[in] msg The new wheel joint state message to be published. <br>
+ */
 void Odometry::publishJointState(
   const rclcpp::Time & now,const std::shared_ptr<sensor_msgs::msg::JointState const> & msg)
 {
@@ -456,20 +382,36 @@ void Odometry::publish(const rclcpp::Time & now)
    tf_broadcaster_->sendTransform(odom_tf);
 }
 
+/**
+ * \brief Calculate v_x, w_z, wheel joint displacement compared to previous state and update wheel joint position. <br>
+ * \details 1- Calculates joint displacement since last update for both wheels. <br>
+ * 2- Calculate the linear velocity for the right and left wheels.
+ * 3- Calculate the linear velocity in x for the robot. <br>
+ * 4- Calculate the angular velocity in z for the robot. <br>
+ * 5- Updates last joint positions for both wheels. <br>
+ * \param[in] joint_state The joint state message containing the current joint positions and velocities. <br>
+ */
 void Odometry::update_joint_state(
   const std::shared_ptr<sensor_msgs::msg::JointState const> &joint_state)
 {
   static std::array<double, 2> last_joint_positions = {0.0f, 0.0f};
-
+  // 1- Calculate joint displacement since last update for both wheels.
   diff_joint_positions_[0] = joint_state->position[0] - last_joint_positions[0];
   diff_joint_positions_[1] = joint_state->position[1] - last_joint_positions[1];
 
-  //v_x = wheels_radius_ *(joint_state->velocity[0]+joint_state->velocity[1])/2;
-  v_x = ((wheels_radius_left * joint_state->velocity[0]) + (wheels_radius_right * joint_state->velocity[1]))/2;
+  // 2- Calculate the linear velocity for the right and left wheels.
+  double linear_velocity_for_right_wheel = wheels_radius_right * joint_state->velocity[1]; // Vr = w_r * radius of right wheel
+  double linear_velocity_for_left_wheel = wheels_radius_left * joint_state->velocity[0]; // Vl = w_l * radius of left wheel
+  
+  // 3- Calculate the linear velocity in x for the robot.
+  v_x = (linear_velocity_for_left_wheel + linear_velocity_for_right_wheel)/2; // Robot linear velocity in x.
   //TODO:change direction for real robot
-  //w_z = -1.0*wheels_radius_ *(joint_state->velocity[0]-joint_state->velocity[1])/(wheels_separation_);
-  w_z = -1.0*(wheels_radius_left * joint_state->velocity[0]- wheels_radius_right * joint_state->velocity[1])/(wheels_separation_);
 
+  // 4- Calculate the angular velocity in z for the robot.
+  // w_z = Vr - Vl / wheels_separation
+  w_z = (linear_velocity_for_right_wheel-linear_velocity_for_left_wheel)/(wheels_separation_);
+
+  // 5- Updates last joint positions for both wheels.'
   last_joint_positions[0] = joint_state->position[0];
   last_joint_positions[1] = joint_state->position[1];
 }
@@ -511,6 +453,16 @@ void Odometry::update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> &im
   imu_time_=imu->header.stamp;
 }
 
+/**
+ * \brief Calculate odometry based on wheel joint displacements
+ * \details 
+ * 1- Calculates the linear displacement (delta_s) and angular displacement (delta_theta). <br>
+ * 2- Updates the robot's pose (x, y, theta). <br>
+ * 3- If time step was < 0.1 and >0, recalculate Odometry::vx and Odometry::wz <br>
+ * 4- Updates the robot's velocity (v_x, w_z) based on the calculated displacements and time duration. <br>
+ * \param[in] duration The time duration since the last odometry calculation. <br>
+ * \return Returns false if time step was 0 and true otherwise, i.e., if odometry was successfully calculated. <br>
+ */
 bool Odometry::calculate_odometry(const rclcpp::Duration &duration)
 {
 

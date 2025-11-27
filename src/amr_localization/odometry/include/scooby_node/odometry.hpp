@@ -54,7 +54,6 @@ class Odometry
 
  private:
   bool calculate_odometry(const rclcpp::Duration & duration);
-  void initialPoseReceived(nav_msgs::msg::Odometry::SharedPtr msg);
   void update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> & imu);
   void update_joint_state(const std::shared_ptr<sensor_msgs::msg::JointState const> & joint_state);
   void publishJointState(const rclcpp::Time & now, const std::shared_ptr<sensor_msgs::msg::JointState const> & msg);
@@ -68,8 +67,6 @@ class Odometry
 
   void publish(const rclcpp::Time & now);
   void publish_corr(const rclcpp::Time & now);
-  void startSlam();
-  void stopSlam();
 
   std::shared_ptr<rclcpp::Node> nh_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
@@ -106,7 +103,8 @@ class Odometry
     rclcpp::Time last_time;
   // v = translational velocity [m/s]
   // w = rotational velocity [rad/s]
-  double v_x,w_z;
+  double v_x; /*!< linear velocity along the x axis.*/
+  double w_z; /*!< angular velocity around the z axis.*/
 
   std::array<double,3> robot_pose_; /*!< The robot pose is x,y and yaw.*/
   std::array<double,3> robot_vel_;
