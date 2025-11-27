@@ -459,7 +459,7 @@ void Odometry::update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> &im
  * 1- Calculates the linear displacement (delta_s) and angular displacement (delta_theta). <br>
  * 2- Updates the robot's pose (x, y, theta). <br>
  * 3- If time step was < 0.1 and >0, recalculate Odometry::vx and Odometry::wz <br>
- * 4- Updates the robot's velocity (v_x, w_z) based on the calculated displacements and time duration. <br>
+ * 4- Updates the robot's velocity (Odometry::robot_vel_) <br>
  * \param[in] duration The time duration since the last odometry calculation. <br>
  * \return Returns false if time step was 0 and true otherwise, i.e., if odometry was successfully calculated. <br>
  */

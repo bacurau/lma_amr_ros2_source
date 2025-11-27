@@ -71,25 +71,36 @@ class Odometry
   std::shared_ptr<rclcpp::Node> nh_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
-  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
-  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr corr_odom_pub_;
-  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr pub_;
-  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr docking_finished_pub_;
-  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
-  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::ConstSharedPtr initial_pose_sub_;
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_; /*!< publisher for topic "odom", with qos 5*/
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr corr_odom_pub_; /* !< publisher for topic "corr_motor_odom, with qos 5" */
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr pub_; /*!< publisher for topic "joint_states_jetson", with qos 5*/
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr docking_finished_pub_;/*!<publisher for topic "docking_finished", with qos 5*/
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_; /*!< subscriber for topic "joint_states", with qos = rclcpp::QoS(rclcpp::SensorDataQoS());*/
+  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_; /*!< subscriber for topic "imu", with qos = rclcpp::QoS(rclcpp::SensorDataQoS());*/
 
-  rclcpp::Service<odometry_msgs::srv::UpdateOdometry>::SharedPtr update_odometry_server_;
 
-  double wheels_separation_;
-  double wheels_radius_left;
-  double wheels_radius_right;
-  double last_theta;
+  rclcpp::Service<odometry_msgs::srv::UpdateOdometry>::SharedPtr update_odometry_server_; /*!< service server for "odometry/update_odometry"*/
+
+  double wheels_separation_; /*!< Distance between the two wheels.*/
+  double wheels_radius_left; /* Radius of left wheel.*/
+  double wheels_radius_right; /* Radius of right wheel.*/
+  /**   \brief the yaw angle provided by the imu in the prior call of the Odometry::calculate_odometry plus a correction. 
+  *  
+  *  Order of events: <br>
+  *   1- Some node publishes in the "joint_states" topic. <br>
+  *   2- Odometry::joint_state_callback is triggered. <br>
+  *   3- Odometry::calculate_odometry is called. <br>
+  *   4- last_theta is updated at the end of the Odometry::calculate_odometry function with the current imu angle.  <br>
+  */
+  double last_theta; 
+   /** 
+  \brief Used to count the first 3 calls of the Odometry::calculate_odometry function after it passes the return false condition. 
+  \attention Why is this needed? 
+  */
   int count_imu;
-  std::string frame_id_of_odometry_;
-  std::string child_frame_id_of_odometry_;
+  std::string frame_id_of_odometry_; /*!< Frame id of the odometry used in the header of the Odometry message (nav_msgs::msg::Odometry).*/
+  std::string child_frame_id_of_odometry_; /*!< Frame if of child_frame used in the Odometry message (nav_msgs::msg::Odometry)*/
 
-  rclcpp::Time slam_initial_time;
 
   bool use_imu_;
   bool publish_tf_;
@@ -100,14 +111,14 @@ class Odometry
   double imu_vel_;
   rclcpp::Time imu_time_;
 
-    rclcpp::Time last_time;
+  rclcpp::Time last_time;
   // v = translational velocity [m/s]
   // w = rotational velocity [rad/s]
   double v_x; /*!< linear velocity along the x axis.*/
   double w_z; /*!< angular velocity around the z axis.*/
 
-  std::array<double,3> robot_pose_; /*!< The robot pose is x,y and yaw.*/
-  std::array<double,3> robot_vel_;
+  std::array<double,3> robot_pose_; /*!<Is the robot pose. <br> robot_pose_[0]: position in the x axis,<br>robot_pose_[1]: position in the y axis,<br>robot_pose_[2]: yaw angle (spin around the z axis) */
+  std::array<double,3> robot_vel_; /*!<Is the robot velocity. <br> robot_vel_[0]: velocity in the x axis,<br>robot_vel_[1]: velocity in the y axis,<br>robot_vel_[2]: yaw angle velocity (spin around the z axis)*/
 };
 } // scooby
 } // lma
