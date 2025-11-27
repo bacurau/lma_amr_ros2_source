@@ -72,7 +72,7 @@ class Odometry
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_; /*!< publisher for topic "odom", with qos 5*/
-  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr corr_odom_pub_; /* !< publisher for topic "corr_motor_odom, with qos 5" */
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr corr_odom_pub_; /*!< publisher for topic "corr_motor_odom, with qos 5" */
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr pub_; /*!< publisher for topic "joint_states_jetson", with qos 5*/
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr docking_finished_pub_;/*!<publisher for topic "docking_finished", with qos 5*/
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_; /*!< subscriber for topic "joint_states", with qos = rclcpp::QoS(rclcpp::SensorDataQoS());*/
@@ -82,8 +82,8 @@ class Odometry
   rclcpp::Service<odometry_msgs::srv::UpdateOdometry>::SharedPtr update_odometry_server_; /*!< service server for "odometry/update_odometry"*/
 
   double wheels_separation_; /*!< Distance between the two wheels.*/
-  double wheels_radius_left; /* Radius of left wheel.*/
-  double wheels_radius_right; /* Radius of right wheel.*/
+  double wheels_radius_left; /*!< Radius of left wheel.*/
+  double wheels_radius_right; /*!< Radius of right wheel.*/
   /**   \brief the yaw angle provided by the imu in the prior call of the Odometry::calculate_odometry plus a correction. 
   *  
   *  Order of events: <br>
@@ -109,9 +109,15 @@ class Odometry
   bool publish_tf_; /*!< Flag to enable or disable the publishing of TF transforms for odometry.*/
 
   std::array<double, 2> diff_joint_positions_;
+  /** \brief Is the yaw angle of the robot determined from the imu msg of the subcriber Odometry::imu_sub_.
+   * \details The msg provide the orientation in quarternions, from which the yaw angle is calculated.
+  */
   double imu_angle_;
+  /** \brief Is the robot velocity determined from the imu msg of the subcriber Odometry::imu_sub_.
+  * \details The msg provide the angular velocity in rad/s. 
+  */
   double imu_vel_;
-  rclcpp::Time imu_time_;
+  rclcpp::Time imu_time_; /*!< Is the timestamp of the imu msg of the subcriber Odometry::imu_sub_.*/
 
   rclcpp::Time last_time;
   // v = translational velocity [m/s]
