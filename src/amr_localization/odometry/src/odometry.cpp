@@ -107,9 +107,6 @@ Odometry::Odometry(
   corr_odom_pub_ = nh_->create_publisher<nav_msgs::msg::Odometry>("corr_motor_odom", 5);
   pub_ = nh_->create_publisher<sensor_msgs::msg::JointState>("joint_states_jetson", 5);
   docking_finished_pub_ = nh_->create_publisher<std_msgs::msg::Bool>("docking_finished", 1);
-
-  this->is_initialized = false;
-
   
   // Add TF2 broadcaster for odometry frame transformations???
   

@@ -101,10 +101,12 @@ class Odometry
   std::string frame_id_of_odometry_; /*!< Frame id of the odometry used in the header of the Odometry message (nav_msgs::msg::Odometry).*/
   std::string child_frame_id_of_odometry_; /*!< Frame if of child_frame used in the Odometry message (nav_msgs::msg::Odometry)*/
 
-
+ /**
+  * \brief Flag to enable or disable the use of IMU data for odometry calculation.
+  * \attention Why is imu not being used?
+  */
   bool use_imu_;
-  bool publish_tf_;
-  bool is_initialized;
+  bool publish_tf_; /*!< Flag to enable or disable the publishing of TF transforms for odometry.*/
 
   std::array<double, 2> diff_joint_positions_;
   double imu_angle_;
