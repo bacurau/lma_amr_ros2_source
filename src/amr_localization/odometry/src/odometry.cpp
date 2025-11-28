@@ -18,8 +18,7 @@
 
 #include "scooby_node/odometry.hpp"
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include "tf2/LinearMath/Matrix3x3.h"
-#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/utils.hpp>
 //#include <geometry_msgs/msg/pose_stamped.hpp>
 
 using namespace lma;
@@ -160,16 +159,10 @@ void Odometry::UpdateOdometry(
   // Update robot pose based on the request message
   robot_pose_[0]=request->pose.pose.position.x; 
   robot_pose_[1]=request->pose.pose.position.y;
-  // Creates a rotation matrix based on quarternions 
-  tf2::Matrix3x3 mat(tf2::Quaternion(request->pose.pose.orientation.x, 
-                                     request->pose.pose.orientation.y,
-                                     request->pose.pose.orientation.z, 
-                                     request->pose.pose.orientation.w));
-
-  double yaw, pitch, roll;
-   // Gets euler angles from the rotation matrix and update yaw angle for the robot.
-  mat.getEulerYPR(yaw, pitch, roll);
-  robot_pose_[2]=yaw;
+  robot_pose_[2] = tf2::getYaw(tf2::Quaternion(request->pose.pose.orientation.x,
+                                            request->pose.pose.orientation.y,
+                                            request->pose.pose.orientation.z,
+                                            request->pose.pose.orientation.w));
 
   // construct odometry message and then publish it.
   publish_corr(last_time);
@@ -439,12 +432,13 @@ void Odometry::update_joint_state(
  */
 void Odometry::update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> &imu)
 {
-  // Gets yaw angle from quarternion, however I do not know if this formula is correct.
+  // Gets yaw angle from quarternion.
   // For unit quarternions, yaw = atan2(2.0*(x*y + w*z), 1 - 2.0*(y*y + z*z))
   // Source https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-  imu_angle_ = atan2f(
-    imu->orientation.x*imu->orientation.y + imu->orientation.w*imu->orientation.z,
-    0.5f - imu->orientation.y*imu->orientation.y - imu->orientation.z*imu->orientation.z);
+  imu_angle_ = tf2::getYaw(tf2::Quaternion(imu->orientation.x,
+                                            imu->orientation.y,
+                                            imu->orientation.z,
+                                            imu->orientation.w));
 
   imu_vel_ =imu->angular_velocity.z;
   imu_time_=imu->header.stamp;
