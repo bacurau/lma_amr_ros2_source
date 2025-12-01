@@ -23,7 +23,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include "scooby_node/odometry.hpp"
+#include "odometry.hpp"
 
 
 

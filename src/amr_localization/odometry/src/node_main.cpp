@@ -23,7 +23,7 @@
 #include <rcutils/cmdline_parser.h>
 #include <rclcpp/rclcpp.hpp>
 
-#include "scooby_node/diff_drive_controller.hpp"
+#include "diff_drive_controller.hpp"
 
   /**
    * \brief C++ main function

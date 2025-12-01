@@ -16,7 +16,7 @@
 
 /* Author: Olmerg */
 
-#include "scooby_node/odometry.hpp"
+#include "odometry.hpp"
 
 
 using namespace lma;
