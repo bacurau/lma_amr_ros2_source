@@ -6,6 +6,9 @@
 # Author: Ivan Diniz Dobbin
 #===============================================================================
 
+
+## This file should only setup rosdep and microROS.
+
 ## This script closes the vscode terminal if it is executed with source ./file.sh or . ./file.sh 
 # because of the command bash. It might no close on the first execution, but it can close on later executions.
 
@@ -14,14 +17,8 @@ set -euo pipefail
 
 # cd ../../../ # Navigate to the root of the workspace
 
+cd ../
 export ROS_DOMAIN_ID=25
-
-##===================== Install dependencies =====================##
-    # sudo apt update && rosdep update
-    # rosdep install --from-paths src --ignore-src -y
-    # sudo apt-get install python3-pip
-    sudo apt-get install stlink-tools
-##===================== Build packages =====================##
 colcon build
 
 
@@ -40,7 +37,7 @@ bash -c "   . ./install/local_setup.bash &&
             ros2 run micro_ros_setup build_agent.sh
         "
 
-
+## TODO: Remove launch from here, this file should only setup rosdep and microROS.
 ##===================== Launch the amr_launch file =====================##
 bash -c "   . ./install/local_setup.bash &&  
             ros2 launch amr_launch amr_launch.py
