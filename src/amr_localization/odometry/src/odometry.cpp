@@ -19,7 +19,6 @@
 #include "scooby_node/odometry.hpp"
 #include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include <tf2/utils.hpp>
-//#include <geometry_msgs/msg/pose_stamped.hpp>
 
 using namespace lma;
 using namespace std::chrono_literals;
@@ -27,10 +26,10 @@ using namespace scooby;
 
 /**
  * \brief Constructor of Odometry class
- * \details 1- Initializes member variables with default values or parameters from the ROS2 parameter server. <br>
- *          2- Creates publishers for odometry, corrected odometry, joint states, and docking status. <br>
- *          3- Creates subscriptions for IMU and joint state data. <br>
- *          4- Sets up a service to update odometry based on external requests.
+ * \details -# Initializes member variables with default values or parameters from the ROS2 parameter server. 
+ *  -# Creates publishers for odometry, corrected odometry, joint states, and docking status.
+ *  -# Creates subscriptions for IMU and joint state data.
+ *  -# Sets up a service to update odometry based on external requests.
 
  */
 Odometry::Odometry(
@@ -143,12 +142,12 @@ Odometry::Odometry(
 /**
  * \brief Service callback to update odometry
  * \details This function is called when the update_odometry service is requested. <br>
- * 1- Updates the robot pose (x,y) based on the request message. <br>
- * 2- Creates a rotation matrix based on the orientation quarternions from the request message. <br>
- * 3- Gets euler angles from the rotation matrix and updates yaw angle for the robot. <br>
- * 4- Passes time to Odometry::publish_corr, so it can publish the corrected odometry. <br>
- * 5- Sets the response success to true and logs the response. <br>
- * 6- Publishes a docking finished message. <br>
+ *-# Updates the robot pose (x,y) based on the request message. <br>
+ *-# Creates a rotation matrix based on the orientation quarternions from the request message. <br>
+ *-# Gets euler angles from the rotation matrix and updates yaw angle for the robot. <br>
+ *-# Passes time to Odometry::publish_corr, so it can publish the corrected odometry. <br>
+ *-# Sets the response success to true and logs the response. <br>
+ *-# Publishes a docking finished message. <br>
  * \param[in] request The request message containing the new pose to update the odometry. <br>
  * \param[out] response The response message indicating success if the odometry was updated. <br>
  */
@@ -188,14 +187,14 @@ void Odometry::imu_callback(const sensor_msgs::msg::Imu::SharedPtr imu_msg)
 
 /**
  * \brief "joint_states" topic data callback
- * \details A subscriber was created to the "joint_states" topic.<br>
- * 1- Calculate the duration since the last callback was called or since initialization with the contructor Odometry::Odometry(). <br>
- * 2- Update the wheels joint states through the Odometry::update_joint_state function. <br>
- * 3- Calculate the odometry based on the duration since last callback through the Odometry::calculate_odometry function. <br>
- * 4- Publish the joint states through the Odometry::publishJointState function. <br>
- * 5- Publish the odometry through the Odometry::publish function. <br>
- * 6- Update the last_time member variable with the current time. <br>
- * \param[in] joint_state_msg The joint state message containing the current joint positions and velocities. <br>
+ * \details A subscriber was created to the "joint_states" topic.
+ *-# Calculate the duration since the last callback was called or since initialization with the contructor Odometry::Odometry(). 
+ *-# Update the wheels joint states through the Odometry::update_joint_state function. 
+ *-# Calculate the odometry based on the duration since last callback through the Odometry::calculate_odometry function. 
+ *-# Publish the joint states through the Odometry::publishJointState function. 
+ *-# Publish the odometry through the Odometry::publish function. 
+ *-# Update the last_time member variable with the current time. 
+ * \param[in] joint_state_msg The joint state message containing the current joint positions and velocities. 
  */
 void Odometry::joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state_msg)
 {
@@ -220,9 +219,9 @@ void Odometry::joint_state_callback(const sensor_msgs::msg::JointState::SharedPt
 
 /**
  * \brief Publish wheel joint states
- * \details This functions publishes the wheel joint state based on the received joint state message (msg). <br>
- * \param[in] now The new time to be used in the header of the joint state message to be published. <br>
- * \param[in] msg The new wheel joint state message to be published. <br>
+ * \details This functions publishes the wheel joint state based on the received joint state message (msg).
+ * \param[in] now The new time to be used in the header of the joint state message to be published.
+ * \param[in] msg The new wheel joint state message to be published.
  */
 void Odometry::publishJointState(
   const rclcpp::Time & now,const std::shared_ptr<sensor_msgs::msg::JointState const> & msg)
@@ -239,16 +238,16 @@ void Odometry::publishJointState(
 
 /**
  * \brief Publish corrected odometry
- * \details This function publishes the corrected odometry based on the current robot pose??? <br>
- * 1- Creates a new odometry message and fills in the header information. <br>
- * 2- Sets the robot's position and orientation in the odometry message. <br>
- * 3- Sets the robot's linear velocity in x and the angular velocity in z in the odometry message to zero. <br>
- * 4- Sets covariance values for pose and twist in the odometry message. <br>
- * 5- Creates a transform message for the odometry frame. <br>
- * 6- Publishes the corrected odometry message. <br>
- * 7- If publishing TF is enabled, sends the transform using the TF broadcaster. <br>
+ * \details This function publishes the corrected odometry based on the current robot pose???
+ *-# Creates a new odometry message and fills in the header information. 
+ *-# Sets the robot's position and orientation in the odometry message. 
+ *-# Sets the robot's linear velocity in x and the angular velocity in z in the odometry message to zero. 
+ *-# Sets covariance values for pose and twist in the odometry message. 
+ *-# Creates a transform message for the odometry frame. 
+ *-# Publishes the corrected odometry message. 
+ *-# If publishing TF is enabled, sends the transform using the TF broadcaster. 
  * \attention This function should be merged with Odometry::publish to avoid code duplication, adding ifs and parameters to 
- * change the behavior instead of duplicating the entire function. <br>
+ * change the behavior instead of duplicating the entire function.
  */
 void Odometry::publish_corr(const rclcpp::Time & now)
 {
@@ -313,8 +312,8 @@ void Odometry::publish_corr(const rclcpp::Time & now)
  * \brief Publish odometry
  * \details This function publishes the odometry based on the current robot pose and velocity. <br>
  * This functions is very similar to Odometry::publish_corr, but it also includes the robot's linear velocities
- * in x and y, and angular velocity in z; and changes covariance values. <br>
- * \attention Odometry::publish and Odometry::publish_corr should be merged, with parameters and ifs to change the behavior. <br>
+ * in x and y, and angular velocity in z; and changes covariance values.
+ * \attention Odometry::publish and Odometry::publish_corr should be merged, with parameters and ifs to change the behavior.
  */
 void Odometry::publish(const rclcpp::Time & now)
 {
@@ -373,13 +372,13 @@ void Odometry::publish(const rclcpp::Time & now)
 }
 
 /**
- * \brief Calculate v_x, w_z, wheel joint displacement compared to previous state and update wheel joint position. <br>
- * \details 1- Calculates joint displacement since last update for both wheels. <br>
- * 2- Calculate the linear velocity for the right and left wheels.
- * 3- Calculate the linear velocity in x for the robot. <br>
- * 4- Calculate the angular velocity in z for the robot. <br>
- * 5- Updates last joint positions for both wheels. <br>
- * \param[in] joint_state The joint state message containing the current joint positions and velocities. <br>
+ * \brief Calculate v_x, w_z, wheel joint displacement compared to previous state and update wheel joint position.
+ * \details-# Calculates joint displacement since last update for both wheels.
+ *-# Calculate the linear velocity for the right and left wheels.
+ *-# Calculate the linear velocity in x for the robot.
+ *-# Calculate the angular velocity in z for the robot. 
+ *-# Updates last joint positions for both wheels.
+ * \param[in] joint_state The joint state message containing the current joint positions and velocities. 
  */
 void Odometry::update_joint_state(
   const std::shared_ptr<sensor_msgs::msg::JointState const> &joint_state)
@@ -408,10 +407,10 @@ void Odometry::update_joint_state(
 
 /**
  * \brief Update IMU data
- * \details This function updates the IMU angle and angular velocity based on the received IMU message. <br>
- * 1- Calculates the IMU yaw angle using the orientation quarternions from the IMU message. <br>
- * 2- Updates the IMU angular velocity in z from the IMU message. <br>
- * 3- Updates the IMU timestamp from the IMU message. <br>
+ * \details This function updates the IMU angle and angular velocity based on the received IMU message. 
+ *-# Calculates the IMU yaw angle using the orientation quarternions from the IMU message. 
+ *-# Updates the IMU angular velocity in z from the IMU message.
+ *-# Updates the IMU timestamp from the IMU message.
  * \attention The formula used to calculate yaw from quarternions may not be correct, the formula is diffent from the standard for unit quarternions.
  * For unit quarternions, <br>
  * yaw = atan2(2.0*(x*y + w*z), 1 - 2.0*(y*y + z*z))<br>. Source https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles.
@@ -447,12 +446,12 @@ void Odometry::update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> &im
 /**
  * \brief Calculate odometry based on wheel joint displacements
  * \details 
- * 1- Calculates the linear displacement (delta_s) and angular displacement (delta_theta). <br>
- * 2- Updates the robot's pose (x, y, theta). <br>
- * 3- If time step was < 0.1 and >0, recalculate Odometry::vx and Odometry::wz <br>
- * 4- Updates the robot's velocity (Odometry::robot_vel_) <br>
- * \param[in] duration The time duration since the last odometry calculation. <br>
- * \return Returns false if time step was 0 and true otherwise, i.e., if odometry was successfully calculated. <br>
+ *-# Calculates the linear displacement (delta_s) and angular displacement (delta_theta).
+ *-# Updates the robot's pose (x, y, theta).
+ *-# If time step was < 0.1 and >0, recalculate Odometry::vx and Odometry::wz
+ *-# Updates the robot's velocity (Odometry::robot_vel_)
+ * \param[in] duration The time duration since the last odometry calculation.
+ * \return Returns false if time step was 0 and true otherwise, i.e., if odometry was successfully calculated.
  */
 bool Odometry::calculate_odometry(const rclcpp::Duration &duration)
 {
