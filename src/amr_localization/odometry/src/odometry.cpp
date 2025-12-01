@@ -17,8 +17,7 @@
 /* Author: Olmerg */
 
 #include "scooby_node/odometry.hpp"
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
-#include <tf2/utils.hpp>
+
 
 using namespace lma;
 using namespace std::chrono_literals;
@@ -28,16 +27,13 @@ using namespace scooby;
  * \brief Constructor of Odometry class
  * \details -# Initializes member variables with default values or parameters from the ROS2 parameter server. 
  *  -# Creates publishers for odometry, corrected odometry, joint states, and docking status.
- *  -# Creates subscriptions for IMU and joint state data.
+ *  -# Creates subscription joint state data.
  *  -# Sets up a service to update odometry based on external requests.
 
  */
-Odometry::Odometry(
-  std::shared_ptr<rclcpp::Node> &nh)
-: nh_(nh),
-  use_imu_(false),
-  publish_tf_(true),
-  imu_angle_(0.0f)
+Odometry::Odometry(std::shared_ptr<rclcpp::Node> &nh): 
+  nh_(nh),
+  publish_tf_(true)
 {
  
 
@@ -51,16 +47,12 @@ Odometry::Odometry(
   robot_vel_[0]=0;
   robot_vel_[2]=0;
   last_theta = 0.0;
-  count_imu=0;
   
 
-  // Create parameters for the ros2 node. How are the parameters being used?
+  // Create parameters for the ros2 node.
   nh_->declare_parameter("odometry.frame_id", "odom");
   nh_->declare_parameter("odometry.child_frame_id", "Base_Link");
-
-  nh_->declare_parameter("odometry.use_imu", false);
   nh_->declare_parameter("odometry.publish_tf", true);
-
   nh_->declare_parameter("wheels.separation", 0.74361);
   nh_->declare_parameter("wheels.radius_left", 0.102873);
   nh_->declare_parameter("wheels.radius_right", 0.102759);
@@ -69,15 +61,9 @@ Odometry::Odometry(
   //float fs = (1.00506 / 1.00211) * 1.0012;
 
   // Get the values of the parameters to set member variables
-  
   nh_->get_parameter_or<double>("wheels.separation", wheels_separation_, 0.74361); // 0.74361 0.742188
   nh_->get_parameter_or<double>("wheels.radius_left", wheels_radius_left, 0.102873); 
   nh_->get_parameter_or<double>("wheels.radius_right", wheels_radius_right, 0.102759); 
-
-  nh_->get_parameter_or<bool>(
-    "odometry.use_imu",
-    use_imu_,
-    false);
 
   nh_->get_parameter_or<bool>(
     "odometry.publish_tf",
@@ -97,101 +83,27 @@ Odometry::Odometry(
 
  // Create publishers for odometry, corrected odometry, joint states, and docking status.
  // These publishers use qos 5, however the variable qos is not used here.
- 
-
-  // auto qos = rclcpp::QoS(rclcpp::KeepLast(10));
   auto qos = rclcpp::QoS(rclcpp::SensorDataQoS());
   odom_pub_ = nh_->create_publisher<nav_msgs::msg::Odometry>("odom", 5);
-  corr_odom_pub_ = nh_->create_publisher<nav_msgs::msg::Odometry>("corr_motor_odom", 5);
-  pub_ = nh_->create_publisher<sensor_msgs::msg::JointState>("joint_states_jetson", 5);
-  docking_finished_pub_ = nh_->create_publisher<std_msgs::msg::Bool>("docking_finished", 1);
   
   // Add TF2 broadcaster for odometry frame transformations???
-  
   tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(nh_);
 
   last_time=nh_->now();
-  use_imu_ = false; // why is imu not being used?
-  
-  // Create subscribers for imu and joint states. 
-  // Nov 21: Removed else, because it was not needed. In the if and else, the
-  // joint_state_sub_ was being created the same way. The if is needed to check
-  // if imu subscription will be created.
-  
-  if (use_imu_)
-  {
-    imu_sub_ = nh_->create_subscription<sensor_msgs::msg::Imu>(
-      "imu",
-      qos,
-      std::bind(&Odometry::imu_callback, this, std::placeholders::_1));
-  }
+  // Create subscriber for wheel joint state data. 
   joint_state_sub_ = nh_->create_subscription<sensor_msgs::msg::JointState>(
     "joint_states",
     qos,
     std::bind(&Odometry::joint_state_callback, this, std::placeholders::_1));
-
-
-// Create a service to update odometry. 
-//  Who calls this server?
-  update_odometry_server_ = nh_->create_service<odometry_msgs::srv::UpdateOdometry>(
-    "odometry/update_odometry", 
-    std::bind(&Odometry::UpdateOdometry, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-
-/**
- * \brief Service callback to update odometry
- * \details This function is called when the update_odometry service is requested. <br>
- *-# Updates the robot pose (x,y) based on the request message. <br>
- *-# Creates a rotation matrix based on the orientation quarternions from the request message. <br>
- *-# Gets euler angles from the rotation matrix and updates yaw angle for the robot. <br>
- *-# Passes time to Odometry::publish_corr, so it can publish the corrected odometry. <br>
- *-# Sets the response success to true and logs the response. <br>
- *-# Publishes a docking finished message. <br>
- * \param[in] request The request message containing the new pose to update the odometry. <br>
- * \param[out] response The response message indicating success if the odometry was updated. <br>
- */
-void Odometry::UpdateOdometry(
-  const std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Request> request,
-  std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Response> response)
-{
-  // Update robot pose based on the request message
-  robot_pose_[0]=request->pose.pose.position.x; 
-  robot_pose_[1]=request->pose.pose.position.y;
-  robot_pose_[2] = tf2::getYaw(tf2::Quaternion(request->pose.pose.orientation.x,
-                                            request->pose.pose.orientation.y,
-                                            request->pose.pose.orientation.z,
-                                            request->pose.pose.orientation.w));
-
-  // construct odometry message and then publish it.
-  publish_corr(last_time);
-
-  response->success = true;
-  RCLCPP_INFO(nh_->get_logger(), "sending back response: [%d]", response->success);
-
-  std_msgs::msg::Bool is_docking_finished;
-  is_docking_finished.data = true;
-  // publish docking finished message
-  docking_finished_pub_->publish(std::move(is_docking_finished));
-}
-
-/**
- * \brief "imu" topic data callback
- * \details A subscriber was created to the "imu" topic. Therefore, when a message is sent to "imu"
- *  this callback function is called to update the imu through the Odometry::update_imu function. <br>
- */
-void Odometry::imu_callback(const sensor_msgs::msg::Imu::SharedPtr imu_msg)
-{
-  update_imu(imu_msg);
-}
 
 /**
  * \brief "joint_states" topic data callback
  * \details A subscriber was created to the "joint_states" topic.
  *-# Calculate the duration since the last callback was called or since initialization with the contructor Odometry::Odometry(). 
  *-# Update the wheels joint states through the Odometry::update_joint_state function. 
- *-# Calculate the odometry based on the duration since last callback through the Odometry::calculate_odometry function. 
- *-# Publish the joint states through the Odometry::publishJointState function. 
+ *-# Calculate the odometry based on the duration since last callback through the Odometry::calculate_odometry function.  
  *-# Publish the odometry through the Odometry::publish function. 
  *-# Update the last_time member variable with the current time. 
  * \param[in] joint_state_msg The joint state message containing the current joint positions and velocities. 
@@ -209,111 +121,18 @@ void Odometry::joint_state_callback(const sensor_msgs::msg::JointState::SharedPt
   // 3- Calculate the odometry based on the duration since last callback.
   calculate_odometry(duration);
 
-  //4- Call Joint state publisher
-  publishJointState(time,joint_state_msg);
-  //5- Call Odometry publisher
+  //4- Call Odometry publisher
   publish(time);
   last_time = time;
 }
 
-
 /**
- * \brief Publish wheel joint states
- * \details This functions publishes the wheel joint state based on the received joint state message (msg).
- * \param[in] now The new time to be used in the header of the joint state message to be published.
- * \param[in] msg The new wheel joint state message to be published.
- */
-void Odometry::publishJointState(
-  const rclcpp::Time & now,const std::shared_ptr<sensor_msgs::msg::JointState const> & msg)
-{
-   auto msg2 = std::make_unique<sensor_msgs::msg::JointState>();
-  msg2->header.frame_id=msg->header.frame_id;
-  msg2->header.stamp =now;
-  msg2->name=msg->name;
-  msg2->position=msg->position;
-  msg2->velocity=msg->velocity;
-  msg2->effort=msg->effort;
-  pub_->publish(std::move(msg2));
-}
-
-/**
- * \brief Publish corrected odometry
- * \details This function publishes the corrected odometry based on the current robot pose???
- *-# Creates a new odometry message and fills in the header information. 
- *-# Sets the robot's position and orientation in the odometry message. 
- *-# Sets the robot's linear velocity in x and the angular velocity in z in the odometry message to zero. 
- *-# Sets covariance values for pose and twist in the odometry message. 
- *-# Creates a transform message for the odometry frame. 
- *-# Publishes the corrected odometry message. 
- *-# If publishing TF is enabled, sends the transform using the TF broadcaster. 
- * \attention This function should be merged with Odometry::publish to avoid code duplication, adding ifs and parameters to 
- * change the behavior instead of duplicating the entire function.
- */
-void Odometry::publish_corr(const rclcpp::Time & now)
-{
-  auto odom_msg = std::make_unique<nav_msgs::msg::Odometry>();
-
-  odom_msg->header.frame_id = frame_id_of_odometry_;
-  odom_msg->child_frame_id  = child_frame_id_of_odometry_;
-  odom_msg->header.stamp = now;
-
-  odom_msg->pose.pose.position.x = robot_pose_[0];
-  odom_msg->pose.pose.position.y = robot_pose_[1];
-  odom_msg->pose.pose.position.z = 0;
-
-  tf2::Quaternion q;
-  q.setRPY(0.0, 0.0, robot_pose_[2]);
-
-  odom_msg->pose.pose.orientation.x = q.x();
-  odom_msg->pose.pose.orientation.y = q.y();
-  odom_msg->pose.pose.orientation.z = q.z();
-  odom_msg->pose.pose.orientation.w = q.w();
-
-  // This sets the velocity to zero
-  odom_msg->twist.twist.linear.x  = 0;
-  odom_msg->twist.twist.angular.z = 0;
-
-  // TODO: Find more accurate covariance.
-  odom_msg->pose.covariance[0] = 0.001;
-  odom_msg->pose.covariance[7] = 0.001;
-  odom_msg->pose.covariance[14] = 1.0e-9;
-  odom_msg->pose.covariance[21] = 1.0e-9;
-  odom_msg->pose.covariance[28] = 1.0e-9;
-  odom_msg->pose.covariance[35] = 0.00172665;
-
-  odom_msg->twist.covariance[0] = 1.0e-9;
-  odom_msg->twist.covariance[7] = 1.0e-9;
-  odom_msg->twist.covariance[14] = 1.0e-9;
-  odom_msg->twist.covariance[21] = 1.0e-9;
-  odom_msg->twist.covariance[28] = 1.0e-9;
-  odom_msg->twist.covariance[35] = 0.0005;
-
-  geometry_msgs::msg::TransformStamped odom_tf;
-
-  odom_tf.transform.translation.x = odom_msg->pose.pose.position.x;
-  odom_tf.transform.translation.y = odom_msg->pose.pose.position.y;
-  odom_tf.transform.translation.z = odom_msg->pose.pose.position.z;
-  odom_tf.transform.rotation      = odom_msg->pose.pose.orientation;
-
-  odom_tf.header.frame_id = frame_id_of_odometry_;
-  odom_tf.child_frame_id = child_frame_id_of_odometry_;
-  odom_tf.header.stamp = now;
-
-  // According to https://cplusplus.com/reference/utility/move/ and https://www.geeksforgeeks.org/cpp/stdmove-in-utility-in-c-move-semantics-move-constructors-and-move-assignment-operators/
-  // It basically transfers the ownership of the object to the new owner, in this case, the publisher.
-  // After the move, the odom_msg pointer in this function is no longer valid and should not be used.
-  // Its faster than copying the object.
-  corr_odom_pub_->publish(std::move(odom_msg));
-
- if (publish_tf_)
-   tf_broadcaster_->sendTransform(odom_tf);
-}
-/**
- * \brief Publish odometry
- * \details This function publishes the odometry based on the current robot pose and velocity. <br>
- * This functions is very similar to Odometry::publish_corr, but it also includes the robot's linear velocities
- * in x and y, and angular velocity in z; and changes covariance values.
- * \attention Odometry::publish and Odometry::publish_corr should be merged, with parameters and ifs to change the behavior.
+ * \brief This function publishes the odometry based on the current robot pose and velocity. 
+ * \details -# Packages odometry message nav_msgs::msg::Odometry.
+ * -# Packages tf2 transform message geometry_msgs::msg::TransformStamped.
+ * -# Publishes the odometry message to the "odom" topic.
+ * -# Publisher the tf2 transform if Odometry::publish_tf_ is true.
+ * \param[in] now is the time stamp present in the joint state message (joint_state_msg->header.stamp).
  */
 void Odometry::publish(const rclcpp::Time & now)
 {
@@ -406,44 +225,6 @@ void Odometry::update_joint_state(
 }
 
 /**
- * \brief Update IMU data
- * \details This function updates the IMU angle and angular velocity based on the received IMU message. 
- *-# Calculates the IMU yaw angle using the orientation quarternions from the IMU message. 
- *-# Updates the IMU angular velocity in z from the IMU message.
- *-# Updates the IMU timestamp from the IMU message.
- * \attention The formula used to calculate yaw from quarternions may not be correct, the formula is diffent from the standard for unit quarternions.
- * For unit quarternions, <br>
- * yaw = atan2(2.0*(x*y + w*z), 1 - 2.0*(y*y + z*z))<br>. Source https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles.
- * Other way to convert quarternions to euler angles is shown below (used at Odometry::UpdateOdometry): <br>
- * \code
- * tf2::Matrix3x3 mat(tf2::Quaternion(
- *     request->pose.pose.orientation.x,
- *     request->pose.pose.orientation.y,
- *     request->pose.pose.orientation.z,
- *     request->pose.pose.orientation.w));
- *
- * double yaw, pitch, roll;
- * // Gets euler angles from the rotation matrix and update yaw angle for the robot.
- * mat.getEulerYPR(yaw, pitch, roll);
- * robot_pose_[2] = yaw;
- * \endcode
- * 
- */
-void Odometry::update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> &imu)
-{
-  // Gets yaw angle from quarternion.
-  // For unit quarternions, yaw = atan2(2.0*(x*y + w*z), 1 - 2.0*(y*y + z*z))
-  // Source https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
-  imu_angle_ = tf2::getYaw(tf2::Quaternion(imu->orientation.x,
-                                            imu->orientation.y,
-                                            imu->orientation.z,
-                                            imu->orientation.w));
-
-  imu_vel_ =imu->angular_velocity.z;
-  imu_time_=imu->header.stamp;
-}
-
-/**
  * \brief Calculate odometry based on wheel joint displacements
  * \details 
  *-# Calculates the linear displacement (delta_s) and angular displacement (delta_theta).
@@ -460,14 +241,9 @@ bool Odometry::calculate_odometry(const rclcpp::Duration &duration)
   //TODO: change for real robot
   double wheel_l = diff_joint_positions_[0];
   double wheel_r = diff_joint_positions_[1];
-
   double delta_s = 0.0;
   double delta_theta = 0.0;
-
   double theta = 0.0;
-  
-
-
   double step_time = duration.seconds();
 
   if (step_time == 0.0)
@@ -479,58 +255,28 @@ bool Odometry::calculate_odometry(const rclcpp::Duration &duration)
   if (std::isnan(wheel_r))
     wheel_r = 0.0;
 
-  //delta_s = wheels_radius_ * (wheel_r + wheel_l) / 2.0;
   delta_s = ( wheels_radius_right * wheel_r + wheels_radius_left * wheel_l) / 2.0;
+  theta = (wheels_radius_right * wheel_r - wheels_radius_left * wheel_l) / wheels_separation_;
 
-  use_imu_ = false;
-  if (use_imu_)
-  {
-    if(count_imu>3){
-    rclcpp::Time time = nh_->now();//TODO:change by joint_state
-   auto duration_imu = rclcpp::Duration::from_nanoseconds(time.nanoseconds() - imu_time_.nanoseconds());
-   
-    theta = imu_angle_+imu_vel_*duration_imu.seconds();
-    delta_theta = theta - last_theta;
-    last_theta = theta;
-    }else{
-      delta_theta=0;
-      theta=0;
-      last_theta=imu_angle_;
-      count_imu++;
-      std::cout<<last_theta*180.0/3.141593;
-    }
+  delta_theta = theta;
+  if(delta_theta>10){
+    delta_theta=0;
   }
-  else
-  {
-    //theta = wheels_radius_ * (wheel_r - wheel_l) / wheels_separation_;
-    theta = (wheels_radius_right * wheel_r - wheels_radius_left * wheel_l) / wheels_separation_;
 
-    delta_theta = theta;
-    if(delta_theta>10)
-      delta_theta=0;
-  }
-//RCLCPP_INFO(nh_->get_logger(), "ds : %f, dtheta : %f", delta_s , delta_theta );
-  // compute odometric pose
   robot_pose_[0] += delta_s * cos(robot_pose_[2] + (delta_theta / 2.0));
   robot_pose_[1] += delta_s * sin(robot_pose_[2] + (delta_theta / 2.0));
   robot_pose_[2] += delta_theta;
 
-  // RCLCPP_DEBUG(nh_->get_logger(), "x : %f, y : %f, theta : %f", robot_pose_[0], robot_pose_[1],robot_pose_[2]);
-
+ 
   // compute odometric instantaneouse velocity
-
-if (step_time<0.1 && step_time>0.0){
-  v_x =(delta_s / step_time);
-  w_z =(delta_theta / step_time);
-}
+  if (step_time<0.1 && step_time>0.0){
+    v_x =(delta_s / step_time);
+    w_z =(delta_theta / step_time);
+  }
 
   robot_vel_[0] = v_x;
   robot_vel_[1] = 0.0;
   robot_vel_[2] = w_z;
- 
-  //std::cout<<robot_vel_[0]<<","<<robot_vel_[1];
-  
-  //RCLCPP_INFO(nh_->get_logger(), "v_x : %f, v_z : %f",robot_vel_[0], robot_vel_[2]);
 
   return true;
 }

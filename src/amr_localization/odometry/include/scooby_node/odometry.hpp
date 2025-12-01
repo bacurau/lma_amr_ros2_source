@@ -19,24 +19,13 @@
 #ifndef SCOOBY_NODE_ODOMETRY_HPP_
 #define SCOOBY_NODE_ODOMETRY_HPP_
 
-#include <array>
-#include <chrono>
-#include <memory>
-#include <geometry_msgs/msg/pose_stamped.hpp>
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <message_filters/subscriber.h>
-#include <message_filters/sync_policies/approximate_time.h>
-#include <message_filters/synchronizer.h>
-#include <nav_msgs/msg/odometry.hpp>
-#include <std_msgs/msg/bool.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <tf2_ros/transform_broadcaster.h>
-#include <tf2/LinearMath/Quaternion.h>
-#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <tf2/utils.hpp>
+#include <memory>
 
-#include "odometry_msgs/srv/update_odometry.hpp"
 
 namespace lma
 {
@@ -44,7 +33,7 @@ namespace scooby
 {
 /**
  * \brief The Odometry class
- * \details This class is responsible for calculating and publishing the robot odometry based on wheel encoder and IMU data???
+ * \details This class is responsible for calculating and publishing the robot wheel odometry
  */  
 class Odometry
 {
@@ -56,38 +45,22 @@ class Odometry
 
   //================================== Methods ======================================================//
   bool calculate_odometry(const rclcpp::Duration & duration);
-  void update_imu(const std::shared_ptr<sensor_msgs::msg::Imu const> & imu);
-  void update_joint_state(const std::shared_ptr<sensor_msgs::msg::JointState const> & joint_state);
-  void publishJointState(const rclcpp::Time & now, const std::shared_ptr<sensor_msgs::msg::JointState const> & msg);
-
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state_msg);
-  void imu_callback(const sensor_msgs::msg::Imu::SharedPtr imu_msg);
-
-  void UpdateOdometry(
-    const std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Request> request,
-    std::shared_ptr<odometry_msgs::srv::UpdateOdometry::Response> response);
-
+  void update_joint_state(const std::shared_ptr<sensor_msgs::msg::JointState const> & joint_state);
   void publish(const rclcpp::Time & now);
-  void publish_corr(const rclcpp::Time & now);
-
   
-  //================================== Publihers and Subscribers ==================================//
+  
+  //================================== Publihers ==================================//
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_; /*!< publisher for topic "odom", with qos 5*/
-  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr corr_odom_pub_; /*!< publisher for topic "corr_motor_odom, with qos 5" */
-  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr pub_; /*!< publisher for topic "joint_states_jetson", with qos 5*/
-  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr docking_finished_pub_;/*!<publisher for topic "docking_finished", with qos 5*/
-  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_; /*!< subscriber for topic "joint_states", with qos = rclcpp::QoS(rclcpp::SensorDataQoS());*/
-  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_; /*!< subscriber for topic "imu", with qos = rclcpp::QoS(rclcpp::SensorDataQoS());*/
 
- //================================== Services ===================================================//
-  rclcpp::Service<odometry_msgs::srv::UpdateOdometry>::SharedPtr update_odometry_server_; /*!< service server for "odometry/update_odometry"*/
+  //================================== Subscribers ==================================//
+  rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_; /*!< subscriber for topic "joint_states", with qos = rclcpp::QoS(rclcpp::SensorDataQoS());*/
 
 
   //================================== Variables ==================================================//
   std::shared_ptr<rclcpp::Node> nh_; /*!< Shared pointer that points to an object of DiffDriveController class. This object is a ROS2 node. */
   /**  This class provides an easy way to publish coordinate frame transform information. 
-   * This is being used to transform the Odometry::frame_id_of_odometry_ coordinates to Odometry::child_frame_id_of_odometry_ coordinates.
-   * \attention How are these frames related to base_link and odom frames? 
+   * This is being used to transform the Odometry::frame_id_of_odometry_ coordinates (odom) to Odometry::child_frame_id_of_odometry_ coordinates (base_link).
   */
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_; 
 
@@ -104,53 +77,27 @@ class Odometry
   *   4- last_theta is updated at the end of the Odometry::calculate_odometry function with the current imu angle.  <br>
   */
   double last_theta; 
-   /** 
-  \brief Used to count the first 3 calls of the Odometry::calculate_odometry function after it passes the return false condition. 
-  \attention Why is this needed? 
-  */
-  int count_imu;
   /**
    *  Frame id of the odometry used in the header of the Odometry message (nav_msgs::msg::Odometry).
-   *  \attention Is frame id the base link? 
+   *  Is the odom frame.
    * */
   std::string frame_id_of_odometry_; 
   
   /**
    * Frame id of the child frame used in the Odometry message (nav_msgs::msg::Odometry).
-   * \attention Is child frame id the odom frame?
+   * Is the base_link frame.
    */
   
   std::string child_frame_id_of_odometry_;
-
- /**
-  * \brief Flag to enable or disable the use of IMU data for odometry calculation.
-  * \attention Why is imu not being used?
-  */
-  bool use_imu_;
   bool publish_tf_; /*!< Flag to enable or disable the publishing of TF transforms for odometry.*/
 
   std::array<double, 2> diff_joint_positions_; /*!< Saves the difference in wheel joint posistion since last update.*/
-  /** \brief Is the yaw angle of the robot determined from the imu msg of the subcriber Odometry::imu_sub_.
-   * \details The msg provide the orientation in quarternions, from which the yaw angle is calculated.
-  */
-  double imu_angle_;
-  /** \brief Is the robot velocity determined from the imu msg of the subcriber Odometry::imu_sub_.
-  * \details The msg provide the angular velocity in rad/s. 
-  */
-  double imu_vel_;
-  rclcpp::Time imu_time_; /*!< Is the timestamp of the imu msg of the subcriber Odometry::imu_sub_.*/
-
   /**
    * Is initialized with the current time when the Odometry object is created.
-   * Used in 3 ways: <br>
-   * 1- Used to calculate the duration since last odometry calculations. <br>
-   * 2- A time stamp to the service server "odometry/update_odometry". <br>
-   * 3- A time stamp to the topic "joint_state".<br>
-   *  
-   * When the service server odometry/update_odometry is called, this time stamp is used by 
-   * the function Odometry::publish_corr to compose the header of the Odometry message (nav_msgs::msg::Odometry)
-   * and the header of the odometry transform (geometry_msgs::msg::TransformStamped).<br>
-   * When the "joint_states" topic callback is called, the last_time variable is used to compose the Odometry and JointState messages headers.
+   * Used in 2 ways: 
+   * #- Used to calculate the duration since last odometry calculations. 
+   * #- A time stamp to the topic "joint_state".
+   * When the "joint_states" topic callback is called, the last_time variable is used to compose the Odometry message header.
    * This variable is only updated at the end of the Odometry::joint_state_callback function. <br>
    */
   rclcpp::Time last_time;

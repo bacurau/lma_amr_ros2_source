@@ -18,16 +18,12 @@ find_package(Boost REQUIRED COMPONENTS thread system date_time)
 # Find ament packages and libraries for ament and system dependencies
 ################################################################################
 find_package(ament_cmake REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(message_filters REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(odometry_msgs REQUIRED)
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
@@ -45,16 +41,12 @@ add_library(${PROJECT_NAME}_lib
 )
 
 set(DEPENDENCIES
-  "geometry_msgs"
-  "message_filters"
   "nav_msgs"
   "rclcpp"
   "rcutils"
   "sensor_msgs"
-  "std_msgs"
   "tf2"
   "tf2_ros"
-  "odometry_msgs"
 )
 
 target_link_libraries(${PROJECT_NAME}_lib)

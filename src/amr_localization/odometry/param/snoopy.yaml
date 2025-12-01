@@ -3,7 +3,6 @@ snoopy_odom:
     # use_sim_time: true
     odometry:
       publish_tf: true
-      use_imu: false
       frame_id: "odom"
       child_frame_id: "Base_Link"
     wheels:
