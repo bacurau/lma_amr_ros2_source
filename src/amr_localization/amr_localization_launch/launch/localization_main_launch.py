@@ -7,9 +7,9 @@ from launch.substitutions import  PathJoinSubstitution
 def generate_launch_description():
 
     # Find and include localization launch files, for now just odometry
-    share_localization_launch_path = FindPackageShare('amr_localization_launch')
+    share_odometry_launch_path = FindPackageShare('odometry')
     odometry_launch_file_path = PathJoinSubstitution([
-            share_localization_launch_path, 
+            share_odometry_launch_path, 
             'launch', 
             'odometry_launch.py'
         ])
