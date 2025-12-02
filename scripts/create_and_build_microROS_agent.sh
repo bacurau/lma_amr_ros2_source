@@ -14,7 +14,7 @@ set -eo pipefail
 # https://micro.ros.org/docs/tutorials/core/first_application_linux/.
 # However, we just needed to create and build the agent, the firmware is not needed here.
 # The micro-ROS agent is run in the launch file amr_launch.py
-
+cd .. # Navigate to the root of the workspace, so you can install the dependencies and build ros2 packages properly.
 source ./install/local_setup.bash &&
     ros2 run micro_ros_setup create_agent_ws.sh &&             
         ros2 run micro_ros_setup build_agent.sh

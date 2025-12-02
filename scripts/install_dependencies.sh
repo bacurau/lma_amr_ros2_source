@@ -11,6 +11,7 @@
 set -eo pipefail
 
 ##===================== Install dependencies =====================##
+cd .. # Navigate to the root of the workspace, so you can install the dependencies and build ros2 packages properly.
 sudo apt update && rosdep update
 rosdep install --from-paths src --ignore-src -y
 
