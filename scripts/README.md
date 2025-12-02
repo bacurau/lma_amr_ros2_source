@@ -8,12 +8,25 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 
 > [!IMPORTANT]  
 > Give the scripts execution permission. 
-> chmod +x main.sh
-> chmod +x install_dependencies.sh
-> chmod +x create_and_build_microROS_agent.sh
-> chmod +x run_project.sh
+> - ```chmod +x main.sh``` 
+> - ```chmod +x install_dependencies.sh```
+> - ```chmod +x create_and_build_microROS_agent.sh```
+> - ```chmod +x run_project.sh```
 
 
+## Execution
+
+First execution:
+```bash
+./main.sh
+```
+
+After the first execution of main.sh, to re-run the project, just execute run_project.sh.
+```bash
+./run_project.sh
+```
+
+## Organization
 
 Scripts:
 - main.sh: installs the dependencies; builds ros2 project; creates and builds micro-ROS agent; change ROS_DOMAIN_ID to 25; and runs this ros2 project.
@@ -29,17 +42,7 @@ Scripts:
 The main.sh script calls the other scripts. 
 
 
-## Execution
 
-First execution:
-```bash
-./main.sh
-```
-
-After the first execution of main.sh, to re-run the project, just execute run_project.sh.
-```bash
-./run_project.sh
-```
 
 ## Notes
 1. To allow the execution of the main.sh script and the individual execution of any script, before 
