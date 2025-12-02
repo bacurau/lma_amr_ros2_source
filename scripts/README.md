@@ -14,6 +14,12 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 > - ```chmod +x run_project.sh```
 
 
+> [!WARNING]  
+> Executing the scripts with "." or "source" can close the vscode terminal after the first execution.
+> Example: ``` source ./main.sh ``` or ```. ./main.sh```.
+> It is not clear why this happens.
+
+
 ## Execution
 
 First execution:
