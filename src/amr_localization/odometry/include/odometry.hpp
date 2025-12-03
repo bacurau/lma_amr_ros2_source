@@ -19,11 +19,14 @@
 #ifndef SCOOBY_NODE_ODOMETRY_HPP_
 #define SCOOBY_NODE_ODOMETRY_HPP_
 
-#include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/joint_state.hpp>
-#include <nav_msgs/msg/odometry.hpp>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2/utils.hpp>
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "nav_msgs/msg/odometry.hpp"
+#include "tf2_ros/transform_broadcaster.h"
+#include "tf2/utils.hpp"
+// this lib is already included by "tf2_ros/transform_broadcaster.h", however all the tutorials import
+// geometry_msgs as well. Thus, to follow the same pattern we include it again.
+#include "geometry_msgs/msg/transform_stamped.hpp" 
 #include <memory>
 
 

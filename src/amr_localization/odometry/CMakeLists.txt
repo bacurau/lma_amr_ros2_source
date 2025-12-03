@@ -24,6 +24,7 @@ find_package(rcutils REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
@@ -47,6 +48,7 @@ set(DEPENDENCIES
   "sensor_msgs"
   "tf2"
   "tf2_ros"
+  "geometry_msgs"
 )
 
 target_link_libraries(${PROJECT_NAME}_lib)
