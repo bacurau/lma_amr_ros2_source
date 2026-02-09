@@ -53,7 +53,7 @@ def generate_launch_description():
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        name='robot_state_publisher',
+        name='robot_state_publisher_node', 
         output='screen',
         parameters=[{'robot_description': urdf_xml}] # you have to pass a string with the contents of the urdf file
         #arguments=[urdf_file_path]

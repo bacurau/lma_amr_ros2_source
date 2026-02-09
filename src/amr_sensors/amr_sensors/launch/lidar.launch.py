@@ -9,6 +9,7 @@ def generate_launch_description():
 
     sick_back = Node(
             package='sick_scan_xd',
+            name='sick_scan_back_node',
             executable='sick_generic_caller',
             output='screen',
             arguments=[os.path.join(get_package_share_directory('amr_sensors'), 'launch/sick_back.launch')] 
@@ -16,6 +17,7 @@ def generate_launch_description():
 
     sick_front = Node(
             package='sick_scan_xd',
+            name='sick_scan_front_node',
             executable='sick_generic_caller',
             output='screen',
             arguments=[os.path.join(get_package_share_directory('amr_sensors'), 'launch/sick_front.launch')] 
