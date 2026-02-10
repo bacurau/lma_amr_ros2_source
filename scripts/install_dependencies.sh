@@ -5,7 +5,7 @@
 #===============================================================================
 
 # -u breaks the script because of COLCON_CURRENT_PREFIX: unbound variable.
-# But, even with these everythings seems normals. Could not find an issue.
+# But, even with these, everything seems normal. Could not find an issue.
 # https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
 
 set -eo pipefail
