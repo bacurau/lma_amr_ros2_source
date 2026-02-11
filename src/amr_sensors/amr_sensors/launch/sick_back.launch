@@ -111,6 +111,7 @@
         Using tick_to_timestamp_mode = 2 might cause unexpected results or error messages. We recommend using tick_to_timestamp_mode = 2 for special test cases only.
         -->
         <param name="tick_to_timestamp_mode" type="int" value="0"/>
-
+        <param name="imu_enable" type="bool" value="False" />
+        <param name="imu_topic" type="string" value="fake_imu_sick"/>
     </node>
 </launch>

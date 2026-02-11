@@ -11,6 +11,7 @@ endif()
 # Find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(xsens_mti_ros2_driver REQUIRED)
+find_package(sick_scan_xd REQUIRED)
 
 # Check ROS distro
 if(DEFINED ENV{ROS_DISTRO})

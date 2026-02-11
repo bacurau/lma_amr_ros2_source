@@ -8,8 +8,8 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <build_depend>xsens_mti_ros2_driver</build_depend>
-  
-  <exec_depend>xsens_mti_ros2_driver</exec_depend>
+  <build_depend>sick_scan_xd</build_depend>
+
   
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
