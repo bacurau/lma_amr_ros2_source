@@ -22,7 +22,7 @@
     <arg name="hostname" default="192.200.253.206"/>
     <arg name="cloud_topic" default="Sick_Cloud_Back"/>
     <arg name="frame_id" default="Sick_Back_D_Link"/>
-    <arg name="sw_pll_only_publish" default="true"/>
+    <arg name="sw_pll_only_publish" default="False"/>
     <arg name="nodename" default="sick_tim_5xx_back"/>
     <arg name="port" default="2112"/>
     <arg name="add_transform_xyz_rpy" default="0,0,0,0,0,0"/>
