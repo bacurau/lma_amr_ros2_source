@@ -1571,7 +1571,7 @@
       xyz="0 0 0" />
   </joint>
   <link
-    name="IMU_MTI_670_Link">
+    name="IMU_MTI_680g_Link">
     <inertial>
       <origin
         xyz="-1.94289029309402E-16 1.16226472890446E-16 0.0174870359963202"
@@ -1592,7 +1592,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://amr_description/amr/meshes/IMU_MTI_670_Link.STL" />
+          filename="package://amr_description/amr/meshes/IMU_MTI_680g_Link.STL" />
       </geometry>
       <material
         name="">
@@ -1606,12 +1606,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://amr_description/amr/meshes/IMU_MTI_670_Link.STL" />
+          filename="package://amr_description/amr/meshes/IMU_MTI_680g_Link.STL" />
       </geometry>
     </collision>
   </link>
   <joint
-    name="IMU_MTI_670_Joint"
+    name="IMU_MTI_680g_Joint"
     type="fixed">
     <origin
       xyz="0 0 0.087925"
@@ -1619,7 +1619,7 @@
     <parent
       link="Base_Link" />
     <child
-      link="IMU_MTI_670_Link" />
+      link="IMU_MTI_680g_Link" />
     <axis
       xyz="0 0 0" />
   </joint>
