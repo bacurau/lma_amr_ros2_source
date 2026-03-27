@@ -26,7 +26,7 @@ using namespace scooby;
 /**
  * \brief Constructor of Odometry class
  * \details -# Initializes member variables with default values or parameters from the ROS2 parameter server. 
- *  -# Creates publishers for odometry, corrected odometry, joint states, and docking status.
+ *  -# Creates publishers for odometry, corrected odometry, joint states.
  *  -# Creates subscription joint state data.
  *  -# Sets up a service to update odometry based on external requests.
 
@@ -128,10 +128,10 @@ void Odometry::joint_state_callback(const sensor_msgs::msg::JointState::SharedPt
 
 /**
  * \brief This function publishes the odometry based on the current robot pose and velocity. 
- * \details -# Packages odometry message nav_msgs::msg::Odometry.
- * -# Packages tf2 transform message geometry_msgs::msg::TransformStamped.
+ * \details -# Packages the odometry message (nav_msgs::msg::Odometry).
+ * -# Packages the tf2 transform message (geometry_msgs::msg::TransformStamped).
  * -# Publishes the odometry message to the "odom" topic.
- * -# Publisher the tf2 transform if Odometry::publish_tf_ is true.
+ * -# Publishes the tf2 transform if Odometry::publish_tf_ is true.
  * \param[in] now is the time stamp present in the joint state message (joint_state_msg->header.stamp).
  */
 void Odometry::publish(const rclcpp::Time & now)
