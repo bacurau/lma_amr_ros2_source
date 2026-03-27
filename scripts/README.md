@@ -24,8 +24,16 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 
 First execution:
 ```bash
-./main.sh
+./main.sh [ Type of build ] [1:for not running after building]
 ```
+> [!NOTE]
+> [] indicates optional argument.
+
+Examples:
+- ```./main.sh "Debug"```builds in Debug mode and then runs.
+- ```./main.sh "Debug" 1```builds in Debug mode, but does not run the project.
+- ```./main.sh ``` builds in the standard mode (Release) and then runs.
+
 
 After the first execution of main.sh, to re-run the project, just execute run_project.sh.
 ```bash
