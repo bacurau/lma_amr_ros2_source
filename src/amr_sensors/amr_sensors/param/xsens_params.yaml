@@ -70,7 +70,7 @@
         # If you want to configure the filter option, firstly set the 'enable_filter_config', then:
         # For MTi-3/7/8/30/300/G-710/670(G)/680(G): change the 'mti_filter_option' to desired index below for your model.
         # For MTi-620(R)/MTi-630(R): change the 'mti620630filterlabel_rollpitch' and 'mti620630filterlabel_yaw' to the exact labels.
-        enable_filter_config: false
+        enable_filter_config: true
         # ---------------------------
         # For MTi-670(G): 3 options: 0 = "General", 1 = "GeneralNoBaro", 2 = "GeneralMag"
         # For MTi-680(G), 3 options: 0 = "General_RTK", 1 = "GeneralNoBaro_RTK", 2 = "GeneralMag_RTK"
@@ -120,17 +120,17 @@
         # Enable or disable publication of various sensor data:
         pub_utctime: false
         pub_sampletime: false
-        pub_imu: false
-        pub_quaternion: false
+        pub_imu: true
+        pub_quaternion: true
         pub_euler: false
-        pub_free_acceleration: false
+        pub_free_acceleration: true
         pub_angular_velocity: true
-        pub_acceleration: false
+        pub_acceleration: true
         pub_dq: false
         pub_dv: false
-        pub_mag: false
-        pub_temperature: false
-        pub_pressure: false
+        pub_mag: true
+        pub_temperature: true
+        pub_pressure: true
         pub_accelerationhr: false #High Rate Data Acceleration, when this is true, set enable_high_rate to true as well
         pub_angular_velocity_hr: false #High Rate Data Angular Velocity,  when this is true, set enable_high_rate to true as well
         pub_transform: false
