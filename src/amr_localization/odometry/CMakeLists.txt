@@ -38,7 +38,6 @@ include_directories(
 
 add_library(${PROJECT_NAME}_lib
   "src/odometry.cpp"
-  "src/diff_drive_controller.cpp"
 )
 
 set(DEPENDENCIES
@@ -69,10 +68,6 @@ install(DIRECTORY param
 
 install(DIRECTORY
   launch
-  DESTINATION share/${PROJECT_NAME}/
-)
-install(DIRECTORY
-  rviz
   DESTINATION share/${PROJECT_NAME}/
 )
 

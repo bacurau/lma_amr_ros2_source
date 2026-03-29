@@ -24,22 +24,23 @@ using namespace std::chrono_literals;
 using namespace scooby;
 
 /**
- * \brief Constructor of Odometry class
+ * \brief Constructor of Odometry class which is a ros2 node.
  * \details -# Initializes member variables with default values or parameters from the ROS2 parameter server. 
  *  -# Creates publishers for odometry, corrected odometry, joint states.
  *  -# Creates subscription joint state data.
  *  -# Sets up a service to update odometry based on external requests.
 
  */
-Odometry::Odometry(std::shared_ptr<rclcpp::Node> &nh): 
-  nh_(nh),
+Odometry::Odometry(): 
+  Node("snoopy_odom", rclcpp::NodeOptions().use_intra_process_comms(true)),
   publish_tf_(true)
 {
- 
+  rclcpp::Parameter simTime( "use_sim_time", rclcpp::ParameterValue( true ) );
+  //nh_ = std::shared_ptr<::rclcpp::Node>(this, [](::rclcpp::Node *) {});
+  this->set_parameter( simTime );
 
   // Initialize robot pose and velocity
-
-  RCLCPP_INFO(nh_->get_logger(), "Init Odometry");
+  RCLCPP_INFO(this->get_logger(), "Init Odometry");
   robot_pose_[0]= 0.005;//0.005;//0.000 -2.8781 0.005; 
   robot_pose_[1]= -0.045;//-0.045;//0.005 -1.8797 0.005;1.981  0.005
   robot_pose_[2]=0.0;  
@@ -50,32 +51,32 @@ Odometry::Odometry(std::shared_ptr<rclcpp::Node> &nh):
   
 
   // Create parameters for the ros2 node.
-  nh_->declare_parameter("odometry.frame_id", "odom");
-  nh_->declare_parameter("odometry.child_frame_id", "Base_Link");
-  nh_->declare_parameter("odometry.publish_tf", true);
-  nh_->declare_parameter("wheels.separation", 0.74361);
-  nh_->declare_parameter("wheels.radius_left", 0.102873);
-  nh_->declare_parameter("wheels.radius_right", 0.102759);
+  this->declare_parameter("odometry.frame_id", "odom");
+  this->declare_parameter("odometry.child_frame_id", "Base_Link");
+  this->declare_parameter("odometry.publish_tf", true);
+  this->declare_parameter("wheels.separation", 0.74361);
+  this->declare_parameter("wheels.radius_left", 0.102873);
+  this->declare_parameter("wheels.radius_right", 0.102759);
 //TODO:: Trocar valores!!
   // Fator de escala obtido a partir do erro identificado após 10 voltas para cada sentido. Erro: 18 graus. Fs = 18/3600
   //float fs = (1.00506 / 1.00211) * 1.0012;
 
   // Get the values of the parameters to set member variables
-  nh_->get_parameter_or<double>("wheels.separation", wheels_separation_, 0.74361); // 0.74361 0.742188
-  nh_->get_parameter_or<double>("wheels.radius_left", wheels_radius_left, 0.102873); 
-  nh_->get_parameter_or<double>("wheels.radius_right", wheels_radius_right, 0.102759); 
+  this->get_parameter_or<double>("wheels.separation", wheels_separation_, 0.74361); // 0.74361 0.742188
+  this->get_parameter_or<double>("wheels.radius_left", wheels_radius_left, 0.102873); 
+  this->get_parameter_or<double>("wheels.radius_right", wheels_radius_right, 0.102759); 
 
-  nh_->get_parameter_or<bool>(
+  this->get_parameter_or<bool>(
     "odometry.publish_tf",
     publish_tf_,
     true);
 
-  nh_->get_parameter_or<std::string>(
+  this->get_parameter_or<std::string>(
     "odometry.frame_id",
     frame_id_of_odometry_,
     std::string("odom"));
 
-  nh_->get_parameter_or<std::string>(
+  this->get_parameter_or<std::string>(
     "odometry.child_frame_id",
     child_frame_id_of_odometry_,
     std::string("Base_Link"));
@@ -84,14 +85,14 @@ Odometry::Odometry(std::shared_ptr<rclcpp::Node> &nh):
  // Create publishers for odometry, corrected odometry, joint states, and docking status.
  // These publishers use qos 5, however the variable qos is not used here.
   auto qos = rclcpp::QoS(rclcpp::SensorDataQoS());
-  odom_pub_ = nh_->create_publisher<nav_msgs::msg::Odometry>("odom", 5);
+  odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("odom", 5);
   
   // Add TF2 broadcaster for odometry frame transformations???
-  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(nh_);
+  tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(this);
 
-  last_time=nh_->now();
+  last_time=this->now();
   // Create subscriber for wheel joint state data. 
-  joint_state_sub_ = nh_->create_subscription<sensor_msgs::msg::JointState>(
+  joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
     "joint_states",
     qos,
     std::bind(&Odometry::joint_state_callback, this, std::placeholders::_1));

@@ -23,11 +23,11 @@
 #include <rcutils/cmdline_parser.h>
 #include <rclcpp/rclcpp.hpp>
 
-#include "diff_drive_controller.hpp"
+#include "odometry.hpp"
 
   /**
    * \brief C++ main function
-   * \details Defines a buffer size for stdout, then creates a DiffDriveController object and spins it 
+   * \details Defines a buffer size for stdout, then creates a Odometry object and spins it 
    * as a node in ROS2 executor.
    */
 int main(int argc, char *argv[])
@@ -39,19 +39,10 @@ int main(int argc, char *argv[])
 
   rclcpp::executors::SingleThreadedExecutor executor;
 
-  //auto scooby = std::make_shared<lma::scooby::Scooby>("/dev/ttyACM1");
-  // auto diff_drive_controller =
-  //   std::make_shared<lma::scooby::DiffDriveController>(
-  //     scooby->get_wheels()->separation,
-  //     scooby->get_wheels()->radius);
+  auto odometry_node = 
+    std::make_shared<lma::scooby::Odometry>(); /*!< Create object of Odometry Class in node format for ROS2*/
 
-  auto diff_drive_controller =
-    std::make_shared<lma::scooby::DiffDriveController>(); /*!< Create object DiffDriveController in node format for ROS2*/
-
-
-  //executor.add_node(scooby);
-
-  executor.add_node(diff_drive_controller); /*!< Add node to executor*/
+  executor.add_node(odometry_node); /*!< Add node to executor*/
   executor.spin();
 
   rclcpp::shutdown();

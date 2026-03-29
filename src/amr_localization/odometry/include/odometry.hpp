@@ -38,10 +38,10 @@ namespace scooby
  * \brief The Odometry class
  * \details This class is responsible for calculating and publishing the robot wheel odometry
  */  
-class Odometry
+class Odometry : public rclcpp::Node
 {
  public:
-  explicit Odometry(std::shared_ptr<rclcpp::Node> & nh);
+  explicit Odometry();
   virtual ~Odometry(){};
 
  private:
@@ -61,7 +61,7 @@ class Odometry
 
 
   //================================== Variables ==================================================//
-  std::shared_ptr<rclcpp::Node> nh_; /*!< Shared pointer that points to an object of DiffDriveController class. This object is a ROS2 node. */
+  //std::shared_ptr<rclcpp::Node> nh_; /*!< Is a shared pointer that points this class (Odometry) own object instance. This object is a ROS2 node. */
   /**  This class provides an easy way to publish coordinate frame transform information. 
    * This is being used to transform the Odometry::frame_id_of_odometry_ coordinates (odom) to Odometry::child_frame_id_of_odometry_ coordinates (base_link).
   */
