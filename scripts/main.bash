@@ -17,10 +17,10 @@ NO=1
 RUN_PROJECT="${2:-$YES}"
 build_type="${1:-Release}"
 scripts_path="./" # Path to the scripts folder
-$scripts_path/install_dependencies.sh # Install dependencies
+$scripts_path/install_dependencies.bash # Install dependencies
 cd ..; colcon build --symlink-install  --cmake-args "-DCMAKE_BUILD_TYPE=$build_type" ; cd ./scripts  # Build ROS2 packages
-$scripts_path/create_and_build_microROS_agent.sh # Create and build micro-ROS agent
+$scripts_path/create_and_build_microROS_agent.bash # Create and build micro-ROS agent
 
 if [[ "$RUN_PROJECT" =  "$YES" ]]; then
-    $scripts_path/run_project.sh # Run all ros2 packages from the AMR project (lma_amr_ros2_source)
+    $scripts_path/run_project.bash # Run all ros2 packages from the AMR project (lma_amr_ros2_source)
 fi
