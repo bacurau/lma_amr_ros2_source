@@ -4,3 +4,8 @@ install/
 .vscode/
 src/uros/
 *doxygen_documentation/
+experiments
+frames
+prog
+Latency-Evaluator/
+CPU_usage/
