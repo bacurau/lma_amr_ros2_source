@@ -18,14 +18,23 @@ def generate_launch_description():
             'lidar.launch.py'
         ])
     
+    launch_velodynes_file_path = PathJoinSubstitution([
+            share_launch_path, 
+            'launch', 
+            'velodyne_launch.py'
+        ])
+    
 
     launch_imu = IncludeLaunchDescription(launch_imu_file_path)
     
     launch_lidar = IncludeLaunchDescription(launch_lidar_file_path)
 
+    launch_velodynes = IncludeLaunchDescription(launch_velodynes_file_path)
+
 
     main_launch_description = LaunchDescription()
     main_launch_description.add_action(launch_imu)
     main_launch_description.add_action(launch_lidar)
+    main_launch_description.add_action(launch_velodynes)
 
     return main_launch_description
