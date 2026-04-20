@@ -8,10 +8,10 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 
 > [!IMPORTANT]  
 > Give the scripts execution permission. 
-> - ```chmod +x main.sh``` 
-> - ```chmod +x install_dependencies.sh```
-> - ```chmod +x create_and_build_microROS_agent.sh```
-> - ```chmod +x run_project.sh```
+> - ```chmod +x main.bash``` 
+> - ```chmod +x install_dependencies.bash```
+> - ```chmod +x create_and_build_microROS_agent.bash```
+> - ```chmod +x run_project.bash```
 
 
 > [!WARNING]  
