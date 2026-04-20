@@ -1,139 +1,48 @@
-# AMR Sensors - ROS 2 Driver Integration
+## README
 
-This module handles integration and configuration of LiDAR, IMU and Marvelmind Ultrassonic Beacons for autonomous mobile robot (AMR) platforms using ROS 2 (Jazzy).
-
-
-## 📦 Included Drivers
-
-- **SICK LiDAR**: via [`sick_scan_xd`](https://github.com/SICKAG/sick_scan_xd)
-- **XSENS IMU** via [`Xsens_MTi_ROS_Driver_and_Ntrip_Client`](https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client)
-- **Marvelmind**: via [`marvelmind_ros2_upstream`](https://github.com/MarvelmindRobotics/marvelmind_ros2_upstream)
-                      [`marvelmind_ros2_msgs_upstream`](https://github.com/MarvelmindRobotics/marvelmind_ros2_msgs_upstream)
-
-## 🛰️ SICK LiDAR Driver (`sick_scan_xd`)
-
-### 🔧 Build Instructions
-
-In the current version, the sick_scan_xd was added as a submodule to the project. 
-
-1. **Add the Driver as a Submodule**
-   ```bash
-   cd ./lma_amr_ros2_source/src/amr_sensors
-   git submodule add https://github.com/SICKAG/sick_scan_xd
-   cd ../../
-   ```
-
-   > 📝 Only required during first-time setup or reinstallation.
-
-2. **Build the Driver (Without LD-MRS Support)**
-
-    `libsick_ldmrs` is only required to support LD-MRS sensors. If you do not need or want to support LD-MRS, you can skip building `libsick_ldmrs`. To build `sick_generic_caller` without LD-MRS support, switch off option `BUILD_WITH_LDMRS_SUPPORT` in `CMakeLists.txt` or call colcon with option `-DLDMRS=0`:
-
-   ```bash
-   colcon build --packages-select sick_scan_xd \
-     --cmake-args " -DROS_VERSION=2" " -DLDMRS=0" \
-     --event-handlers console_direct+
-   ```
-
-### ⚙️ Configuration
-
-Each LiDAR device is configured through a dedicated `.launch file` containing XML-style arguments that are passed as ROS 2 launch parameters.
-
-An example template is provided at:
-
-```bash
-   sick_scan_xd/launch/sick_tim_5xx.launch
-```
-
-#### 🔑 Key Parameters (example from `sick_back.launch`)
-
-Some key configurable parameters are:
-
-```xml
-<arg name="hostname" default="192.200.253.206" />
-<arg name="cloud_topic" default="Sick_Cloud_Back" />
-<arg name="frame_id" default="Sick_Back_D_Link" />
-```
-
-- `hostname`: IP address of the device
-- `cloud_topic`: Topic name where point clouds will be published
-- `frame_id`: TF frame associated with the device
-
-Additional configurable options:
-- `range_min`, `range_max`
-- `angle_min`, `angle_max`
-- `add_transform_xyz_rpy`, etc.
-
-> ⚠️ Each device (front/back) must have its own launch configuration, with unique IP addresses and topic names.
-
-The current project configuration files are located at:
-
-- `src/amr_sensors/launch/sick_front.launch`
-- `src/amr_sensors/launch/sick_back.launch`
-
-### 🚀 Launching Both LiDAR Devices
-
-Use the provided launch file to start both front and back devices:
-
-```bash
-ros2 launch amr_sensors lidar.launch.py
-```
-
-This internally invokes the `sick_generic_caller` node using both launch configurations.
+Functionalities:
+- created a gazebo model for simulation and ros2 tf2 trees.
+- added 3 ros2 driver sensors: velodyne (3D-lidar), sick(2D-lidar) and IMU.
+- implemented wheel odometry.
+- configurated micro-ROS to communicate with the embedded system.
 
 
-## 🧭 XSENS IMU Driver
+Folders description:
 
-### 📦 Install Required Dependencies
-
-```bash
-sudo apt install ros-jazzy-nmea-msgs
-sudo apt install ros-jazzy-mavros-msgs
-```
-
-These packages are needed for NMEA and MAVROS-compatible IMU data parsing.
-
-
-## Marvelmind Driver
-
-### Tutorial
-
-[Installation guide for Marvelmind Beacons](https://marvelmind.com/downloads/marvelmind_ROS2.pdf)
+- src/amr_launch: launches the ros2 project by launching the other packages in the right order with the correct configuration.
+- src/amr_description: contains urdf and other files about the robot model.
+- src/amr_localization: contains a package for odometry and a launch package to launch all packages in this folder. Currently, the only package (besides the launch one) is odometry. Other packages will probably be implemented in the future.
+- src/amr_sensors: contains a launch package to launch all packages in this folder, and 3 ros2 sensor drivers packages: velodyne (3D-lidar), sick(2D-lidar) and IMU.
+- src/amr_stm32: contains the micro-ROS package and a package for reseting the stm32 board so a proper connection can be made via micro-ROS.
+- scripts: folder which contains all the scripts necessary to launch the ros2 project.
+- wiki artifacts: contains wiki artifacts, such as a code to get all ros2 topics with their publishers and subscribers, and a ros2 graph of the nodes, topics and their connections.
+- my_rosbags: contains 3 rosbags related to odometry experiments.
 
 
-## 📂 Repository Structure
+:open_file_folder
 
-```
-.
-lma_amr_ros2_source/
-├── src/
-|    ├── amr_sensors/
-|    │   ├── include
-|    │   ├── launch/
-│    │   │   ├── sick_front.launch
-│    │   │   ├── sick_back.launch
-│    │   │   ├── imu.launch.py
-│    │   │   └── lidar.launch.py
-|    │   ├── lib
-|    │   ├── package.xml
-|    │   ├── param
-|    │   ├── src
-|    │   └── xsens_mti_node.yaml
-|    ├── Xsens_MTi_ROS_Driver_and_Ntrip_Client/ ← Git submodule
-|    └── sick_scan_xd/ ← Git submodule
-```
----
+├── my_rosbags
+│   ├── odom_bag
+│   ├── odom_bag2
+│   └── odom_bag3
+├── README.md
+├── scripts
+│   ├── create_and_build_microROS_agent.bash
+│   ├── install_dependencies.bash
+│   ├── main.bash
+│   ├── README.md
+│   └── run_project.bash
+├── src
+│   ├── amr_description
+│   ├── amr_launch
+│   ├── amr_localization
+│   ├── amr_sensors
+│   └── amr_stm32
+└── wiki_artifacts
+    ├── info_ros2.c
+    ├── ros2_graph
+    └── topic_information.md
 
-## ✅ Notes
 
-- Compatible with **ROS 2 Jazzy**.
-- Ensure network access to LiDAR devices (correct `hostname` setting).
-- Each device should publish to a unique topic and frame ID.
 
----
 
-## 📞 Support
-
-For additional configuration examples and troubleshooting:
-- SICK SCAN XD Docs: [https://github.com/SICKAG/sick_scan_xd](https://github.com/SICKAG/sick_scan_xd)
-- XSENS ROS Drivers: [https://github.com/xsens](https://github.com/xsens)

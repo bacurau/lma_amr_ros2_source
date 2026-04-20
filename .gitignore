@@ -7,5 +7,5 @@ src/uros/
 experiments
 frames
 prog
-Latency-Evaluator/
-CPU_usage/
+Latency-Evaluator
+CPU_usage
