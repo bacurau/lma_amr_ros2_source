@@ -1,13 +1,13 @@
 ## README
 
-Functionalities:
-- created a gazebo model for simulation and ros2 tf2 trees.
-- added 3 ros2 driver sensors: velodyne (3D-lidar), sick(2D-lidar) and IMU.
-- implemented wheel odometry.
+This project basic functionalities:
+- created a gazebo model for simulation and ros2 tf2 trees;
+- added 3 ros2 driver sensors: velodyne (3D-lidar), sick(2D-lidar) and IMU;
+- implemented wheel odometry; and
 - configurated micro-ROS to communicate with the embedded system.
 
 
-Folders description:
+### 📂 Folders description:
 
 - src/amr_launch: launches the ros2 project by launching the other packages in the right order with the correct configuration.
 - src/amr_description: contains urdf and other files about the robot model.
@@ -19,8 +19,8 @@ Folders description:
 - my_rosbags: contains 3 rosbags related to odometry experiments.
 
 
-:open_file_folder
-
+```
+.
 ├── my_rosbags
 │   ├── odom_bag
 │   ├── odom_bag2
@@ -43,6 +43,6 @@ Folders description:
     ├── ros2_graph
     └── topic_information.md
 
-
+```
 
 
