@@ -18,7 +18,7 @@ RUN_PROJECT="${2:-$YES}"
 build_type="${1:-Release}"
 scripts_path="./" # Path to the scripts folder
 $scripts_path/install_dependencies.bash # Install dependencies
-cd ..; colcon build --symlink-install  --cmake-args "-DCMAKE_BUILD_TYPE=$build_type" ; cd ./scripts  # Build ROS2 packages
+cd ..; colcon build  --base-path "./src" --symlink-install  --cmake-args "-DCMAKE_BUILD_TYPE=$build_type" ; cd ./scripts  # Build ROS2 packages
 $scripts_path/create_and_build_microROS_agent.bash # Create and build micro-ROS agent
 
 if [[ "$RUN_PROJECT" =  "$YES" ]]; then

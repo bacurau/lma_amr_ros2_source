@@ -1,8 +1,9 @@
+# Parameters are with default value of joy package, except where explicitly commented.
 joy_node:
     ros__parameters:
         device_id: 0
         device_name: ""
         deadzone: 0.5
-        autorepeat_rate: 5.0
+        autorepeat_rate: 5.0 # 20: robot takes too long to stop. 1: robot movement is chopped. So empirically, 5 was chosen.
         sticky_buttons: false
         coalesce_interval_ms: 1
