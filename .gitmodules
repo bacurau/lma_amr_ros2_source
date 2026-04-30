@@ -13,3 +13,11 @@
 [submodule "src/amr_sensors/velodyne"]
 	path = src/amr_sensors/velodyne
 	url = https://github.com/ros-drivers/velodyne.git
+[submodule "src/amr_sensors/src/v4l2_camera"]
+	path = src/amr_sensors/src/v4l2_camera
+	url = https://gitlab.com/boldhearts/ros2_v4l2_camera.git
+	branch = jazzy
+[submodule "src/amr_sensors/v4l2_camera"]
+	path = src/amr_sensors/v4l2_camera
+	url = https://gitlab.com/boldhearts/ros2_v4l2_camera.git
+	branch = jazzy

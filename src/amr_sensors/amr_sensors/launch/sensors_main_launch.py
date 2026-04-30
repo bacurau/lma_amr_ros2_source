@@ -2,7 +2,7 @@ from launch import LaunchDescription
 from launch.substitutions import PathJoinSubstitution
 from launch.actions import IncludeLaunchDescription
 from launch_ros.substitutions import FindPackageShare
-
+from launch_ros.actions import Node
 def generate_launch_description():
 
     
@@ -23,7 +23,7 @@ def generate_launch_description():
             'launch', 
             'velodyne_launch.py'
         ])
-    
+
 
     launch_imu = IncludeLaunchDescription(launch_imu_file_path)
     
@@ -32,9 +32,20 @@ def generate_launch_description():
     launch_velodynes = IncludeLaunchDescription(launch_velodynes_file_path)
 
 
+    ## Create robot_state_publisher node
+    camera_node = Node(
+        package='v4l2_camera',
+        executable='v4l2_camera_node',
+        name='v4l2_camera_node', 
+        output='screen'
+    )
+
+
+
     main_launch_description = LaunchDescription()
     main_launch_description.add_action(launch_imu)
     main_launch_description.add_action(launch_lidar)
     main_launch_description.add_action(launch_velodynes)
+    #main_launch_description.add_action(camera_node)
 
     return main_launch_description
