@@ -21,3 +21,6 @@
 	path = src/amr_sensors/v4l2_camera
 	url = https://gitlab.com/boldhearts/ros2_v4l2_camera.git
 	branch = jazzy
+[submodule "src/amr_joystick/joystick_drivers"]
+	path = src/amr_joystick/joystick_drivers
+	url = git@github.com:ros-drivers/joystick_drivers.git
