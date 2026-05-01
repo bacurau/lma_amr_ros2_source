@@ -49,12 +49,12 @@
           </mesh>
         </geometry>
       </collision>
-      <collision name='Base_Link_fixed_joint_lump__IMU_MTI_670_Link_collision_4'>
+      <collision name='Base_Link_fixed_joint_lump__IMU_MTI_680g_Link_collision_4'>
         <pose>0 0 0.087925 0 -0 0</pose>
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://amr/meshes/IMU_MTI_670_Link.STL</uri>
+            <uri>model://amr/meshes/IMU_MTI_680g_Link.STL</uri>
           </mesh>
         </geometry>
       </collision>
@@ -240,12 +240,12 @@
           </mesh>
         </geometry>
       </visual>
-      <visual name='Base_Link_fixed_joint_lump__IMU_MTI_670_Link_visual_4'>
+      <visual name='Base_Link_fixed_joint_lump__IMU_MTI_680g_Link_visual_4'>
         <pose>0 0 0.087925 0 -0 0</pose>
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://amr/meshes/IMU_MTI_670_Link.STL</uri>
+            <uri>model://amr/meshes/IMU_MTI_680g_Link.STL</uri>
           </mesh>
         </geometry>
       </visual>
@@ -1172,6 +1172,7 @@
       <wheel_separation>0.750</wheel_separation> <!--0.7462-->
       <wheel_radius>0.100</wheel_radius>
       <odom_publish_frequency>1</odom_publish_frequency>
+      <topic>cmd_vel</topic>
       <max_linear_acceleration>1</max_linear_acceleration>
       <min_linear_acceleration>-1</min_linear_acceleration>
       <max_angular_acceleration>2</max_angular_acceleration>
@@ -1183,7 +1184,7 @@
 
     </plugin>
 
-    <link name="IMU_MTI_670_Link">
+    <link name="IMU_MTI_680g_Link">
       <sensor name="snoopy_imu" type="imu">
         <always_on>true</always_on>
         <update_rate>100</update_rate>
@@ -1235,7 +1236,7 @@
     
     <joint name="imu_joint" type="fixed">
       <parent>Base_Link</parent>
-      <child>IMU_MTI_670_Link</child>
+      <child>IMU_MTI_680g_Link</child>
       <pose>-0.032 0 0.068 0 0 0</pose>
       <axis>
         <xyz>0 0 1</xyz>

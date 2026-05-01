@@ -70,14 +70,29 @@ def generate_launch_description():
     joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path)
 
 
+    # Find and include localization main launch file
+    share_folder_path_for_amr_description = FindPackageShare('amr_description')
+    amr_description_launch_file_path = PathJoinSubstitution([
+            share_folder_path_for_amr_description, 
+            'launch', 
+            'gazebo_launch.py'
+        ])
+    amr_description_launch_file = IncludeLaunchDescription(amr_description_launch_file_path)
+
+
+
+
+
     ## Create launch description and add actions, each action is a launch file or a node and
     ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
-    main_launch_description.add_action(robot_state_publisher_node)
-    main_launch_description.add_action(sensors_launch_file)
-    main_launch_description.add_action(stm32_launch_file)
-    main_launch_description.add_action(localization_launch_file)
-    #main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
+    #main_launch_description.add_action(robot_state_publisher_node)
+    #main_launch_description.add_action(sensors_launch_file)
+    #main_launch_description.add_action(stm32_launch_file)
+    #main_launch_description.add_action(localization_launch_file)
+    main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
+    main_launch_description.add_action(amr_description_launch_file)
+    
     
     
     return main_launch_description
