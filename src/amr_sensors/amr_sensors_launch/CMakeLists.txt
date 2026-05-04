@@ -1,6 +1,6 @@
 #Set minimum required CMake version and project name.
 cmake_minimum_required(VERSION 3.5)
-project(amr_sensors)
+project(amr_sensors_launch)
 
 
 # Set C++ standard, default to C++14

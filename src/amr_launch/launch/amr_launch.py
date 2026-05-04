@@ -10,7 +10,7 @@ from launch.substitutions import  PathJoinSubstitution
 def generate_launch_description():
 
     # Find and include stm32 launch file
-    share_stm32_launch_path = FindPackageShare('stm32_launch')
+    share_stm32_launch_path = FindPackageShare('amr_stm32_launch')
     stm32_launch_file_path = PathJoinSubstitution([
             share_stm32_launch_path, 
             'launch', 
@@ -19,7 +19,7 @@ def generate_launch_description():
     stm32_launch_file = IncludeLaunchDescription(stm32_launch_file_path)
 
     # Find and include sensors main launch file
-    share_sensors_launch_path = FindPackageShare('amr_sensors')
+    share_sensors_launch_path = FindPackageShare('amr_sensors_launch')
     sensors_launch_file_path = PathJoinSubstitution([
             share_sensors_launch_path, 
             'launch', 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>amr_sensors</name>
+  <name>amr_sensors_launch</name>
   <version>1.0.2</version>
   <description>ROS 2.0 driver for Xsens MTi IMU sensors</description>
   <maintainer email="support@movella.com">Movella</maintainer>

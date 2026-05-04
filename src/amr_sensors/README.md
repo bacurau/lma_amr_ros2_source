@@ -1,4 +1,7 @@
-This folder contains all sensors packages.
+## Summary
+This folder contains all sensors packages and is responsible for launching them.
+To launch every sensor package with their correct launch files and configurations a
+new package called amr_sensors_launch was added.
 
 
 Not submodule:
