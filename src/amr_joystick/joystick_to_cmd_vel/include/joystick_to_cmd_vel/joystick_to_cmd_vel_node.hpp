@@ -10,10 +10,10 @@
 
 // Buttons
 
-#define X_BUTTON 0
-#define A_BUTTON 1
-#define B_BUTTON 2
-#define Y_BUTTON 3
+#define X_BUTTON 3
+#define A_BUTTON 0
+#define B_BUTTON 1
+#define Y_BUTTON 2
 #define LB_BUTTON 4
 #define RB_BUTTON 5
 #define LT_BUTTON 6
@@ -55,8 +55,8 @@ private:
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_cmd_vel_stamped;
   double temp_velocity=0;
   double minimum_velocity=0.01;
-  double maximum_velocity=0.1;
-  double velocity_increment= 0.01;
+  double maximum_velocity=5;
+  double velocity_increment= 0.5;
   int previous_start_button_state=BUTTON_PRESSED;
   bool rising_edge=false;
   bool pause=true;

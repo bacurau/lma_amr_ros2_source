@@ -43,7 +43,7 @@ def generate_launch_description():
     # Using os.path.join returns a string with the filepath,
     # which is needed for reading the file.
     description_package_share_dir = get_package_share_directory('amr_description')
-    urdf_file_path = os.path.join(description_package_share_dir, 'amr', 'urdf', 'amr.urdf')
+    urdf_file_path = os.path.join(description_package_share_dir, 'models/amr', 'urdf', 'amr.urdf')
     
     # create string variable with the contents of the urdf file
     with open(urdf_file_path, 'r') as f:
