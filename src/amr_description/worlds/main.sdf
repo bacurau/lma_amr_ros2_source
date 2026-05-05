@@ -74,25 +74,25 @@
         <include>
             <name>Wall</name>
             <uri>model://wall</uri>
-            <pose>62.5 0 5 0 0 0</pose>
+            <pose>62.5 0 2.5 0 0 0</pose>
         </include>
 
         <include>
             <name>Wall2</name>
             <uri>model://wall</uri>
-            <pose>0 67.5 5 0 0 -1.5708</pose>
+            <pose>0 67.5 2.5 0 0 -1.5708</pose>
         </include>
 
         <include>
             <name>Wall3</name>
             <uri>model://wall</uri>
-            <pose>0 -67.5 5 0 0 1.5708</pose>
+            <pose>0 -67.5 2.5 0 0 1.5708</pose>
         </include>
 
         <include>
             <name>Wall4</name>
             <uri>model://wall</uri>
-            <pose>-62.5 0 5 0 0 0</pose>
+            <pose>-62.5 0 2.5 0 0 0</pose>
         </include>
 
 
