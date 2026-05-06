@@ -23,7 +23,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gz_launch_path),
             launch_arguments={
-                'gz_args': [PathJoinSubstitution([amr_description_pkg_path, 'worlds/world1.sdf -r'])], 
+                'gz_args': [PathJoinSubstitution([amr_description_pkg_path, 'worlds/temp.sdf -r'])], 
                 'on_exit_shutdown': 'True'
             }.items(),
         ),

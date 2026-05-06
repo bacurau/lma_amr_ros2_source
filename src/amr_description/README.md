@@ -18,6 +18,13 @@ Structure:
 > Be careful when inserting multiple models of robots. The topics could have the same names across multiple robots. For example: vehicle blue and x1 could have the same name for the imu topic and the topic that controls the robot (cmd_vel).
 
 
+
+## Generate sdf from xacro
+
+```
+ros2 run xacro xacro world2.sdf.xacro > temp.sdf
+```
+
 ### Independent use
 To use this package alone, follow the next instructions.
 To use it with all the other packages, check the README.md of amr_launch.
