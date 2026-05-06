@@ -13,3 +13,5 @@ rosbags
 gazebo_package/
 Dataset-of-Gazebo-Worlds-Models-and-Maps/
 src/ros2.repos
+.Trash-1000/
+.bash_history

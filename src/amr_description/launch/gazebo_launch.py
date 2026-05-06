@@ -3,8 +3,10 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import SetEnvironmentVariable, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution,EnvironmentVariable
+from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
+
+# This launch was based on the launch present at the link https://gazebosim.org/docs/harmonic/ros2_launch_gazebo/
 
 def generate_launch_description():
     ros_gz_sim_pkg_path = get_package_share_directory('ros_gz_sim')
@@ -15,15 +17,13 @@ def generate_launch_description():
             'GZ_SIM_RESOURCE_PATH',[
             PathJoinSubstitution([amr_description_pkg_path, 'models']),
             ':',
-            PathJoinSubstitution([amr_description_pkg_path, 'worlds'])
+            PathJoinSubstitution([amr_description_pkg_path, 'scenarios'])
             ]
-        ),
+        ), ## This variable needs to be set (GZ_SIM_RESOURCE_PATH) so the main.sdf file can find our models and worlds using model://name
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gz_launch_path),
             launch_arguments={
-                'gz_args': [PathJoinSubstitution([amr_description_pkg_path, 'worlds/main.sdf -r'])], 
-                            # '--gui-config ', 
-                            # PathJoinSubstitution([example_pkg_path, 'config/gazebo_config_with_keyboard_press.config '])],
+                'gz_args': [PathJoinSubstitution([amr_description_pkg_path, 'worlds/world1.sdf -r'])], 
                 'on_exit_shutdown': 'True'
             }.items(),
         ),

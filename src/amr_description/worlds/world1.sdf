@@ -99,69 +99,76 @@
 
 
         <include>
-            <name>Obstacle World</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>0 0 0 0 0 0</pose>
         </include>
         <include>
-            <name>Obstacle World2</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario2</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>30 0 0 0 0 0</pose>
         </include>
 
         <include>
-            <name>Obstacle World3</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario3</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>0 30 0 0 0 0</pose>
         </include>
 
         <include>
-            <name>Obstacle World4</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario4</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>0 -30 0 0 0 0</pose>
         </include>
 
         <include>
-            <name>Obstacle World5</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario5</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>-30 0 0 0 0 0</pose>
         </include>
 
         <include>
-            <name>Obstacle World6</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario6</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>-25 -25 0 0 0 10</pose>
         </include>
 
         <include>
-            <name>Obstacle World7</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario7</name>
+            <uri>model://obstacle_scenario</uri>
             <pose> 25 25 0 0 0 -10</pose>
         </include>
 
         <include>
-            <name>Obstacle World8</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario8</name>
+            <uri>model://obstacle_scenario</uri>
             <pose>-25 -25 0 0 0 10</pose>
         </include>
 
         <include>
-            <name>Obstacle World9</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario9</name>
+            <uri>model://obstacle_scenario</uri>
             <pose> 25 -25 0 0 0 -10</pose>
         </include>
 
         <include>
-            <name>Obstacle World10</name>
-            <uri>model://obstacle_world</uri>
+            <name>Obstacle Scenario10</name>
+            <uri>model://obstacle_scenario</uri>
             <pose> -25 25 0 0 0 10</pose>
         </include>
 
 
         <!-- X Y Z Roll Pitch Yaw -->
-        <include>
+        <!-- <include>
             <name>Vehicle_blue</name>
             <uri>model://vehicle_blue</uri>
+            <pose>2 4 0.05 0 0 0</pose> 
+        </include> -->
+
+
+        <include>
+            <name>X1_Config_5</name>
+            <uri>model://x1</uri>
             <pose>2 4 0.05 0 0 0</pose> <!-- X Y Z Roll Pitch Yaw -->
         </include>
 
