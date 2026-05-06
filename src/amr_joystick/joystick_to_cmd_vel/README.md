@@ -17,7 +17,7 @@ Commands from the perspective of a ps3 controller:
 > If you plug a different controller, check the joy topic to see the position of each button in the array.
 
 
-### Detach use
+### Detached use
 To use this package alone, follow the next instructions.
 To use it with all the other packages, check the README.md of amr_launch.
 
