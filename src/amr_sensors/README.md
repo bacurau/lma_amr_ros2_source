@@ -8,10 +8,9 @@ Current packages:
 - Not submodule:
     - amr_sensors_launch: is responsible for launching all of the submodules with their correct parameter files.
 - Submodules:
-    - sick_scan_xd: get data from sick (2d lidar ) and converts to ros2 topics.
-    - v4l2_camera: gets data from camera and converts to ros2 topics.
-    - velodyne (is a folder containing more packages): gets data from velodyne (3d lidar) and coverts to ros2 topics.
-    - Xsens_MTI_ROS_Driver_and_Ntrip_Client: gets data from imu MTI-680g and converts to ros2 topics.
+    - sick_scan_xd: get data from sick (2d lidar ) and converts to ros2 topics. Link: https://github.com/SICKAG/sick_scan_xd
+    - velodyne (is a folder containing more packages): gets data from velodyne (3d lidar) and coverts to ros2 topics. Link: https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client
+    - Xsens_MTI_ROS_Driver_and_Ntrip_Client: gets data from imu MTI-680g and converts to ros2 topics. Link: https://github.com/ros-drivers/velodyne
 
 
 ### Detached Use
