@@ -40,37 +40,32 @@ void ConvertJoystickCommandsToCmdVel::joyCallback(const sensor_msgs::msg::Joy::S
   
 
   // ------ Buttons used to move the robot --------------
-  // // Turn right or left
-  // if(joy_msg->buttons[X_BUTTON] == BUTTON_PRESSED 
-  //   || joy_msg->axes[DIRECTIONAL_PAD_HORIZONTAL_MOVEMENT]== BUTTON_PRESSED 
-  //   || joy_msg->axes[LEFT_ANALOG_STICK_HORIZONTAL_MOVEMENT]>0) message_to_publish_cmd_vel->angular.z=this->temp_velocity;
-  // else if(joy_msg->buttons[B_BUTTON] == BUTTON_PRESSED 
-  //   || joy_msg->axes[DIRECTIONAL_PAD_HORIZONTAL_MOVEMENT]==-(int)BUTTON_PRESSED 
-  //   || joy_msg->axes[LEFT_ANALOG_STICK_HORIZONTAL_MOVEMENT]<0) message_to_publish_cmd_vel->angular.z=-this->temp_velocity;
-  // // Move backward or forward
-  // if(joy_msg->buttons[Y_BUTTON] == BUTTON_PRESSED 
-  //   || joy_msg->axes[DIRECTIONAL_PAD_VERTICAL_MOVEMENT]== BUTTON_PRESSED 
-  //   || joy_msg->axes[LEFT_ANALOG_STICK_VERTICAL_MOVEMENT]>0) message_to_publish_cmd_vel->linear.x=this->temp_velocity;
-  // else if(joy_msg->buttons[A_BUTTON] == BUTTON_PRESSED 
-  //   || joy_msg->axes[DIRECTIONAL_PAD_VERTICAL_MOVEMENT]==-(int)BUTTON_PRESSED 
-  //   || joy_msg->axes[LEFT_ANALOG_STICK_VERTICAL_MOVEMENT]<0) message_to_publish_cmd_vel->linear.x=-this->temp_velocity;
-
     // Turn right or left
-  if(joy_msg->buttons[X_BUTTON] == BUTTON_PRESSED) message_to_publish_cmd_vel->angular.z=this->temp_velocity;
-  else if(joy_msg->buttons[B_BUTTON] == BUTTON_PRESSED) message_to_publish_cmd_vel->angular.z=-this->temp_velocity;
+  if(joy_msg->buttons[X_BUTTON] == BUTTON_PRESSED
+  || joy_msg->buttons[DIRECTIONAL_PAD_LEFT] == BUTTON_PRESSED) message_to_publish_cmd_vel->angular.z=this->current_angular_velocity;
+  else if(joy_msg->buttons[B_BUTTON] == BUTTON_PRESSED
+  || joy_msg->buttons[DIRECTIONAL_PAD_RIGHT] == BUTTON_PRESSED) message_to_publish_cmd_vel->angular.z=-this->current_angular_velocity;
   // Move backward or forward
-  if(joy_msg->buttons[Y_BUTTON] == BUTTON_PRESSED) message_to_publish_cmd_vel->linear.x=this->temp_velocity;
-  else if(joy_msg->buttons[A_BUTTON] == BUTTON_PRESSED) message_to_publish_cmd_vel->linear.x=-this->temp_velocity;
+  if(joy_msg->buttons[Y_BUTTON] == BUTTON_PRESSED
+  || joy_msg->buttons[DIRECTIONAL_PAD_UP] == BUTTON_PRESSED) message_to_publish_cmd_vel->linear.x=this->current_linear_velocity;
+  else if(joy_msg->buttons[A_BUTTON] == BUTTON_PRESSED
+  || joy_msg->buttons[DIRECTIONAL_PAD_DOWN] == BUTTON_PRESSED) message_to_publish_cmd_vel->linear.x=-this->current_linear_velocity;
 
   //------ Buttons used to change robot speed ----------
-  if(joy_msg->buttons[LB_BUTTON] == BUTTON_PRESSED && temp_velocity > minimum_velocity) this->temp_velocity-=velocity_increment;
-  else if(joy_msg->buttons[RB_BUTTON] == BUTTON_PRESSED && temp_velocity < maximum_velocity) this->temp_velocity+=velocity_increment;
-  // else if(joy_msg->buttons[LT_BUTTON] == BUTTON_PRESSED && temp_velocity > minimum_velocity) this->temp_velocity-=2*velocity_increment;
-  // else if(joy_msg->buttons[RT_BUTTON] == BUTTON_PRESSED && temp_velocity < maximum_velocity) this->temp_velocity+=2*velocity_increment;
-  
+  if(joy_msg->buttons[LB_BUTTON] == BUTTON_PRESSED){
+    this->current_linear_velocity-=linear_velocity_increment;
+    this->current_angular_velocity-=angular_velocity_increment;
+  } 
+  if(joy_msg->buttons[RB_BUTTON] == BUTTON_PRESSED){
+    this->current_linear_velocity+=linear_velocity_increment;
+    this->current_angular_velocity+=angular_velocity_increment;
+  } 
+
   // Check if maximum and minimum velocity are respected
-  if(temp_velocity < minimum_velocity) temp_velocity = minimum_velocity;
-  else if(temp_velocity > maximum_velocity) temp_velocity = maximum_velocity;
+  if(current_linear_velocity < minimum_linear_velocity) current_linear_velocity = minimum_linear_velocity;
+  else if(current_linear_velocity > maximum_linear_velocity) current_linear_velocity = maximum_linear_velocity;
+  if(current_angular_velocity < minimum_angular_velocity) current_angular_velocity = minimum_angular_velocity;
+  else if(current_angular_velocity > maximum_angular_velocity) current_angular_velocity = maximum_angular_velocity;
 
   publisher_cmd_vel_stamped->publish(std::move(message_to_publish_cmd_vel));
 }

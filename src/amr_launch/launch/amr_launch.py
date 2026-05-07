@@ -43,7 +43,7 @@ def generate_launch_description():
     # Using os.path.join returns a string with the filepath,
     # which is needed for reading the file.
     description_package_share_dir = get_package_share_directory('amr_description')
-    urdf_file_path = os.path.join(description_package_share_dir, 'models/amr', 'urdf', 'amr.urdf')
+    urdf_file_path = os.path.join(description_package_share_dir, 'amr', 'urdf', 'amr.urdf')
     
     # create string variable with the contents of the urdf file
     with open(urdf_file_path, 'r') as f:
@@ -71,13 +71,13 @@ def generate_launch_description():
 
 
     # Find and include localization main launch file
-    share_folder_path_for_amr_description = FindPackageShare('amr_description')
-    amr_description_launch_file_path = PathJoinSubstitution([
-            share_folder_path_for_amr_description, 
+    share_folder_path_for_amr_simulation = FindPackageShare('amr_simulation')
+    amr_simulation_launch_file_path = PathJoinSubstitution([
+            share_folder_path_for_amr_simulation, 
             'launch', 
-            'gazebo_launch.py'
+            'simulation_launch.py'
         ])
-    amr_description_launch_file = IncludeLaunchDescription(amr_description_launch_file_path)
+    amr_simulation_launch_file = IncludeLaunchDescription(amr_simulation_launch_file_path)
 
 
 
@@ -91,7 +91,7 @@ def generate_launch_description():
     #main_launch_description.add_action(stm32_launch_file)
     #main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
-    main_launch_description.add_action(amr_description_launch_file)
+    main_launch_description.add_action(amr_simulation_launch_file)
     
     
     

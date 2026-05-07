@@ -48,7 +48,7 @@
 
         <!-- +++++++++++++++++++++++++++++++++Insert your models here++++++++++++++++++++++++++++++++++++ -->
         <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-        <xacro:include_model name="Black floor" model="white_floor" pose="0 0 0 0 0 0"/>
+        <xacro:include_model name="White floor" model="white_floor" pose="0 0 0 0 0 0"/>
         <xacro:include_model name="Wall 1" model="wall" pose="62.5 0 2.5 0 0 0"/>
         <xacro:include_model name="Wall 2" model="wall" pose="0 67.5 2.5 0 0 -1.5708"/>
         <xacro:include_model name="Wall 3" model="wall" pose="0 -67.5 2.5 0 0 1.5708"/>
@@ -63,6 +63,6 @@
         <xacro:include_model name="Obstacle Scenario8" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
         <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
         <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/>
-        <xacro:include_model name="X1_Config_5" model="x1" pose="2 4 0.05 0 0 0"/>
+        <xacro:include_model name="bluevehicleA" model="vehicle_blue" pose="2 4 0.05 0 0 0"/>
     </world>
 </sdf>

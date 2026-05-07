@@ -23,6 +23,15 @@
 #define L3_BUTTON 10 // when you press the left analogic button, the round one that moves.
 #define R3_BUTTON 11 // when you press the right analogic button, the round one that moves.
 
+// Playstation controller buttons
+#define DIRECTIONAL_PAD_UP 13
+#define DIRECTIONAL_PAD_DOWN 14
+#define DIRECTIONAL_PAD_LEFT 15
+#define DIRECTIONAL_PAD_RIGHT 16
+
+
+
+
 // Axis
 
 #define LEFT_ANALOG_STICK_HORIZONTAL_MOVEMENT 0
@@ -53,14 +62,21 @@ private:
   rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr subscriber_joy;
   sensor_msgs::msg::Joy joy_msg_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_cmd_vel_stamped;
-  double temp_velocity=0;
-  double minimum_velocity=0.01;
-  double maximum_velocity=5;
-  double velocity_increment= 0.5;
   int previous_start_button_state=BUTTON_PRESSED;
   bool rising_edge=false;
   bool pause=true;
   bool first_iteration=true;
+  // Simulated robot speed parameters, change them as you see fit.
+  // Be careful with these parameters when you are using the real robot.
+  double current_linear_velocity=0.0;
+  double current_angular_velocity=0.0;
+  double minimum_linear_velocity=0.0;
+  double maximum_linear_velocity=5; // 5 ms per second is the maximum linear velocity the simulated robot should achieve. 
+  double minimum_angular_velocity=0.0;
+  double maximum_angular_velocity=1.5708; // 90 degrees in radians
+  double linear_velocity_increment= maximum_linear_velocity/100;
+  double angular_velocity_increment= maximum_angular_velocity/100;
+  
 };
 
 
