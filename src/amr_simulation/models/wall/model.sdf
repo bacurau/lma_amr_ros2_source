@@ -31,7 +31,7 @@
             <visual name='box_visual'>
                 <geometry>
                     <box>
-                        <size>5 130 5</size>
+                        <size>5 150 5</size>
                     </box>
                 </geometry>
                 <material>

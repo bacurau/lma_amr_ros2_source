@@ -30,30 +30,32 @@
     <include>
       <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
     </include>
+    <!-- +++++++++++++++++++++++++++++++++Insert your models here++++++++++++++++++++++++++++++++++++ -->
+    <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     <include>
       <name>White floor</name>
       <uri>model://white_floor</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
     <include>
-      <name>Wall 1</name>
+      <name>Wall north</name>
       <uri>model://wall</uri>
-      <pose>62.5 0 2.5 0 0 0</pose>
+      <pose>77.5 0 2.5 0 0 0</pose>
     </include>
     <include>
-      <name>Wall 2</name>
+      <name>Wall east</name>
       <uri>model://wall</uri>
-      <pose>0 67.5 2.5 0 0 -1.5708</pose>
+      <pose>0 72.5 2.5 0 0 -1.5708</pose>
     </include>
     <include>
-      <name>Wall 3</name>
+      <name>Wall west</name>
       <uri>model://wall</uri>
-      <pose>0 -67.5 2.5 0 0 1.5708</pose>
+      <pose>0 -72.5 2.5 0 0 1.5708</pose>
     </include>
     <include>
-      <name>Wall 4</name>
+      <name>Wall south</name>
       <uri>model://wall</uri>
-      <pose>-62.5 0 2.5 0 0 0</pose>
+      <pose>-77.5 0 2.5 0 0 0</pose>
     </include>
     <include>
       <name>Obstacle Scenario</name>
