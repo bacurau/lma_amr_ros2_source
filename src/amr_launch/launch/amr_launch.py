@@ -59,6 +59,9 @@ def generate_launch_description():
         #arguments=[urdf_file_path]
     )
 
+    
+    
+
 
      # Find and include localization main launch file
     share_folder_path_for_joystick_to_cmd_vel_ = FindPackageShare('joystick_to_cmd_vel')
@@ -68,6 +71,9 @@ def generate_launch_description():
             'joystick_to_cmd_vel_launch.py'
         ])
     joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path)
+
+    
+
 
 
     # Find and include localization main launch file
@@ -79,9 +85,43 @@ def generate_launch_description():
         ])
     amr_simulation_launch_file = IncludeLaunchDescription(amr_simulation_launch_file_path)
 
+ 
+    #===========================================================================================================================================
+  
+    # Find robot description urdf file, 
+    # Using os.path.join returns a string with the filepath,
+    # which is needed for reading the file.
+    description_package_share_dir = get_package_share_directory('amr_simulation')
+    vehicle_blue_sdf_file_path = os.path.join(description_package_share_dir, 'models', 'vehicle_blue', 'model.sdf')
+    
+    # create string variable with the contents of the urdf file
+    with open(vehicle_blue_sdf_file_path, 'r') as f:
+        vehicle_blue_sdf = f.read()
+    
+    ## Create robot_state_publisher node
+    vehicle_blue_state_publisher_node_sdf = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher_node', 
+        output='screen',
+        parameters=[{'robot_description': vehicle_blue_sdf}] # you have to pass a string with the contents of the urdf file
+    )
 
 
+    vehicle_blue_urdf_file_path = os.path.join(description_package_share_dir, 'models', 'vehicle_blue', 'model.urdf')
+    # create string variable with the contents of the urdf file
+    with open(vehicle_blue_urdf_file_path, 'r') as f:
+        vehicle_blue_urdf = f.read()
+    ## Create robot_state_publisher node
+    vehicle_blue_state_publisher_node_urdf = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher_node', 
+        output='screen',
+        parameters=[{'robot_description': vehicle_blue_urdf}] # you have to pass a string with the contents of the urdf file
+    )
 
+    #===========================================================================================================================================
 
     ## Create launch description and add actions, each action is a launch file or a node and
     ## will be executed in the order of addition.
@@ -92,7 +132,8 @@ def generate_launch_description():
     #main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
     main_launch_description.add_action(amr_simulation_launch_file)
-    
+    #main_launch_description.add_action(vehicle_blue_state_publisher_node_urdf)
+    main_launch_description.add_action(vehicle_blue_state_publisher_node_sdf)
     
     
     return main_launch_description

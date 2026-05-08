@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <sdf version="1.10">
     <model name='vehicle_blue' canonical_link='chassis'>
+        <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+            <topic>joint_states</topic>
+            <joint_name>right_wheel_joint</joint_name> <!--motor direita-->
+            <joint_name>left_wheel_joint</joint_name> <!--motor esquerda-->
+        </plugin>
         <plugin
             filename="gz-sim-diff-drive-system"
             name="gz::sim::systems::DiffDrive">
@@ -18,11 +24,11 @@
         <link name='chassis'>
             <pose relative_to='__model__'>0.5 0 0.4 0 0 0</pose>
             <sensor name="imu_sensor" type="imu">
-            <always_on>1</always_on>
-            <update_rate>1</update_rate>
-            <visualize>true</visualize>
-            <topic>imu</topic>
-        </sensor>
+                <always_on>1</always_on>
+                <update_rate>1</update_rate>
+                <visualize>true</visualize>
+                <topic>imu</topic>
+            </sensor>
             <inertial> <!--inertial
             properties of the link mass, inertia matix-->
                 <mass>10.14395</mass>

@@ -292,7 +292,7 @@
       <pose>-25 25 0 0 0 10</pose>
     </include>
     <include>
-      <name>bluevehicleA</name>
+      <name>vehicle</name>
       <uri>model://vehicle_blue</uri>
       <pose>2 4 0.05 0 0 0</pose>
     </include>
