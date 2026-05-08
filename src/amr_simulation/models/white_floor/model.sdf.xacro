@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <sdf version="1.10" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:property name="x_size_floor" value="2" />
-    <xacro:property name="y_size_floor" value="2" />
-    <xacro:macro name="white_floor">
-        <model name="white_floor">
+    <xacro:property name="x_size_floor" value="100" />
+    <xacro:property name="y_size_floor" value="100" />
+    <xacro:macro name="brown_floor">
+        <model name="Brown Floor">
             <static>true</static>
             <link name="floor_link">
                 <collision name="collision">

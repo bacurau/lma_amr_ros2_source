@@ -21,9 +21,9 @@ def generate_launch_description():
             cmd=[[
                 FindExecutable(name='ros2'),
                 ' run xacro xacro ',
-                PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world2.sdf.xacro']),
+                PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world.sdf.xacro']),
                 '>',
-                PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world2.sdf']),
+                PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world.sdf']),
             ]],
             shell=True
         ),
@@ -42,7 +42,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gz_launch_path),
             launch_arguments={
-                'gz_args': [PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world2.sdf -r'])], 
+                'gz_args': [PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world.sdf -r'])], 
                 'on_exit_shutdown': 'True'
             }.items(),
         ),

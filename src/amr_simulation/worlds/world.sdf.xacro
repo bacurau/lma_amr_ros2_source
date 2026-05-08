@@ -1,15 +1,13 @@
 <?xml version="1.0"?>
 <sdf version="1.10" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    
-    <!-- A default function to include models -->
-    <xacro:macro name="include_model" params="name model pose">
+     <xacro:macro name="include_model" params="name model pose">
         <include>
         <name>${name}</name>
         <uri>model://${model}</uri>
         <pose>${pose}</pose>
         </include>
     </xacro:macro>
-
+    
     <world name="default">
         <!-- ===================================================== -->
         <!-- Plugins needed for the simulation                     -->
@@ -46,25 +44,17 @@
             <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
         </include>
 
-        <!-- ++++++++++++++++++++++++++++++++++ Parameters +++++++++++++++++++++++++++++++++++++++++++++++++ -->
-        <xacro:property name="wall_width" value="5" />
-        <xacro:property name="wall_length" value="140" />
-        <xacro:property name="wall_height" value="5" />
-        <xacro:property name="x_size_floor" value="160" />
-        <xacro:property name="y_size_floor" value="150" />
-        <xacro:property name="wall_x_pose" value="${x_size_floor / 2 - wall_width / 2}" />
-        <xacro:property name="wall_y_pose" value="${y_size_floor / 2 - wall_width / 2}" />
-        <xacro:property name="wall_z_pose" value="${wall_height / 2}" />
-        <xacro:property name="wall_z_orientation" value="1.5708" />
+        <!-- +++++++++++++++++++++++++++++++++Import xacro files++++++++++++++++++++++++++++++++++++ -->
+        <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+        <xacro:property name="amr_simulation_install_path" value="$(find amr_simulation)" />
+        <xacro:include filename="${amr_simulation_install_path}/models/white_floor/model.sdf.xacro" ns="floor_namespace"/>
+        <xacro:include filename="${amr_simulation_install_path}/scenarios/wall_fortress/model.sdf.xacro" ns="wall_fortress_namespace"/>
 
         <!-- +++++++++++++++++++++++++++++++++Insert your models here++++++++++++++++++++++++++++++++++++ -->
         <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+        <xacro:floor_namespace.brown_floor/>
+        <xacro:wall_fortress_namespace.wall_fortress/>
         
-        <xacro:include_model name="White floor" model="white_floor" pose="0 0 0 0 0 0"/>
-        <xacro:include_model name="Wall north" model="wall" pose="${wall_x_pose} 0 ${wall_z_pose} 0 0 0"/>
-        <xacro:include_model name="Wall east" model="wall" pose="0 ${wall_y_pose} ${wall_z_pose} 0 0 -${wall_z_orientation}"/>
-        <xacro:include_model name="Wall west" model="wall" pose="0 -${wall_y_pose} ${wall_z_pose} 0 0 ${wall_z_orientation}"/>
-        <xacro:include_model name="Wall south" model="wall" pose="-${wall_x_pose} 0 ${wall_z_pose} 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario" model="obstacle_scenario" pose="0 0 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
@@ -76,5 +66,6 @@
         <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
         <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/>
         <xacro:include_model name="bluevehicleA" model="vehicle_blue" pose="2 4 0.05 0 0 0"/>
+
     </world>
 </sdf>

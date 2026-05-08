@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.10" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:property name="width" value="1" />
+  <xacro:property name="width" value="2" />
   <xacro:property name="height" value="5" />
   <xacro:macro name="wall" params="suffix length pose">
     <model name='Wall ${suffix}'>
