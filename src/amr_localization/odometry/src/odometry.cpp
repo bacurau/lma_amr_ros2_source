@@ -41,8 +41,8 @@ Odometry::Odometry():
 
   // Initialize robot pose and velocity
   RCLCPP_INFO(this->get_logger(), "Init Odometry");
-  robot_pose_[0]= 0.005;//0.005;//0.000 -2.8781 0.005; 
-  robot_pose_[1]= -0.045;//-0.045;//0.005 -1.8797 0.005;1.981  0.005
+  robot_pose_[0]= 0;//0.005;//0.005;//0.000 -2.8781 0.005; 
+  robot_pose_[1]= 0;//-0.045;//-0.045;//0.005 -1.8797 0.005;1.981  0.005
   robot_pose_[2]=0.0;  
  
   robot_vel_[0]=0;
