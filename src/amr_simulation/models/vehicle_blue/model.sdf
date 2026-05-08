@@ -4,8 +4,10 @@
         <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
             <topic>joint_states</topic>
-            <joint_name>right_wheel_joint</joint_name> <!--motor direita-->
-            <joint_name>left_wheel_joint</joint_name> <!--motor esquerda-->
+            <joint_name>right_wheel_joint</joint_name> <!--motor
+            direita-->
+            <joint_name>left_wheel_joint</joint_name> <!--motor
+            esquerda-->
         </plugin>
         <plugin
             filename="gz-sim-diff-drive-system"
@@ -23,12 +25,12 @@
         <!--chassis-->
         <link name='chassis'>
             <pose relative_to='__model__'>0.5 0 0.4 0 0 0</pose>
-            <sensor name="imu_sensor" type="imu">
+            <!-- <sensor name="imu_sensor" type="imu">
                 <always_on>1</always_on>
                 <update_rate>1</update_rate>
                 <visualize>true</visualize>
                 <topic>imu</topic>
-            </sensor>
+            </sensor> -->
             <inertial> <!--inertial
             properties of the link mass, inertia matix-->
                 <mass>10.14395</mass>
@@ -183,6 +185,24 @@
                 </geometry>
             </collision>
         </link>
+
+        <link name="IMU_MTI_680g_Link">
+            <sensor name="imu_sensor" type="imu">
+                <always_on>1</always_on>
+                <update_rate>10</update_rate>
+                <visualize>true</visualize>
+                <topic>imu</topic>
+            </sensor>
+        </link>
+
+        <joint name="imu_joint" type="fixed">
+            <parent>chassis</parent>
+            <child>IMU_MTI_680g_Link</child>
+            <pose relative_to='chassis'>
+                2 0 0 0 0 0
+            </pose>
+        </joint>
+
 
         <!--left
     wheel joint-->
