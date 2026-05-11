@@ -16,6 +16,8 @@
             <topic>joint_states</topic>
             <joint_name>rear_right_wheel_joint</joint_name> <!--motor direita-->
             <joint_name>rear_left_wheel_joint</joint_name> <!--motor esquerda-->
+            <joint_name>front_right_wheel_joint</joint_name> <!--motor direita-->
+            <joint_name>front_left_wheel_joint</joint_name> <!--motor esquerda-->
         </plugin>
         <enable_wind>1</enable_wind>
         <static>0</static>
