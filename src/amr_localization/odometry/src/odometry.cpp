@@ -35,9 +35,6 @@ Odometry::Odometry():
   Node("snoopy_odom", rclcpp::NodeOptions().use_intra_process_comms(true)),
   publish_tf_(true)
 {
-  rclcpp::Parameter simTime( "use_sim_time", rclcpp::ParameterValue( true ) );
-  //nh_ = std::shared_ptr<::rclcpp::Node>(this, [](::rclcpp::Node *) {});
-  this->set_parameter( simTime );
 
   // Initialize robot pose and velocity
   RCLCPP_INFO(this->get_logger(), "Init Odometry");
