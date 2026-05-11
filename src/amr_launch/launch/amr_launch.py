@@ -5,7 +5,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import  PathJoinSubstitution
-
+from launch_ros.actions import SetParameter
 
 def generate_launch_description():
 
@@ -108,31 +108,20 @@ def generate_launch_description():
     )
 
 
-    vehicle_blue_urdf_file_path = os.path.join(description_package_share_dir, 'models', 'vehicle_blue', 'model.urdf')
-    # create string variable with the contents of the urdf file
-    with open(vehicle_blue_urdf_file_path, 'r') as f:
-        vehicle_blue_urdf = f.read()
-    ## Create robot_state_publisher node
-    vehicle_blue_state_publisher_node_urdf = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher_node', 
-        output='screen',
-        parameters=[{'robot_description': vehicle_blue_urdf}] # you have to pass a string with the contents of the urdf file
-    )
+    use_sim_time = SetParameter(name='use_sim_time', value=True)
 
     #===========================================================================================================================================
 
     ## Create launch description and add actions, each action is a launch file or a node and
     ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
+    main_launch_description.add_action(use_sim_time)
     #main_launch_description.add_action(robot_state_publisher_node)
     #main_launch_description.add_action(sensors_launch_file)
     #main_launch_description.add_action(stm32_launch_file)
-    #main_launch_description.add_action(localization_launch_file)
+    main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
     main_launch_description.add_action(amr_simulation_launch_file)
-    #main_launch_description.add_action(vehicle_blue_state_publisher_node_urdf)
     main_launch_description.add_action(vehicle_blue_state_publisher_node_sdf)
     
     
