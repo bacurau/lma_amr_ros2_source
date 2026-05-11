@@ -1,11 +1,10 @@
-snoopy_odom:
+odometry_node:
   ros__parameters:
-    # use_sim_time: true
     odometry:
       publish_tf: true
       frame_id: "odom"
-      child_frame_id: "Base_Link"
+      child_frame_id: "chassis" #"Base_Link"
     wheels:
-      separation: 0.750 #0.7462 #0.7743
-      radius_left: 0.1 #0.1015 #0.1026 #0.11418
-      radius_right: 0.1 #0.1026 #0.11418
+      separation: 1.0 #0.750 #0.7462 #0.7743
+      radius_left: 0.4 #0.1 #0.1015 #0.1026 #0.11418
+      radius_right: 0.4 #0.1 #0.1026 #0.11418
