@@ -5,7 +5,8 @@ from launch.actions import SetEnvironmentVariable, IncludeLaunchDescription,Exec
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution,FindExecutable
 from launch_ros.substitutions import FindPackageShare
-import subprocess
+
+
 # This launch was based on the launch present at the link https://gazebosim.org/docs/harmonic/ros2_launch_gazebo/
 
 def generate_launch_description():
@@ -13,7 +14,6 @@ def generate_launch_description():
     amr_description_pkg_path = FindPackageShare('amr_description')  #
     amr_simulation_pkg_path = FindPackageShare('amr_simulation')  #
     gz_launch_path = PathJoinSubstitution([ros_gz_sim_pkg_path, 'launch', 'gz_sim.launch.py'])
-
     return LaunchDescription([
         # this process runs the command 'ros2 run xacro xacro path/to/world.sdf.xacro > path/to/world.sdf'.
         # Used to convert the file from xacro to sdf.
@@ -52,7 +52,18 @@ def generate_launch_description():
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            arguments=['/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist','/imu@sensor_msgs/msg/Imu@gz.msgs.IMU', '/joint_states@sensor_msgs/msg/JointState@gz.msgs.Model'],
+            arguments=['/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
+                       '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
+                        '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
+                        '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+                         ],
             output='screen'
-        )
+        ),
+        # Launch rviz
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            arguments=['-d', PathJoinSubstitution([amr_simulation_pkg_path, 'rviz/vehicle.rviz'])],
+            output='screen'
+        ) 
     ])
