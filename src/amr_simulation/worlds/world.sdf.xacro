@@ -65,7 +65,7 @@
         <xacro:include_model name="Obstacle Scenario8" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
         <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
         <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/>
-        <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/>
+        <!-- <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/> -->
 
     </world>
 </sdf>

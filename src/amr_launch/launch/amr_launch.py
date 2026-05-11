@@ -107,7 +107,7 @@ def generate_launch_description():
         parameters=[{'robot_description': vehicle_blue_sdf}] # you have to pass a string with the contents of the urdf file
     )
 
-
+    # https://robotics.stackexchange.com/questions/97957/ros2-set-parameters-from-file-and-directly
     use_sim_time = SetParameter(name='use_sim_time', value=True)
 
     #===========================================================================================================================================

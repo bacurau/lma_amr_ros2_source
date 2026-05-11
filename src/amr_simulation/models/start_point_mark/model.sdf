@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<sdf version="1.10">
+    <model name='start_point_mark'>
+        <link name='box_link'>
+            <visual name='box_visual'>
+                <geometry>
+                    <box>
+                        <size>2.5 2 0</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>1 0 0.929 1</ambient>
+                    <diffuse>1 0 0.929 1</diffuse>
+                    <specular>1 1 1 1</specular>
+                </material>
+            </visual>
+            <enable_wind>false</enable_wind>
+        </link>
+        <static>true</static>
+        <self_collide>false</self_collide>
+    </model>
+</sdf>

@@ -291,10 +291,6 @@
       <uri>model://obstacle_scenario</uri>
       <pose>-25 25 0 0 0 10</pose>
     </include>
-    <include>
-      <name>vehicle</name>
-      <uri>model://vehicle_blue</uri>
-      <pose>2 4 0.05 0 0 0</pose>
-    </include>
+    <!-- <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/> -->
   </world>
 </sdf>
