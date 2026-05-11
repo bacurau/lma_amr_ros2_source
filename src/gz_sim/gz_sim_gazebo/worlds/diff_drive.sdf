@@ -65,15 +65,16 @@ https://github.com/gazebosim/docs/blob/master/ionic/tutorials/sensors/sensor_tut
       </link>
     </model>
 
-    <!-- This is an option to spawn the model directly -->
-    <include>
-      <!-- <uri>file://model.sdf</uri> -->
-      <!-- <uri>file://model.sdf</uri> -->
-      <uri>package://ros_gz_example_description/models/diff_drive</uri>
-      <name>robot</name>
-      <pose>0 0 0.5 0 0 0</pose>
-    </include>
 
+    <!-- This is an option to spawn the model directly -->
+
+    <model name="amr_robot_model_name">
+      <self_collide>true</self_collide>
+      <pose>0 0 0.5 0 0 0</pose>
+      <include merge="true">
+        <uri>package://gz_sim_description/models/diff_drive</uri>
+      </include>
+    </model>
 
     <!--wall-->
     <model name='wall'>

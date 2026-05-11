@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Following directive defines the project name.
-project(ros_gz_example_gazebo)
+project(gz_sim_gazebo)
 
 
 # Following directives find required packages and load their configuration.
 # The 'set' directive defines a variable (e.g. 'GZ_PLUGIN_VER').
 # Such variables can be used lateron in the CMakeLists.txt file.
 find_package(ament_cmake REQUIRED)
-find_package(ros_gz_example_description REQUIRED)
+find_package(gz_sim_description REQUIRED)
 
 find_package(gz-cmake3 REQUIRED)
 find_package(gz-plugin2 REQUIRED COMPONENTS register)
@@ -29,7 +29,7 @@ else()
 endif()
 
 # Following 'install' directive ensures that the 'worlds' subfolder
-# will be copied to the 'share/ros_gz_example_gazebo/worlds'
+# will be copied to the 'share/gz_sim_gazebo/worlds'
 # subfolder of the installation directory.
 install(
   DIRECTORY worlds/
