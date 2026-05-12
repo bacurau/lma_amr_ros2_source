@@ -54,7 +54,10 @@ class ConvertJoystickCommandsToCmdVel : public rclcpp::Node
 {
 public:
   explicit ConvertJoystickCommandsToCmdVel();
- 
+  void setLinearVelocityWithComplementaryFilter(const bool forward, const bool backward);
+  void setAngularVelocityWithComplementaryFilter(const bool turn_right, const bool turn_left);
+  void setLinearVelocityToReachWithLimits(const int velocity_increment_signal);
+  void setAngularVelocityToReachWithLimits(const int velocity_increment_signal);
   // ~ConvertJoystickCommandsToCmdVel();
 
 private:
@@ -70,13 +73,18 @@ private:
   // Be careful with these parameters when you are using the real robot.
   double current_linear_velocity=0.0;
   double current_angular_velocity=0.0;
-  double minimum_linear_velocity=0.0;
   double maximum_linear_velocity=5; // 5 ms per second is the maximum linear velocity the simulated robot should achieve. 
-  double minimum_angular_velocity=0.0;
+  double minimum_linear_velocity=0.0;
   double maximum_angular_velocity=1.5708; // 90 degrees in radians
-  double linear_velocity_increment= maximum_linear_velocity/100;
-  double angular_velocity_increment= maximum_angular_velocity/100;
-  
+  double minimum_angular_velocity=0.0;
+  double linear_velocity_increment= maximum_linear_velocity/20;
+  double angular_velocity_increment= maximum_angular_velocity/20;
+  double linear_velocity_to_reach=0.0;
+  double angular_velocity_to_reach=0.0;
+  const double alpha=0.2; // the complementary filter parameter, change it as you see fit. It should be between 0 and 1.
+  double epsilon=1e-3; // because of the complementary filter, the velocity never reaches 0. To make sure the velocity is set to 0, a threshold is used.
+   //------ Buttons used to change robot speed ----------
+  int velocity_increment_signal = 1;
 };
 
 

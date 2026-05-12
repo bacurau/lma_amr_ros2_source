@@ -20,6 +20,7 @@ def generate_launch_description():
                 )
 
     joystick_to_cmd_vel_node = Node(
+        #prefix='gdbserver localhost:3000',
         package='joystick_to_cmd_vel',
         executable='joystick_to_cmd_vel_node',
         name='joystick_to_cmd_vel_node', 

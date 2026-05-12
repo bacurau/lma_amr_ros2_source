@@ -27,7 +27,7 @@
             <pose relative_to='__model__'>0.5 0 0.4 0 0 0</pose>
             <inertial> <!--inertial
             properties of the link mass, inertia matix-->
-                <mass>10.14395</mass>
+                <mass>2.14395</mass>
                 <inertia>
                     <ixx>0.095329</ixx>
                     <ixy>0</ixy>
@@ -66,7 +66,7 @@
             <pose relative_to="chassis">-0.5 0.6 0 -1.5707 0 0</pose> <!--angles
         are in radian-->
             <inertial>
-                <mass>2</mass>
+                <mass>1</mass>
                 <inertia>
                     <ixx>0.043333</ixx>
                     <ixy>0</ixy>
@@ -105,7 +105,7 @@
             <pose relative_to="chassis">-0.5 -0.6 0 -1.5707 0 0</pose> <!--angles
         are in radian-->
             <inertial>
-                <mass>2</mass>
+                <mass>1</mass>
                 <inertia>
                     <ixx>0.043333</ixx>
                     <ixy>0</ixy>
