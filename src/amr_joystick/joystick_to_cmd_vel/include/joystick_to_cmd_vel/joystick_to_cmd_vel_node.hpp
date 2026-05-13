@@ -81,7 +81,7 @@ private:
   double angular_velocity_increment= maximum_angular_velocity/20;
   double linear_velocity_to_reach=0.0;
   double angular_velocity_to_reach=0.0;
-  const double alpha=0.2; // the complementary filter parameter, change it as you see fit. It should be between 0 and 1.
+  const double alpha=0.7; // the complementary filter parameter, change it as you see fit. It should be between 0 and 1.
   double epsilon=1e-3; // because of the complementary filter, the velocity never reaches 0. To make sure the velocity is set to 0, a threshold is used.
    //------ Buttons used to change robot speed ----------
   int velocity_increment_signal = 1;

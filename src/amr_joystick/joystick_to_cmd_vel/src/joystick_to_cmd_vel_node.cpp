@@ -14,16 +14,16 @@ ConvertJoystickCommandsToCmdVel::ConvertJoystickCommandsToCmdVel()
   publisher_cmd_vel_stamped = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 3); // queue size
 }
 
-void ConvertJoystickCommandsToCmdVel::setAngularVelocityWithComplementaryFilter(const bool turn_right, const bool turn_left)
+void ConvertJoystickCommandsToCmdVel::setAngularVelocityWithComplementaryFilter(const bool turn_left, const bool turn_right)
 {
-  if(turn_right){
-    current_angular_velocity = alpha*current_angular_velocity + (1-alpha)*angular_velocity_to_reach;
-  } else if(turn_left){
-    current_angular_velocity = alpha*current_angular_velocity + (1-alpha)*(-angular_velocity_to_reach);
+  if(turn_left){
+    current_angular_velocity = alpha*angular_velocity_to_reach + (1-alpha)*current_angular_velocity;
+  } else if(turn_right){
+    current_angular_velocity = alpha*(-angular_velocity_to_reach) + (1-alpha)*(current_angular_velocity);
   } else{
-    current_angular_velocity = (alpha*current_angular_velocity);
+    current_angular_velocity = (1-alpha)*(current_angular_velocity);
   }
-   if(std::abs(current_angular_velocity) < epsilon) current_angular_velocity = 0.0;
+  if(std::abs(current_angular_velocity) < epsilon) current_angular_velocity = 0.0;
 }
 
 
@@ -31,12 +31,13 @@ void ConvertJoystickCommandsToCmdVel::setAngularVelocityWithComplementaryFilter(
 
 void ConvertJoystickCommandsToCmdVel::setLinearVelocityWithComplementaryFilter(const bool forward, const bool backward)
 {
+  //https://www.quora.com/What-is-a-complimentary-filter-How-does-it-differ-from-a-Kalman-filter
   if(forward){
-    current_linear_velocity = alpha*current_linear_velocity + (1-alpha)*linear_velocity_to_reach;
+    current_linear_velocity = alpha*linear_velocity_to_reach + (1-alpha)*current_linear_velocity;
   } else if(backward){
-    current_linear_velocity = alpha*current_linear_velocity + (1-alpha)*(-linear_velocity_to_reach);
+    current_linear_velocity = alpha*(-linear_velocity_to_reach) + (1-alpha)*(current_linear_velocity);
   } else{
-    current_linear_velocity = (alpha*current_linear_velocity);
+    current_linear_velocity = (1-alpha)*current_linear_velocity;
   }
   if(std::abs(current_linear_velocity) < epsilon) current_linear_velocity = 0.0;
 }
@@ -84,13 +85,13 @@ void ConvertJoystickCommandsToCmdVel::joyCallback(const sensor_msgs::msg::Joy::S
   this->setAngularVelocityWithComplementaryFilter(
     (joy_msg->buttons[X_BUTTON] == BUTTON_PRESSED) | (joy_msg->buttons[DIRECTIONAL_PAD_LEFT] == BUTTON_PRESSED)
   , (joy_msg->buttons[B_BUTTON] == BUTTON_PRESSED) | (joy_msg->buttons[DIRECTIONAL_PAD_RIGHT] == BUTTON_PRESSED));
-  message_to_publish_cmd_vel->angular.z = this->current_angular_velocity;
+  message_to_publish_cmd_vel->angular.z = current_angular_velocity;
 
   // Move backward or forward
   this->setLinearVelocityWithComplementaryFilter(
     (joy_msg->buttons[Y_BUTTON] == BUTTON_PRESSED) | (joy_msg->buttons[DIRECTIONAL_PAD_UP] == BUTTON_PRESSED)
   , (joy_msg->buttons[A_BUTTON] == BUTTON_PRESSED) | (joy_msg->buttons[DIRECTIONAL_PAD_DOWN] == BUTTON_PRESSED));
-  message_to_publish_cmd_vel->linear.x = this->current_linear_velocity;
+  message_to_publish_cmd_vel->linear.x = current_linear_velocity;
 
   if(joy_msg->buttons[LB_BUTTON] == BUTTON_PRESSED){
     this->setLinearVelocityToReachWithLimits(-velocity_increment_signal);
