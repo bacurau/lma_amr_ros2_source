@@ -33,6 +33,7 @@ Examples:
 - ```./main.sh "Debug"```builds in Debug mode and then runs.
 - ```./main.sh "Debug" 1```builds in Debug mode, but does not run the project.
 - ```./main.sh ``` builds in the standard mode (Release) and then runs.
+- ```./main.sh Release 1``` builds in the standard mode (Release), but does not run the project..
 
 
 After the first execution of main.sh, to re-run the project, just execute run_project.sh.
@@ -43,25 +44,23 @@ After the first execution of main.sh, to re-run the project, just execute run_pr
 ## Organization
 
 Scripts:
-- main.sh: installs the dependencies; builds ros2 project; creates and builds micro-ROS agent; change ROS_DOMAIN_ID to 25; and runs this ros2 project.
+- main.bash: installs the dependencies; builds ros2 project; creates and builds micro-ROS agent; change ROS_DOMAIN_ID to 25; and runs this ros2 project.
 
-    - install_dependencies.sh: installs the ros2 project dependencies with rosdep.
+    - install_dependencies.bash: installs the ros2 project dependencies with rosdep.
 
-    - create_and_build_microROS_agent.sh: Creates and builds the micro-ROS agent for the AMR project
+    - create_and_build_microROS_agent.bash: Creates and builds the micro-ROS agent for the AMR project
 
-    - run_project.sh: Changes ROS_DOMAIN_ID to 25 and runs amr ros2 project.
+    - run_project.bash: Changes ROS_DOMAIN_ID to 25 and runs amr ros2 project.
 
 
 
-The main.sh script calls the other scripts. 
+The main.bash script calls the other scripts. 
 
 
 
 
 ## Notes
-1. To allow the execution of the main.sh script and the individual execution of any script, before 
-any command is executed the following line was added to ensure that every script runs in the
-root of the workspace, i.e., lma_amr_source/.
+1. Before any command is executed the scripts navigates to the root of the workspace. Properly executing the ros2 commands in the correct folder.
 
 ```bash
 cd .. # Navigate to the root of the workspace, so you can install the dependencies and build ros2 packages properly.
