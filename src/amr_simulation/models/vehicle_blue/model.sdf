@@ -197,6 +197,7 @@
                 2 0 0 0 0 0
             </pose>
             <sensor name="imu_sensor" type="imu">
+                <localization>ENU</localization>
                 <gz_frame_id>IMU_MTI_680g_Link</gz_frame_id>
                 <always_on>1</always_on>
                 <update_rate>100</update_rate>

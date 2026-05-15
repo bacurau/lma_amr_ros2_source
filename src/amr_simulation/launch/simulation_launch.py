@@ -76,7 +76,7 @@ def generate_launch_description():
     #==================================================================================================================
 
     # Spawns a the robot model in gazebo simulation.
-    robot_position = {'x': '2.0', 'y': '4.0', 'z': '0.01', 'R': '0.0', 'P': '0.0', 'Y': '0.0'}
+    robot_position = {'x': '0.0', 'y': '0.0', 'z': '0.01', 'R': '0.0', 'P': '0.0', 'Y': '0.0'}
     mark_position = robot_position.copy()
     mark_position['x'] = str(float(mark_position['x']) + 0.5) # spawn the mark a bit ahead of the robot
    
