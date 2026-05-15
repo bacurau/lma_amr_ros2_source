@@ -10,14 +10,31 @@ from launch_ros.substitutions import FindPackageShare
 # This launch was based on the launch present at the link https://gazebosim.org/docs/harmonic/ros2_launch_gazebo/
 
 def generate_launch_description():
+    
+    
+    #===============================================Find packages and launch files=====================================
+    #==================================================================================================================
+    
+    # Find paths to packages from install/share.
     ros_gz_sim_pkg_path = get_package_share_directory('ros_gz_sim')
     amr_description_pkg_path = FindPackageShare('amr_description')  #
     amr_simulation_pkg_path = FindPackageShare('amr_simulation')  #
+
+    # Create paths for 2 gazebo launch files: one for launching the gazebo simulation and the other for spawning models.
     gz_launch_path = PathJoinSubstitution([ros_gz_sim_pkg_path, 'launch', 'gz_sim.launch.py'])
     gz_spawn_model_launch_path = PathJoinSubstitution([ros_gz_sim_pkg_path, 'launch', 'gz_spawn_model.launch.py'])
+    
 
-    # this process runs the command 'ros2 run xacro xacro path/to/world.sdf.xacro > path/to/world.sdf'.
-    # Used to convert the file from xacro to sdf.
+    ''' ==============================================Important note =================================================
+        The following section create elements which will be inserted in LaunchDescription to execute. The order of 
+        insertion determinates the order of execution. So, [nodeA,nodeB], executes nodeA and then nodeB.
+    ================================================================================================================== '''
+
+
+    #================================================Converting Xacro to SDF===========================================
+    #==================================================================================================================
+
+    # This process runs the command 'ros2 run xacro xacro path/to/world.sdf.xacro > path/to/world.sdf'.
     create_xacro_cmd =  ExecuteProcess(
             cmd=[[
                 FindExecutable(name='ros2'),
@@ -28,7 +45,11 @@ def generate_launch_description():
             ]],
             shell=True
         )
-    # needed so models and scenarios can be found using model://name in the sdf file.
+    
+    #========================================Setting Gazebo environment variables======================================
+    #==================================================================================================================
+
+    # Needed so models and scenarios can be found using model://name in the sdf file.
     set_gz_resource_path = SetEnvironmentVariable(
             'GZ_SIM_RESOURCE_PATH',[
             PathJoinSubstitution([amr_simulation_pkg_path, 'models']),
@@ -38,65 +59,92 @@ def generate_launch_description():
             amr_description_pkg_path
             ]
         )
-     # To launch gazebo simulation.
+    
+    #=========================================Launching Gazebo Simulation==============================================
+    #==================================================================================================================
+    
     launch_gazebo_simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gz_launch_path),
         launch_arguments={
-            'gz_args': [PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world.sdf -r'])], 
+            'gz_args': [PathJoinSubstitution([amr_simulation_pkg_path, 'worlds/world.sdf -r '])], 
             'on_exit_shutdown': 'True'
         }.items(),
     )
 
-    robot_position = {'x': '2.0', 'y': '4.0', 'z': '0.01', 'roll': '0.0', 'pitch': '0.0', 'yaw': '0.0'}
-    # To spawn a model in gazebo simulation.
-    spawn_model_node = IncludeLaunchDescription(
+
+    #=======================================Spawning Models in Gazebo==================================================
+    #==================================================================================================================
+
+    # Spawns a the robot model in gazebo simulation.
+    robot_position = {'x': '2.0', 'y': '4.0', 'z': '0.01', 'R': '0.0', 'P': '0.0', 'Y': '0.0'}
+    mark_position = robot_position.copy()
+    mark_position['x'] = str(float(mark_position['x']) + 0.5) # spawn the mark a bit ahead of the robot
+   
+    spawn_robot_model = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gz_spawn_model_launch_path),
         launch_arguments={
             'world':'default', # name of the world given in the sdf file, not the name of the sdf file itself.
             'file': [PathJoinSubstitution([amr_simulation_pkg_path, 'models/vehicle_blue/model.sdf'])],
             'entity_name': 'my_vehicle',
-            'x': robot_position['x'],
-            'y': robot_position['y'],
-            'z': robot_position['z'],
-            'roll': robot_position['roll'],
-            'pitch': robot_position['pitch'],
-            'yaw': robot_position['yaw'],
-            'on_exit_shutdown': 'True'
+            **robot_position,
         }.items(),
     )
 
 
-     # To spawn a model in gazebo simulation.
-    spawn_start_point_mark_model_node = IncludeLaunchDescription(
+    # Spawns a starting point mark in gazebo simulation.
+    spawn_start_point_mark_model = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gz_spawn_model_launch_path),
         launch_arguments={
             'world':'default', # name of the world given in the sdf file, not the name of the sdf file itself.
             'file': [PathJoinSubstitution([amr_simulation_pkg_path, 'models/start_point_mark/model.sdf'])],
             'entity_name': 'my_mark',
-            'x': str(float(robot_position['x']) + 0.5), # spawn the mark a bit ahead of the robot
-            'y': robot_position['y'],
-            'z': robot_position['z'],
-            'roll': robot_position['roll'],
-            'pitch': robot_position['pitch'],
-            'yaw': robot_position['yaw'],
-            'on_exit_shutdown': 'True'
+            **mark_position,
         }.items(),
     )
 
+    #====================================Bridging and remapping Gazebo topics to ROS 2=================================
+    #==================================================================================================================
 
-    # Bridging and remapping Gazebo topics to ROS 2 (replace with your own topics)
     # https://github.com/gazebosim/ros_gz/blob/jazzy/ros_gz_bridge/README.md
+    # https://github.com/gazebosim/ros_gz/pull/826 to override the frame_id.
     ros2_gazebo_bridge_node = Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
             arguments=['/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
-                       '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU',
                         '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
                         '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+                        '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+                       # '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
                          ],
-            output='screen'
+            output='screen',
         )
     
+    # To make odometry and pose use the same frame used in ROS 2 another brigde is used.
+    odometry_ros2_gazebo_bridge_node = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            arguments=['/model/my_vehicle/odometry@nav_msgs/msg/Odometry[gz.msgs.Odometry',
+                        '/model/my_vehicle/pose@geometry_msgs/msg/PoseStamped[gz.msgs.Pose'],
+            output='screen',
+            parameters=[
+                {'override_frame_id': 'odom_frame'}
+            ],
+    )
+    
+    # To make IMU use the same frame used in ROS 2 another brigde is used.
+    imu_ros2_gazebo_bridge_node = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            arguments=['/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'],
+            output='screen',
+            parameters=[
+                {'override_frame_id': 'IMU_MTI_680g_Link'}
+            ],
+    )
+
+
+    #==================================================================================================================
+
     # Launch rviz
     rviz2_node = Node(
             package='rviz2',
@@ -105,14 +153,17 @@ def generate_launch_description():
             output='screen'
     )
 
-
-
+    #==================================================== Executing the actions ========================================
+    #===================================================================================================================
+    
     return LaunchDescription([
         create_xacro_cmd,
         set_gz_resource_path,
         launch_gazebo_simulation,
-        spawn_model_node,
-        spawn_start_point_mark_model_node,
+        spawn_robot_model,
+        spawn_start_point_mark_model,
         ros2_gazebo_bridge_node,
-        rviz2_node
+        odometry_ros2_gazebo_bridge_node,
+        imu_ros2_gazebo_bridge_node,
+        #rviz2_node
     ])

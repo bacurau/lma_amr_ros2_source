@@ -54,3 +54,43 @@ ros2 launch amr_simulation simulation_launch.py
 ```
 
 5. A simulated world in gazebo should open.
+
+
+## Troubleshooting
+
+
+### RVIZ2 not showing the topic messages messages
+An issue we had was the messages no being shown in rviz2. Even though the topic existed and was publishing messages, we would get the message: _Showing [0] points from [0] messages_. This error was caused by a failure in the tfs.
+
+When our sensor does not define a frame using  ```<gz_frame_id>name of your frame</gz_frame_id>```, it was observed that gazebo uses a standard, ```model_name::link_name::type_of_sensor```. When we bridged the lidar, odometry, and imu topics to ros2, it could not find a transform between ```model_name::link_name::type_of_sensor``` and the ```base_link```.
+Example: gazebo lidar frame id = my_vehicle::lidar_link::gpu_lidar, base_link = chassis.
+
+As you can see in the image, there is no transform between these 2 frames.
+![tf tree](images/tf_tree.png)
+
+Solution: insert inside of the ```<sensor></sensor>``` tags the tag ```<gz_frame_id>lidar_link</gz_frame_id>```. Now, the lidar topic will have the correct frame in its header.
+
+> [!NOTE]
+> You can overwrite a topic frame id in the launch file as well
+> Example: 
+```
+  imu_ros2_gazebo_bridge_node = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            arguments=['/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'],
+            output='screen',
+            parameters=[
+                {'override_frame_id': 'IMU_MTI_680g_Link'}
+            ],
+    )
+```
+
+
+### [GUI] [Err] [VisualizeLidar.cc:285] The lidar entity with topic '['/scan'] could not be found. Error displaying lidar visual. 
+
+According to https://www.reddit.com/r/ROS/comments/1r8tebh/jazzyharmonic_visualizelidar_error_topic_scan/ and
+https://robotics.stackexchange.com/questions/118158/entity-spawning-issue-ros-gz-sim-solved-by-listing-link-potentially-bug, the sensor is not properly registred in the gazebo scene. A temporary fix is to query the robot model and the lidar link, which will register the sensor.
+
+```gz model -m name_of_model -l name_of_lidar_link```
+
+Example: ```gz model -m my_vehicle -l lidar_link```
