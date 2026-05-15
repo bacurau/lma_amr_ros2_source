@@ -114,7 +114,8 @@ def generate_launch_description():
                         '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
                         '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
                         '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-                       # '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+                        '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+                        '/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'
                          ],
             output='screen',
         )
@@ -131,16 +132,16 @@ def generate_launch_description():
             ],
     )
     
-    # To make IMU use the same frame used in ROS 2 another brigde is used.
-    imu_ros2_gazebo_bridge_node = Node(
-            package='ros_gz_bridge',
-            executable='parameter_bridge',
-            arguments=['/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'],
-            output='screen',
-            parameters=[
-                {'override_frame_id': 'IMU_MTI_680g_Link'}
-            ],
-    )
+    # # To make IMU use the same frame used in ROS 2 another brigde is used.
+    # imu_ros2_gazebo_bridge_node = Node(
+    #         package='ros_gz_bridge',
+    #         executable='parameter_bridge',
+    #         arguments=['/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'],
+    #         output='screen',
+    #         parameters=[
+    #             {'override_frame_id': 'IMU_MTI_680g_Link'}
+    #         ],
+    # )
 
 
     #==================================================================================================================
@@ -164,6 +165,6 @@ def generate_launch_description():
         spawn_start_point_mark_model,
         ros2_gazebo_bridge_node,
         odometry_ros2_gazebo_bridge_node,
-        imu_ros2_gazebo_bridge_node,
+        #imu_ros2_gazebo_bridge_node,
         #rviz2_node
     ])
