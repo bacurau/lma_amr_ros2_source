@@ -44,7 +44,10 @@ def generate_launch_description():
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
         launch_arguments={
-            'gz_args': PathJoinSubstitution([pkg_project_gazebo, 'worlds', 'diff_drive.sdf'])
+            'gz_args': [
+                '-r ',
+                PathJoinSubstitution([pkg_project_gazebo, 'worlds', 'diff_drive.sdf']),
+            ]
         }.items(),
     )
 
