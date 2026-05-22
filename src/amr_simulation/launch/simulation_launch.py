@@ -154,6 +154,21 @@ def generate_launch_description():
             output='screen'
     )
 
+
+
+    pose_to_odometry = Node(
+            package='amr_simulation',
+            executable='convert_pose_to_odometry_node',
+            output='screen',
+            name="convert_pose_to_odometry_node"
+    )
+
+
+
+
+
+
+
     #==================================================== Executing the actions ========================================
     #===================================================================================================================
     
@@ -165,6 +180,7 @@ def generate_launch_description():
         spawn_start_point_mark_model,
         ros2_gazebo_bridge_node,
         odometry_ros2_gazebo_bridge_node,
+        pose_to_odometry
         #imu_ros2_gazebo_bridge_node,
         #rviz2_node
     ])
