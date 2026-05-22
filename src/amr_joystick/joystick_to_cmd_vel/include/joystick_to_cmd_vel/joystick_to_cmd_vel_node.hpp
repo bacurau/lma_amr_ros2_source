@@ -73,9 +73,9 @@ private:
   // Be careful with these parameters when you are using the real robot.
   double current_linear_velocity=0.0;
   double current_angular_velocity=0.0;
-  double maximum_linear_velocity=5; // 5 ms per second is the maximum linear velocity the simulated robot should achieve. 
+  double maximum_linear_velocity=2; // 5 ms per second is the maximum linear velocity the simulated robot should achieve. 
   double minimum_linear_velocity=0.0;
-  double maximum_angular_velocity=1.5708; // 90 degrees in radians
+  double maximum_angular_velocity=1.5708/2.0; // 45 degrees in radians
   double minimum_angular_velocity=0.0;
   double linear_velocity_increment= maximum_linear_velocity/20;
   double angular_velocity_increment= maximum_angular_velocity/20;
