@@ -5,7 +5,8 @@ from launch.actions import SetEnvironmentVariable, IncludeLaunchDescription,Exec
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution,FindExecutable
 from launch_ros.substitutions import FindPackageShare
-
+from launch.event_handlers import OnProcessExit,OnExecutionComplete
+from launch.actions import RegisterEventHandler
 
 # This launch was based on the launch present at the link https://gazebosim.org/docs/harmonic/ros2_launch_gazebo/
 
@@ -70,7 +71,6 @@ def generate_launch_description():
             'on_exit_shutdown': 'True'
         }.items(),
     )
-
 
     #=======================================Spawning Models in Gazebo==================================================
     #==================================================================================================================
@@ -175,9 +175,21 @@ def generate_launch_description():
     return LaunchDescription([
         create_xacro_cmd,
         set_gz_resource_path,
-        launch_gazebo_simulation,
-        spawn_robot_model,
-        spawn_start_point_mark_model,
+        RegisterEventHandler(
+            OnProcessExit(
+                target_action=create_xacro_cmd,
+                on_exit=[
+                    launch_gazebo_simulation
+                    ]
+            )
+        ),
+        RegisterEventHandler(
+            OnExecutionComplete(
+                target_action=launch_gazebo_simulation,
+                on_completion=[  spawn_robot_model,
+                                spawn_start_point_mark_model]
+            )
+        ),
         ros2_gazebo_bridge_node,
         odometry_ros2_gazebo_bridge_node,
         pose_to_odometry
