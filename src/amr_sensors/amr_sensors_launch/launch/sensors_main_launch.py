@@ -6,7 +6,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     
-    share_launch_path = FindPackageShare('amr_sensors')
+    share_launch_path = FindPackageShare('amr_sensors_launch')
     launch_imu_file_path = PathJoinSubstitution([
             share_launch_path, 
             'launch', 

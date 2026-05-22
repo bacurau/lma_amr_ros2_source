@@ -47,7 +47,7 @@ from launch.substitutions import LaunchConfiguration,  PathJoinSubstitution
 def generate_launch_description():
         
     velodyne_ns = LaunchConfiguration('velodyne_ns')
-    amr_sensors_share_dir = ament_index_python.packages.get_package_share_directory('amr_sensors')
+    amr_sensors_share_dir = ament_index_python.packages.get_package_share_directory('amr_sensors_launch')
     driver_params_file = PathJoinSubstitution([amr_sensors_share_dir, 'param', [velodyne_ns,'_params.yaml']])
     velodyne_driver_node = launch_ros.actions.Node(package='velodyne_driver',
                                                    executable='velodyne_driver_node',

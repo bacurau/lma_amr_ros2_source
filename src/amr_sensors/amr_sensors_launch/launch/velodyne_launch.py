@@ -5,7 +5,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    share_launch_path = FindPackageShare('amr_sensors')
+    share_launch_path = FindPackageShare('amr_sensors_launch')
     launch_velodyne_file_path = PathJoinSubstitution([
             share_launch_path, 
             'launch/secondary_launchs', 
