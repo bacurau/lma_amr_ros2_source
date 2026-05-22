@@ -204,7 +204,7 @@
                 <visualize>true</visualize>
                 <topic>imu</topic>
                 <!-- <gz_frame_id>IMU_MTI_680g_Link</gz_frame_id> -->
-                <!-- <imu>
+               <imu>
                     <angular_velocity>
                         <x>
                             <noise type="gaussian">
@@ -245,15 +245,15 @@
                             </noise>
                         </z>
                     </linear_acceleration>
-                </imu> -->
+                </imu>
             </sensor>
         </link>
 
         <link name="lidar_link">
-             <pose relative_to='chassis'>
+            <pose relative_to='chassis'>
                 0 0 0.5 0 0 0
             </pose>
-            
+
             <inertial>
                 <mass>0.1</mass>
                 <inertia>
