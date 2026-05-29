@@ -10,5 +10,5 @@
         frame_id: Velodyne_Front_Right_D_Link
         model: VLP16
         rpm: 600.0
-        port: 2370
+        port: 2371
         timestamp_first_packet: false
