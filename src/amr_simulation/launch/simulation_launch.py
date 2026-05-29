@@ -132,28 +132,7 @@ def generate_launch_description():
             ],
     )
     
-    # # To make IMU use the same frame used in ROS 2 another brigde is used.
-    # imu_ros2_gazebo_bridge_node = Node(
-    #         package='ros_gz_bridge',
-    #         executable='parameter_bridge',
-    #         arguments=['/imu@sensor_msgs/msg/Imu[gz.msgs.IMU'],
-    #         output='screen',
-    #         parameters=[
-    #             {'override_frame_id': 'IMU_MTI_680g_Link'}
-    #         ],
-    # )
-
-
     #==================================================================================================================
-
-    # Launch rviz
-    rviz2_node = Node(
-            package='rviz2',
-            executable='rviz2',
-            arguments=['-d', PathJoinSubstitution([amr_simulation_pkg_path, 'rviz/vehicle.rviz'])],
-            output='screen'
-    )
-
 
 
     pose_to_odometry = Node(
@@ -193,6 +172,4 @@ def generate_launch_description():
         ros2_gazebo_bridge_node,
         odometry_ros2_gazebo_bridge_node,
         pose_to_odometry
-        #imu_ros2_gazebo_bridge_node,
-        #rviz2_node
     ])

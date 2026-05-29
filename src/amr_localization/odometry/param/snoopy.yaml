@@ -3,8 +3,10 @@ odometry_node:
     odometry:
       publish_tf: true
       frame_id: "odom_frame" #"odom"
-      child_frame_id: "chassis" #"Base_Link"
+      child_frame_id: "Base_Link" #"chassis" 
     wheels:
-      separation: 1.2 #0.750 #0.7462 #0.7743
-      radius_left: 0.4 #0.1 #0.1015 #0.1026 #0.11418
-      radius_right: 0.4 #0.1 #0.1026 #0.11418
+      separation: 0.750 #0.7462 #0.7743 # 1.2
+      radius_left:  0.1 #0.1015 #0.1026 #0.11418 #0.4
+      radius_right:  0.1 #0.1026 #0.11418 0.4
+
+# 1.2, 0.4, 0.4 are simulation values
