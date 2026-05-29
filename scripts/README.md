@@ -24,16 +24,19 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 
 First execution:
 ```bash
-./main.sh [ Type of build ] [1:for not running after building]
+./main.sh [0: To use simulation | 1: To use the actual robot (default 1)] [ Type of build (default Release) ] [1:for not running after building  | 0: To run after building (default 0)]
 ```
 > [!NOTE]
 > [] indicates optional argument.
 
 Examples:
-- ```./main.sh "Debug"```builds in Debug mode and then runs.
-- ```./main.sh "Debug" 1```builds in Debug mode, but does not run the project.
 - ```./main.sh ``` builds in the standard mode (Release) and then runs.
-- ```./main.sh Release 1``` builds in the standard mode (Release), but does not run the project..
+- ```./main.sh 0 ``` builds in the standard mode (Release), and then runs in simulation mode.
+- ```./main.sh 1 "Debug"```builds in Debug mode and then runs.
+- ```./main.sh 1 "Debug" 1```builds in Debug mode, but does not run the project.
+- ```./main.sh 1 Release 1``` builds in the standard mode (Release), but does not run the project..
+
+
 
 
 After the first execution of main.sh, to re-run the project, just execute run_project.sh.
