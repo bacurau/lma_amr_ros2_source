@@ -5,7 +5,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import  PathJoinSubstitution
-
+from launch_ros.actions import SetParameter
 def generate_launch_description():
 
     #================= Find and include stm32 launch file ==============================================================
@@ -69,14 +69,44 @@ def generate_launch_description():
     joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path)
 
 
+
+
+    #======================== Create rviz2 node for visualizing localization results ==========================================================
+    rviz2_node = Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2_node',
+            arguments=['-d', PathJoinSubstitution([share_localization_launch_path, 'rviz/odometry.rviz'])],
+            output='screen'
+    )
+
     #=========================================================================================================================================
+
+
+    # Find and include localization main launch file
+    share_folder_path_for_robot_localization = FindPackageShare('robot_localization')
+    robot_localization_launch_file_path = PathJoinSubstitution([
+            share_folder_path_for_robot_localization, 
+            'launch', 
+            'ekf.launch.py'
+        ])
+    robot_localization_launch_file = IncludeLaunchDescription(robot_localization_launch_file_path)
+
+
+
+    use_sim_time = SetParameter(name='use_sim_time', value=True)
+
+
+
 
     ## Add action to the launch. Each action is a launch file or a node and will be executed in the order they were added.
     main_launch_description = LaunchDescription() ## Create launch description
-    main_launch_description.add_action(robot_state_publisher_node)
-    main_launch_description.add_action(sensors_launch_file)
-    main_launch_description.add_action(stm32_launch_file)
+    main_launch_description.add_action(use_sim_time)
+    #main_launch_description.add_action(robot_state_publisher_node)
+    #main_launch_description.add_action(sensors_launch_file)
+    #main_launch_description.add_action(stm32_launch_file)
     main_launch_description.add_action(localization_launch_file)
-    main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
-
+    #main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
+    main_launch_description.add_action(rviz2_node)
+    main_launch_description.add_action(robot_localization_launch_file)
     return main_launch_description
