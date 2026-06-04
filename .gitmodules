@@ -13,3 +13,9 @@
 [submodule "src/amr_sensors/velodyne"]
 	path = src/amr_sensors/velodyne
 	url = https://github.com/ros-drivers/velodyne.git
+[submodule "robot_localization"]
+	path = robot_localization
+	url = git@github.com:cra-ros-pkg/robot_localization.git
+[submodule "src/amr_localization/robot_localization"]
+	path = src/amr_localization/robot_localization
+	url = git@github.com:cra-ros-pkg/robot_localization.git
