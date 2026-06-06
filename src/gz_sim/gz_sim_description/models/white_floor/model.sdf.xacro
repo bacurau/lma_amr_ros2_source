@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<sdf version="1.10" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="x_size_floor" value="150" />
+    <xacro:property name="y_size_floor" value="150" />
+    <xacro:macro name="brown_floor">
+        <model name="Brown Floor">
+            <static>true</static>
+            <link name="floor_link">
+                <collision name="collision">
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>${x_size_floor} ${y_size_floor}</size>
+                        </plane>
+                    </geometry>
+                </collision>
+                <visual name="visual">
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>${x_size_floor} ${y_size_floor}</size>
+                        </plane>
+                    </geometry>
+                    <material>
+                        <ambient>0.6 0.3 0.1 1</ambient>
+                        <diffuse>0.6 0.3 0.1 1</diffuse>
+                        <specular>0.1 0.1 0.1 1</specular>
+                    </material>
+                </visual>
+            </link>
+        </model>
+    </xacro:macro>
+</sdf>

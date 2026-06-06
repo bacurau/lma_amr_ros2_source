@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<sdf version="1.10" xmlns:xacro="http://www.ros.org/wiki/xacro">
+     <xacro:macro name="include_model" params="name model pose">
+        <include>
+        <name>${name}</name>
+        <uri>model://${model}</uri>
+        <pose>${pose}</pose>
+        </include>
+    </xacro:macro>
+    
+    <world name="default">
+        <!-- ===================================================== -->
+        <!-- Plugins needed for the simulation                     -->
+        <!-- Gazebo uses system plugins to enable core features   -->
+        <!-- ===================================================== -->
+
+        <!-- Physics engine: enables dynamics simulation
+     (gravity, collisions, wheel motion, forces) -->
+        <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics" />
+
+        <!-- User commands: allows external commands such as
+     spawning or deleting entities from ROS or CLI -->
+        <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands" />
+
+        <!-- Scene broadcaster: sends simulation updates to
+     the GUI so objects move correctly in the viewer -->
+        <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster" />
+
+        <!-- Sensors system: enables simulated sensors such as
+     LiDAR, cameras, IMU, etc. Without this plugin
+     sensors exist but do not produce data -->
+        <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+            <!-- Rendering engine used by sensors.
+       "ogre2" is standard but WSL2 often works better with "ogre". -->
+            <render_engine>ogre</render_engine>
+        </plugin>
+
+        <!-- Sun -->
+        <include>
+            <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun</uri>
+        </include>
+
+        <!-- +++++++++++++++++++++++++++++++++Import xacro files++++++++++++++++++++++++++++++++++++ -->
+        <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+        <xacro:property name="amr_simulation_install_path" value="$(find amr_simulation)" />
+        <xacro:include filename="${amr_simulation_install_path}/models/white_floor/model.sdf.xacro" ns="floor_namespace"/>
+        <xacro:include filename="${amr_simulation_install_path}/scenarios/wall_fortress/model.sdf.xacro" ns="wall_fortress_namespace"/>
+
+        <!-- +++++++++++++++++++++++++++++++++Insert your models here++++++++++++++++++++++++++++++++++++ -->
+        <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+        <xacro:floor_namespace.brown_floor/>
+        <xacro:wall_fortress_namespace.wall_fortress/>
+        
+        <xacro:include_model name="Obstacle Scenario" model="obstacle_scenario" pose="0 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario4" model="obstacle_scenario" pose="0 -30 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario5" model="obstacle_scenario" pose="-30 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario6" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
+        <xacro:include_model name="Obstacle Scenario7" model="obstacle_scenario" pose=" 25 25 0 0 0 -10"/>
+        <xacro:include_model name="Obstacle Scenario8" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
+        <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
+        <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/>
+        <!-- <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/> -->
+
+    </world>
+</sdf>

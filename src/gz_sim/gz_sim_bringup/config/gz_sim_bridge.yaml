@@ -1,11 +1,11 @@
 ---
-- ros_topic_name: "/robot/cmd_vel"
+- ros_topic_name: "/robot/sim/cmd_vel"
   gz_topic_name: "/model/amr_robot_model_name/cmd_vel"
   ros_type_name: "geometry_msgs/msg/Twist"
   gz_type_name: "gz.msgs.Twist"
   direction: ROS_TO_GZ
 
-- ros_topic_name: "/clock"
+- ros_topic_name: "/robot/sim/clock"
   gz_topic_name: "/clock"
   ros_type_name: "rosgraph_msgs/msg/Clock"
   gz_type_name: "gz.msgs.Clock"
@@ -13,38 +13,38 @@
 
 # Sensors:
 
-- ros_topic_name: "/robot/odometry"
+- ros_topic_name: "/robot/sim/odom_frame"
   gz_topic_name: "/model/amr_robot_model_name/odometry"
   ros_type_name: "nav_msgs/msg/Odometry"
   gz_type_name: "gz.msgs.Odometry"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/robot/back_lidar/scan"
+- ros_topic_name: "/robot/sim/back_lidar/scan"
   gz_topic_name: "/model/amr_robot_model_name/back_lidar"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/robot/back_lidar/points"
+- ros_topic_name: "/robot/sim/back_lidar/points"
   gz_topic_name: "/model/amr_robot_model_name/back_lidar/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/robot/front_lidar/scan"
+- ros_topic_name: "/robot/sim/front_lidar/scan"
   gz_topic_name: "/model/amr_robot_model_name/front_lidar"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
 
-- ros_topic_name: "/robot/front_lidar/points"
+- ros_topic_name: "/robot/sim/front_lidar/points"
   gz_topic_name: "/model/amr_robot_model_name/front_lidar/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
 
 
-- ros_topic_name: "/joint_states"
+- ros_topic_name: "/robot/sim/joint_states"
   gz_topic_name: "/world/sensor_world/model/amr_robot_model_name/joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
   gz_type_name: "gz.msgs.Model"
