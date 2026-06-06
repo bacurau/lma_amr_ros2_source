@@ -3,7 +3,7 @@
      <xacro:macro name="include_model" params="name model pose">
         <include>
         <name>${name}</name>
-        <uri>model://${model}</uri>
+        <uri>package://gz_sim_description/scenarios/${model}</uri>
         <pose>${pose}</pose>
         </include>
     </xacro:macro>
@@ -46,25 +46,25 @@
 
         <!-- +++++++++++++++++++++++++++++++++Import xacro files++++++++++++++++++++++++++++++++++++ -->
         <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-        <xacro:property name="amr_simulation_install_path" value="$(find amr_simulation)" />
-        <xacro:include filename="${amr_simulation_install_path}/models/white_floor/model.sdf.xacro" ns="floor_namespace"/>
-        <xacro:include filename="${amr_simulation_install_path}/scenarios/wall_fortress/model.sdf.xacro" ns="wall_fortress_namespace"/>
+        <xacro:property name="gz_sim_description" value="$(find gz_sim_description)" />
+        <xacro:include filename="${gz_sim_description}/models/white_floor/model.sdf.xacro" ns="floor_namespace"/>
+        <xacro:include filename="${gz_sim_description}/scenarios/wall_fortress/model.sdf.xacro" ns="wall_fortress_namespace"/>
 
         <!-- +++++++++++++++++++++++++++++++++Insert your models here++++++++++++++++++++++++++++++++++++ -->
         <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
         <xacro:floor_namespace.brown_floor/>
-        <xacro:wall_fortress_namespace.wall_fortress/>
+        <!-- <xacro:wall_fortress_namespace.wall_fortress/>
         
         <xacro:include_model name="Obstacle Scenario" model="obstacle_scenario" pose="0 0 0 0 0 0"/>
-        <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/>
-        <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/> -->
+        <!-- <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario4" model="obstacle_scenario" pose="0 -30 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario5" model="obstacle_scenario" pose="-30 0 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario6" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
         <xacro:include_model name="Obstacle Scenario7" model="obstacle_scenario" pose=" 25 25 0 0 0 -10"/>
         <xacro:include_model name="Obstacle Scenario8" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
         <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
-        <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/>
+        <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/> -->
         <!-- <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/> -->
 
     </world>

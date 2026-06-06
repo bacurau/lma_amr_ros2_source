@@ -203,8 +203,8 @@ def generate_launch_description():
                     on_completion=[spawn_robot_model, spawn_start_point_mark_model],
                 )
             ),
-            bridge,
-            robot_state_publisher,
-            rviz,
+            # bridge,
+            # robot_state_publisher,
+            # rviz,
         ]
     )
