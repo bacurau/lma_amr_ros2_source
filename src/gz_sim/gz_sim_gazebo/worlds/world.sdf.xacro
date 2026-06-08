@@ -32,12 +32,7 @@
         <!-- Sensors system: enables simulated sensors such as
      LiDAR, cameras, IMU, etc. Without this plugin
      sensors exist but do not produce data -->
-        <plugin filename="gz-sim-sensors-system"
-            name="gz::sim::systems::Sensors">
-            <!-- Rendering engine used by sensors.
-       "ogre2" is standard but WSL2 often works better with "ogre". -->
-            <render_engine>ogre</render_engine>
-        </plugin>
+
 
         <!-- Sun -->
         <include>
@@ -53,18 +48,18 @@
         <!-- +++++++++++++++++++++++++++++++++Insert your models here++++++++++++++++++++++++++++++++++++ -->
         <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
         <xacro:floor_namespace.brown_floor/>
-        <!-- <xacro:wall_fortress_namespace.wall_fortress/>
+        <xacro:wall_fortress_namespace.wall_fortress/>
         
         <xacro:include_model name="Obstacle Scenario" model="obstacle_scenario" pose="0 0 0 0 0 0"/>
-        <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/> -->
-        <!-- <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario4" model="obstacle_scenario" pose="0 -30 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario5" model="obstacle_scenario" pose="-30 0 0 0 0 0"/>
         <xacro:include_model name="Obstacle Scenario6" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
         <xacro:include_model name="Obstacle Scenario7" model="obstacle_scenario" pose=" 25 25 0 0 0 -10"/>
         <xacro:include_model name="Obstacle Scenario8" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
         <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
-        <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/> -->
+        <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/>
         <!-- <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/> -->
 
     </world>
