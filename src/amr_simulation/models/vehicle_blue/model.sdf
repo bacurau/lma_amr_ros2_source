@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.10">
-    <model name='vehicle_blue' canonical_link='chassis'>
+    <model name='vehicle_blue' canonical_link='Base_Link'>
         <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
             <topic>joint_states</topic>
@@ -33,8 +33,8 @@
         <plugin filename="gz-sim-imu-system"
             name="gz::sim::systems::Imu">
         </plugin>
-        <!--chassis-->
-        <link name='chassis'>
+        <!--Base_Link-->
+        <link name='Base_Link'>
 
             <pose relative_to='__model__'>0.5 0 0.4 0 0 0</pose>
             <inertial> <!--inertial
@@ -75,7 +75,7 @@
         <!--Left
     wheel-->
         <link name='left_wheel'>
-            <pose relative_to="chassis">-0.5 0.6 0 -1.5707 0 0</pose> <!--angles
+            <pose relative_to="Base_Link">-0.5 0.6 0 -1.5707 0 0</pose> <!--angles
         are in radian-->
             <inertial>
                 <mass>1</mass>
@@ -114,7 +114,7 @@
         <!--The
     same as left wheel but with different position-->
         <link name='right_wheel'>
-            <pose relative_to="chassis">-0.5 -0.6 0 -1.5707 0 0</pose> <!--angles
+            <pose relative_to="Base_Link">-0.5 -0.6 0 -1.5707 0 0</pose> <!--angles
         are in radian-->
             <inertial>
                 <mass>1</mass>
@@ -152,7 +152,7 @@
 
         <!--arbitrary
     frame-->
-        <frame name="caster_frame" attached_to='chassis'>
+        <frame name="caster_frame" attached_to='Base_Link'>
             <pose>0.8 0 -0.2 0 0 0</pose>
         </frame>
 
@@ -193,7 +193,7 @@
         </link>
 
         <link name="IMU_MTI_680g_Link">
-            <pose relative_to='chassis'>
+            <pose relative_to='Base_Link'>
                 2 0 0 0 0 0
             </pose>
             <sensor name="imu_sensor" type="imu">
@@ -250,7 +250,7 @@
         </link>
 
         <link name="lidar_link">
-            <pose relative_to='chassis'>
+            <pose relative_to='Base_Link'>
                 0 0 0.5 0 0 0
             </pose>
 
@@ -309,13 +309,13 @@
         </link>
 
         <joint name='lidar_joint' type='fixed'>
-            <parent>chassis</parent>
+            <parent>Base_Link</parent>
             <child>lidar_link</child>
         </joint>
 
 
         <joint name="imu_joint" type="fixed">
-            <parent>chassis</parent>
+            <parent>Base_Link</parent>
             <child>IMU_MTI_680g_Link</child>
         </joint>
 
@@ -324,7 +324,7 @@
     wheel joint-->
         <joint name='left_wheel_joint' type='revolute'>
             <pose relative_to='left_wheel' />
-            <parent>chassis</parent>
+            <parent>Base_Link</parent>
             <child>left_wheel</child>
             <axis>
                 <xyz expressed_in='__model__'>0 1 0</xyz> <!--can
@@ -342,7 +342,7 @@
     wheel joint-->
         <joint name='right_wheel_joint' type='revolute'>
             <pose relative_to='right_wheel' />
-            <parent>chassis</parent>
+            <parent>Base_Link</parent>
             <child>right_wheel</child>
             <axis>
                 <xyz expressed_in='__model__'>0 1 0</xyz>
@@ -359,7 +359,7 @@
     wheel joint--> <!--pose
     defult value is the child-->
         <joint name='caster_wheel' type='ball'>
-            <parent>chassis</parent>
+            <parent>Base_Link</parent>
             <child>caster</child>
         </joint>
     </model>

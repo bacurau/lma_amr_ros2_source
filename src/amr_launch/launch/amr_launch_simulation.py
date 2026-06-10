@@ -61,6 +61,22 @@ def generate_launch_description():
 
     #===========================================================================================================================================
 
+
+
+
+
+
+    #======================== Create rviz2 node for visualizing localization results ==========================================================
+    rviz2_node = Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2_node',
+            arguments=['-d', PathJoinSubstitution([share_localization_launch_path, 'rviz/odometry.rviz'])],
+            output='screen'
+    )
+
+
+
     ## Create launch description and add actions, each action is a launch file or a node and
     ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
@@ -68,6 +84,10 @@ def generate_launch_description():
     main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
     main_launch_description.add_action(amr_simulation_launch_file)
+    main_launch_description.add_action(rviz2_node)
     main_launch_description.add_action(vehicle_blue_state_publisher_node_sdf)
+    
+
+    
     
     return main_launch_description

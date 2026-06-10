@@ -10,18 +10,20 @@ set(DEPENDENCIES
   "ament_cmake"
   "rclcpp"
   "sensor_msgs"
+  "nav_msgs"
+  "tf2"
 )
 
 set(EXECUTABLE_NAME "imu_covariance")
 
-# foreach(X IN LISTS DEPENDENCIES)
-#     find_package(${X} REQUIRED)
-# endforeach()
+foreach(X IN LISTS DEPENDENCIES)
+    find_package(${X} REQUIRED)
+endforeach()
 
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(sensor_msgs REQUIRED)
+# find_package(ament_cmake REQUIRED)
+# find_package(rclcpp REQUIRED)
+# find_package(sensor_msgs REQUIRED)
 
 
 add_executable(${EXECUTABLE_NAME} src/imu_covariance.cpp)

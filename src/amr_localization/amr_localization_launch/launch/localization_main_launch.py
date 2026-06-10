@@ -1,8 +1,8 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription,DeclareLaunchArgument
 from launch_ros.substitutions import FindPackageShare
-from launch.substitutions import  PathJoinSubstitution
-from launch_ros.actions import Node
+from launch.substitutions import  PathJoinSubstitution, LaunchConfiguration
+from launch_ros.actions import Node, LifecycleNode
 
 def generate_launch_description():
 
@@ -17,6 +17,7 @@ def generate_launch_description():
 
 
     imu_cov_node = Node(
+            #prefix='gdbserver localhost:3000',
             package='change_covariance_value',
             executable='imu_covariance',
             name='imu_covariance',
@@ -24,11 +25,31 @@ def generate_launch_description():
     )
 
 
+    autostart = DeclareLaunchArgument(
+        'autostart',
+        default_value='true',
+        description='Automatically configure and activate the node. Set to false for managed lifecycle control.')
+
+    ekf_node = LifecycleNode(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        namespace='',
+        output='screen',
+        autostart=LaunchConfiguration('autostart'),
+        parameters=[PathJoinSubstitution([FindPackageShare('amr_localization_launch'),'params','ekf.yaml'])]
+    )
+
+
+
+
     ## Create launch description and add actions, each action is a launch file or a node and
     ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
+    main_launch_description.add_action(autostart)
     main_launch_description.add_action(odometry_launch_file)
     main_launch_description.add_action(imu_cov_node)
+    main_launch_description.add_action(ekf_node)
 
     
     return main_launch_description
