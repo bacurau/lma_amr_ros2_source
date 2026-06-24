@@ -32,9 +32,8 @@ First execution:
 Examples:
 - ```./main.sh ``` builds in the standard mode (Release) and then runs.
 - ```./main.sh 0 ``` builds in the standard mode (Release), and then runs in simulation mode.
-- ```./main.sh 1 "Debug"```builds in Debug mode and then runs.
-- ```./main.sh 1 "Debug" 1```builds in Debug mode, but does not run the project.
-- ```./main.sh 1 Release 1``` builds in the standard mode (Release), but does not run the project..
+- ```./main.sh 1 1 Debug```builds in Debug mode, but does not run the project.
+- ```./main.sh 1 1 Release``` builds in the standard mode (Release), but does not run the project..
 
 
 

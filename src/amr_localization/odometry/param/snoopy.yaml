@@ -6,7 +6,7 @@ odometry_node:
       child_frame_id: "Base_Link" #"chassis" 
     wheels:
       separation: 0.750 #0.7462 #0.7743 # 1.2
-      radius_left:  0.1 #0.1015 #0.1026 #0.11418 #0.4
-      radius_right:  0.1 #0.1026 #0.11418 0.4
+      radius_left: 0.102986 #0.1015 #0.1026 #0.11418 #0.4
+      radius_right: 0.102986 #0.1026 #0.11418 0.4
 
 # 1.2, 0.4, 0.4 are simulation values
