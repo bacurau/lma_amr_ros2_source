@@ -12,6 +12,8 @@ set(DEPENDENCIES
   "sensor_msgs"
   "nav_msgs"
   "tf2"
+  "geometry_msgs"
+  "control_toolbox"
 )
 
 set(EXECUTABLE_NAME "imu_covariance")

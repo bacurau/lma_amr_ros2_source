@@ -165,7 +165,7 @@ void Odometry::publish(const rclcpp::Time & now)
   odom_msg->twist.covariance[14] = 1.0e-9;
   odom_msg->twist.covariance[21] = 1.0e-9;
   odom_msg->twist.covariance[28] = 1.0e-9;
-  odom_msg->twist.covariance[35] = 0.008;
+  odom_msg->twist.covariance[35] = 0.005;
 
   geometry_msgs::msg::TransformStamped odom_tf;
 

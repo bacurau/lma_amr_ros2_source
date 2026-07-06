@@ -4,7 +4,9 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 #include "nav_msgs/msg/odometry.hpp"
+#include "geometry_msgs/msg/vector3_stamped.hpp"
 #include "tf2/utils.hpp"
+#include "control_toolbox/low_pass_filter.hpp"
 #include <cmath>
 
 #define PI 3.141592
@@ -24,10 +26,13 @@ class ImuCovariance: public rclcpp::Node
     private:
         void GetImuMsgAndChangeCovarianceValues(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor);
         void CalculateImuPose(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor);
+        void RemoveBias_and_Drift(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor);
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscriber_imu_from_sensor;
         rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr publisher_imu_with_changed_covariance_values;
-        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publiser_odom_from_imu;
+        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publisher_odom_from_imu;
+        rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr publisher_correct_angular_velocities_from_imu;
         rclcpp::Time last_time = rclcpp::Time(0);
+        control_toolbox::LowPassFilter<std::vector<double>> low_pass_filter{400, 10, 1.0};
         double hypotenuse=0.0;
         double current_x_linear_acceleration=0.0;
         double current_yaw_rate=0.0;
