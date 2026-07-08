@@ -54,6 +54,7 @@ Odometry::Odometry():
   this->declare_parameter("wheels.separation", 0.74361);
   this->declare_parameter("wheels.radius_left", 0.102873);
   this->declare_parameter("wheels.radius_right", 0.102759);
+  this->declare_parameter("odometry.start_bias_calculation_for_imu",0);
 //TODO:: Trocar valores!!
   // Fator de escala obtido a partir do erro identificado após 10 voltas para cada sentido. Erro: 18 graus. Fs = 18/3600
   //float fs = (1.00506 / 1.00211) * 1.0012;
@@ -216,6 +217,7 @@ void Odometry::calculate_odometry(const rclcpp::Duration &duration,const sensor_
   last_joint_positions[0] = joint_state_msg->position[0];
   last_joint_positions[1] = joint_state_msg->position[1];
 
+  liberate_imu_bias_calculation(diff_joint_positions_left_wheel, diff_joint_positions_right_wheel);
 
   //========================= Calculate linear and angular velocities ================================
   // 1- Calculate the linear velocity for the right and left wheels.
@@ -245,4 +247,28 @@ void Odometry::calculate_odometry(const rclcpp::Duration &duration,const sensor_
   robot_vel_[2] = w_z;
 
   return ;
+}
+
+
+void Odometry::liberate_imu_bias_calculation(double diff_joint_positions_left_wheel, double diff_joint_positions_right_wheel){
+  static int number_of_callbacks_the_robot_did_not_move=0;
+  static int calculate_bias=0;
+  static int previous_calculate_bias=0;
+  if(std::abs(diff_joint_positions_left_wheel) < 1e-5 && std::abs(diff_joint_positions_right_wheel) < 1e-5){
+    number_of_callbacks_the_robot_did_not_move++;
+    if(number_of_callbacks_the_robot_did_not_move == 10){
+      number_of_callbacks_the_robot_did_not_move=0;
+      calculate_bias=1;
+    }
+  } else {
+      number_of_callbacks_the_robot_did_not_move=0;
+      calculate_bias=0;
+  }
+
+  if(previous_calculate_bias != calculate_bias){
+    std::vector<rclcpp::Parameter> all_new_parameters{rclcpp::Parameter("odometry.start_bias_calculation_for_imu", calculate_bias)};
+    this->set_parameters(all_new_parameters);
+    previous_calculate_bias = calculate_bias;
+  }
+  
 }

@@ -50,6 +50,7 @@ class Odometry : public rclcpp::Node
   void calculate_odometry(const rclcpp::Duration & duration, const sensor_msgs::msg::JointState::SharedPtr joint_state_msg);
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state_msg);
   void publish(const rclcpp::Time & now);
+  void liberate_imu_bias_calculation(double diff_joint_positions_left_wheel, double diff_joint_positions_right_wheel);
   
   
   //================================== Publihers ==================================//

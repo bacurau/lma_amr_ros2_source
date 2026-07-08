@@ -12,51 +12,78 @@ ImuCovariance::ImuCovariance(): rclcpp::Node("imu_covariance_calculator_node"){
   this->publisher_odom_from_imu = create_publisher<nav_msgs::msg::Odometry>("odom_from_imu",rclcpp::SensorDataQoS());
   this->publisher_correct_angular_velocities_from_imu = create_publisher<geometry_msgs::msg::Vector3Stamped>("corrected_angular_velocities_from_imu",rclcpp::SensorDataQoS());
   low_pass_filter.configure();
+
+  this->param_subscriber_for_start_bias_calculation_for_imu = std::make_shared<rclcpp::ParameterEventHandler>(this);
+  bias_parameter_call_back_handle = this->param_subscriber_for_start_bias_calculation_for_imu->add_parameter_callback("odometry.start_bias_calculation_for_imu",
+    std::bind(&ImuCovariance::LiberateNewBiasCalculation,this, std::placeholders::_1),
+    "odometry_node");
+  
 }
 
 
 
 void ImuCovariance::GetImuMsgAndChangeCovarianceValues(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor ){
-  RemoveBias_and_Drift(imu_msg_from_sensor);
+  //RemoveBias_and_Drift(imu_msg_from_sensor);
+
+  static double sum_of_z_angular_velocities = 0;
+
   CalculateImuPose(imu_msg_from_sensor);
-    auto imu_msg = std::make_unique<sensor_msgs::msg::Imu>(*imu_msg_from_sensor);
-    imu_msg->header.stamp = this->get_clock()->now();
-    // imu_msg->orientation_covariance[0] = 1e-3;
-    // imu_msg->orientation_covariance[4] = 1e-3;
-    // imu_msg->orientation_covariance[8] = 1e-3;
+  // this->get_parameter_or<double>(
+  //   "bias",
+  //   z_angular_velocity_bias,
+  //   0.0);
+  auto imu_msg = std::make_unique<sensor_msgs::msg::Imu>(*imu_msg_from_sensor);
+  imu_msg->header.stamp = this->get_clock()->now();
+  // imu_msg->orientation_covariance[0] = 1e-3;
+  // imu_msg->orientation_covariance[4] = 1e-3;
+  // imu_msg->orientation_covariance[8] = 1e-3;
 
-    imu_msg->angular_velocity_covariance[0] = 1e-2;
-    imu_msg->angular_velocity_covariance[4] = 1e-2;
-    imu_msg->angular_velocity_covariance[8] = 1e-3;
+  imu_msg->angular_velocity_covariance[0] = 1e-2;
+  imu_msg->angular_velocity_covariance[4] = 1e-2;
+  imu_msg->angular_velocity_covariance[8] = 1e-3;
 
-    imu_msg->linear_acceleration_covariance[0] = 1e-2;
-    imu_msg->linear_acceleration_covariance[4] = 1e-2;
-    imu_msg->linear_acceleration_covariance[8] = 1e-4;
+  imu_msg->linear_acceleration_covariance[0] = 1e-2;
+  imu_msg->linear_acceleration_covariance[4] = 1e-2;
+  imu_msg->linear_acceleration_covariance[8] = 1e-4;
 
 
-     std::vector<double> raw_data = {
-      imu_msg->angular_velocity.x,
-      imu_msg->angular_velocity.y,
-      imu_msg->angular_velocity.z
-     };
-    std::vector<double> filtered_data(raw_data.size(), 0.0);
+  std::vector<double> raw_data = {
+  imu_msg->angular_velocity.x,
+  imu_msg->angular_velocity.y,
+  imu_msg->angular_velocity.z
+  };
+  std::vector<double> filtered_data(raw_data.size(), 0.0);
+
+
+  // pass a low pass filter
+
+  try {
+      low_pass_filter.update(raw_data, filtered_data);
+    } catch (const std::exception & e) {
+      RCLCPP_ERROR(get_logger(), "Low-pass filter error: %s", e.what());
+      return;
+    }
+
+  // remove bias when robot is static.
+  sum_of_z_angular_velocities+=filtered_data[2];
+  z_angular_velocity_queue.push(filtered_data[2]);
+  if(z_angular_velocity_queue.size()>WINDOW_SIZE){
+    sum_of_z_angular_velocities-=z_angular_velocity_queue.front();
+    z_angular_velocity_queue.pop();
+  }
+  //RCLCPP_INFO(this->get_logger(),"size_of_queue %d",z_angular_velocity_queue.size());
+  if(use_bias && z_angular_velocity_queue.size()==WINDOW_SIZE){
+    filtered_data[2]-=sum_of_z_angular_velocities/(double)WINDOW_SIZE;
+    //RCLCPP_INFO(this->get_logger(), "Filtered data: %lf. Removed bias: %lf",filtered_data[2],sum_of_z_angular_velocities/20.0);
+  }
+
+  imu_msg->angular_velocity.x = filtered_data[0];
+  imu_msg->angular_velocity.y = filtered_data[1];
+  imu_msg->angular_velocity.z = filtered_data[2];
+
   
-    try {
-        low_pass_filter.update(raw_data, filtered_data);
-      } catch (const std::exception & e) {
-        RCLCPP_ERROR(get_logger(), "Low-pass filter error: %s", e.what());
-        return;
-      }
-
-    imu_msg->angular_velocity.x = filtered_data[0];
-    imu_msg->angular_velocity.y = filtered_data[1];
-    imu_msg->angular_velocity.z = filtered_data[2];
-
-
-
-
-    publisher_imu_with_changed_covariance_values->publish(std::move(imu_msg));
-    //std::make_unique<sensor_msgs::msg::Imu>();
+  publisher_imu_with_changed_covariance_values->publish(std::move(imu_msg));
+   
 }
 
 void ImuCovariance::RemoveBias_and_Drift(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor){
@@ -136,6 +163,15 @@ void ImuCovariance::CalculateImuPose(const sensor_msgs::msg::Imu::SharedPtr imu_
   last_time = time;
 }
 
+void ImuCovariance::LiberateNewBiasCalculation(const rclcpp::Parameter & p){
+   RCLCPP_INFO(
+          this->get_logger(), "Received an update to parameter \"%s\" of type %s: \"%ld\"",
+          p.get_name().c_str(),
+          p.get_type_name().c_str(),
+          p.as_int());
+    
+  use_bias=p.as_int();
+}
 
 int main(int argc, char ** argv)
 {

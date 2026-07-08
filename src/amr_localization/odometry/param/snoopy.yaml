@@ -3,10 +3,11 @@ odometry_node:
     odometry:
       publish_tf: true
       frame_id: "odom_frame" #"odom"
-      child_frame_id: "Base_Link" #"chassis" 
+      child_frame_id: "Base_Link" #"chassis"
+      start_bias_calculation_for_imu: 0 
     wheels:
       separation: 0.750 #0.7462 #0.7743 # 1.2
       radius_left: 0.102986 #0.1015 #0.1026 #0.11418 #0.4
       radius_right: 0.102986 #0.1026 #0.11418 0.4
-
+    
 # 1.2, 0.4, 0.4 are simulation values
