@@ -7,7 +7,7 @@ using namespace imu_covariance_namespace;
 
 ImuCovariance::ImuCovariance(): rclcpp::Node("imu_covariance_calculator_node"){
   this->subscriber_imu_from_sensor = this->create_subscription<sensor_msgs::msg::Imu>(
-    "/imu/data", rclcpp::SensorDataQoS(), std::bind(&ImuCovariance::GetImuMsgAndChangeCovarianceValues,this, std::placeholders::_1));
+    "/imu/data", rclcpp::SensorDataQoS(), std::bind(&ImuCovariance::ProcessImuMsg,this, std::placeholders::_1));
   this->publisher_imu_with_changed_covariance_values = create_publisher<sensor_msgs::msg::Imu>("new_imu_data",rclcpp::SensorDataQoS());
   this->publisher_odom_from_imu = create_publisher<nav_msgs::msg::Odometry>("odom_from_imu",rclcpp::SensorDataQoS());
   this->publisher_correct_angular_velocities_from_imu = create_publisher<geometry_msgs::msg::Vector3Stamped>("corrected_angular_velocities_from_imu",rclcpp::SensorDataQoS());
@@ -22,35 +22,49 @@ ImuCovariance::ImuCovariance(): rclcpp::Node("imu_covariance_calculator_node"){
 
 
 
-void ImuCovariance::GetImuMsgAndChangeCovarianceValues(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor ){
+void ImuCovariance::ProcessImuMsg(sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor ){
   //RemoveBias_and_Drift(imu_msg_from_sensor);
 
-  static double sum_of_z_angular_velocities = 0;
+ 
 
-  CalculateImuPose(imu_msg_from_sensor);
+ 
   // this->get_parameter_or<double>(
   //   "bias",
   //   z_angular_velocity_bias,
   //   0.0);
+  //auto imu_msg = std::make_unique<sensor_msgs::msg::Imu>(*imu_msg_from_sensor);
+ 
+
+  ChangeCovarianceValues(imu_msg_from_sensor);
+  RemoveBias_and_Drift(imu_msg_from_sensor);
+  CalculateImuPose(imu_msg_from_sensor);
   auto imu_msg = std::make_unique<sensor_msgs::msg::Imu>(*imu_msg_from_sensor);
   imu_msg->header.stamp = this->get_clock()->now();
-  // imu_msg->orientation_covariance[0] = 1e-3;
+  publisher_imu_with_changed_covariance_values->publish(std::move(imu_msg));
+   
+}
+
+void ImuCovariance::ChangeCovarianceValues(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_0_covariance){
+    // imu_msg->orientation_covariance[0] = 1e-3;
   // imu_msg->orientation_covariance[4] = 1e-3;
   // imu_msg->orientation_covariance[8] = 1e-3;
 
-  imu_msg->angular_velocity_covariance[0] = 1e-2;
-  imu_msg->angular_velocity_covariance[4] = 1e-2;
-  imu_msg->angular_velocity_covariance[8] = 1e-3;
+  imu_msg_with_0_covariance->angular_velocity_covariance[0] = 1e-2;
+  imu_msg_with_0_covariance->angular_velocity_covariance[4] = 1e-2;
+  imu_msg_with_0_covariance->angular_velocity_covariance[8] = 1e-3;
 
-  imu_msg->linear_acceleration_covariance[0] = 1e-2;
-  imu_msg->linear_acceleration_covariance[4] = 1e-2;
-  imu_msg->linear_acceleration_covariance[8] = 1e-4;
+  imu_msg_with_0_covariance->linear_acceleration_covariance[0] = 1e-2;
+  imu_msg_with_0_covariance->linear_acceleration_covariance[4] = 1e-2;
+  imu_msg_with_0_covariance->linear_acceleration_covariance[8] = 1e-4;
+}
 
+void ImuCovariance::RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_bias){
+   static double sum_of_z_angular_velocities = 0;
 
   std::vector<double> raw_data = {
-  imu_msg->angular_velocity.x,
-  imu_msg->angular_velocity.y,
-  imu_msg->angular_velocity.z
+  imu_msg_with_bias->angular_velocity.x,
+  imu_msg_with_bias->angular_velocity.y,
+  imu_msg_with_bias->angular_velocity.z
   };
   std::vector<double> filtered_data(raw_data.size(), 0.0);
 
@@ -77,40 +91,9 @@ void ImuCovariance::GetImuMsgAndChangeCovarianceValues(const sensor_msgs::msg::I
     //RCLCPP_INFO(this->get_logger(), "Filtered data: %lf. Removed bias: %lf",filtered_data[2],sum_of_z_angular_velocities/20.0);
   }
 
-  imu_msg->angular_velocity.x = filtered_data[0];
-  imu_msg->angular_velocity.y = filtered_data[1];
-  imu_msg->angular_velocity.z = filtered_data[2];
-
-  
-  publisher_imu_with_changed_covariance_values->publish(std::move(imu_msg));
-   
-}
-
-void ImuCovariance::RemoveBias_and_Drift(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor){
-  
-
-  std::vector<double> raw_data = {
-      imu_msg_from_sensor->angular_velocity.x,
-      imu_msg_from_sensor->angular_velocity.y,
-      imu_msg_from_sensor->angular_velocity.z
-  };
-  std::vector<double> filtered_data(raw_data.size(), 0.0);
-  
-   try {
-      low_pass_filter.update(raw_data, filtered_data);
-    } catch (const std::exception & e) {
-      RCLCPP_ERROR(get_logger(), "Low-pass filter error: %s", e.what());
-      return;
-    }
-
-  // Create the message to publish
-  auto angular_velocity_from_imu_without_bias_and_drift = std::make_unique<geometry_msgs::msg::Vector3Stamped>();
-  angular_velocity_from_imu_without_bias_and_drift->header.frame_id  = "IMU_MTI_680g_Link";
-  angular_velocity_from_imu_without_bias_and_drift->header.stamp = imu_msg_from_sensor->header.stamp;
-  angular_velocity_from_imu_without_bias_and_drift->vector.x = filtered_data[0];
-  angular_velocity_from_imu_without_bias_and_drift->vector.y = filtered_data[1];
-  angular_velocity_from_imu_without_bias_and_drift->vector.z = filtered_data[2];
-  // publisher_correct_angular_velocities_from_imu->publish(std::move(angular_velocity_from_imu_without_bias_and_drift));
+  imu_msg_with_bias->angular_velocity.x = filtered_data[0];
+  imu_msg_with_bias->angular_velocity.y = filtered_data[1];
+  imu_msg_with_bias->angular_velocity.z = filtered_data[2];
 }
 
 
@@ -120,7 +103,7 @@ void ImuCovariance::CalculateImuPose(const sensor_msgs::msg::Imu::SharedPtr imu_
   // angular velocity from imu is in radian/s  
   rclcpp::Time time = imu_msg_from_sensor->header.stamp;
   //double bias = -0.05;
-  current_x_linear_acceleration += ( imu_msg_from_sensor->linear_acceleration.x - current_x_linear_acceleration) * 0.1 ;
+  current_x_linear_acceleration = imu_msg_from_sensor->linear_acceleration.x;
   current_yaw_rate = imu_msg_from_sensor->angular_velocity.z;
   auto duration = rclcpp::Duration::from_nanoseconds(time.nanoseconds() - last_time.nanoseconds());
   double delta_t =  duration.seconds();

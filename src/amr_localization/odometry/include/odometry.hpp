@@ -29,7 +29,10 @@
 #include "geometry_msgs/msg/transform_stamped.hpp" 
 #include <memory>
 
-
+#define WINDOW_TO_CHECK_IF_THE_ROBOT_IS_NOT_MOVING 4
+// imu is at 400 hz and odometry is at 40 hz (microros sends joints positions every 25 ms).
+// Detection of stopped movement for 0.1 seconds.
+// 40*0.1 = 4. This is the window size.
 namespace lma
 {
 namespace scooby

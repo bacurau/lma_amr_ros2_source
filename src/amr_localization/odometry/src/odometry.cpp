@@ -256,7 +256,7 @@ void Odometry::liberate_imu_bias_calculation(double diff_joint_positions_left_wh
   static int previous_calculate_bias=0;
   if(std::abs(diff_joint_positions_left_wheel) < 1e-5 && std::abs(diff_joint_positions_right_wheel) < 1e-5){
     number_of_callbacks_the_robot_did_not_move++;
-    if(number_of_callbacks_the_robot_did_not_move == 10){
+    if(number_of_callbacks_the_robot_did_not_move == WINDOW_TO_CHECK_IF_THE_ROBOT_IS_NOT_MOVING){
       number_of_callbacks_the_robot_did_not_move=0;
       calculate_bias=1;
     }

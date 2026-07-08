@@ -10,7 +10,12 @@
 #include <cmath>
 #include <queue>
 #define PI 3.141592
-#define WINDOW_SIZE 100
+#define WINDOW_SIZE 40
+
+// imu is at 400 hz and odometry is at 40 hz (microros sends joints positions every 25 ms).
+// Detection of stopped movement for 0.1 seconds.
+// 400*0.1 = 40. This is the window size.
+
 namespace imu_covariance_namespace
 {
 
@@ -24,9 +29,10 @@ class ImuCovariance: public rclcpp::Node
         ~ImuCovariance(){};
 
     private:
-        void GetImuMsgAndChangeCovarianceValues(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor);
+        void ProcessImuMsg(sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor );
+        void ChangeCovarianceValues(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_0_covariance);
+        void RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_bias);
         void CalculateImuPose(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor);
-        void RemoveBias_and_Drift(const sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor);
         void LiberateNewBiasCalculation(const rclcpp::Parameter & parameter);
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscriber_imu_from_sensor;
         rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr publisher_imu_with_changed_covariance_values;
