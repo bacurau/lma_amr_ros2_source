@@ -263,3 +263,24 @@ void Odometry::liberate_imu_bias_calculation(double diff_joint_positions_left_wh
   }
   
 }
+
+// void Odometry::CalculateConfidenceInterval(double vl, double vr){
+//   // using the theorem of triangle inequality, and replacing a=vl and b=-vl
+//   // you will be able to realize that x is always <=1.
+//   // https://www.stat.ubc.ca/~saif.syed/math100V/Math%20100V%20-%20Triangle%20inequality.pdf
+//   double x = std::abs(vl -vr)/(std::abs(vl)+std::abs(vr)) ; 
+  
+//   // linear equation create by using 2 points (0,10) and (1,90)
+//   // Confidence is a value used to reduce the variance of the odometry, and thus, making the kalman filter
+//   // really on in it more. Example: if we have 90% confidence on the odometry, we want to reduce its variance
+//   // by 90%, keeping only 10% of the original value.  odom_msg->twist.covariance[35] = 0.005*0.1; 
+
+
+//   // when the robot is moving in a straight line, we give the odometry 90% confidence.
+//   //  vl = vr, then x =0
+//   // when the robot is turning in the same axis, we give the odometry 10% confidence vl = - vr, then x = 1
+//   double confidence = 80*x+10; 
+
+
+
+// }
