@@ -9,8 +9,10 @@
 #include "control_toolbox/low_pass_filter.hpp"
 #include <cmath>
 #include <queue>
+#include <deque>
 #define PI 3.141592
 #define WINDOW_SIZE 40
+#define VARIANCE_WINDOW_SIZE 40
 
 // imu is at 400 hz and odometry is at 40 hz (microros sends joints positions every 25 ms).
 // Detection of stopped movement for 0.1 seconds.
@@ -54,6 +56,7 @@ class ImuCovariance: public rclcpp::Node
         double z_angular_velocity_bias=0.0;
         int use_bias=0;
         std::queue<double>z_angular_velocity_queue;
+        std::deque<double>z_angular_velocity_queue_for_variance;
 };
 
 

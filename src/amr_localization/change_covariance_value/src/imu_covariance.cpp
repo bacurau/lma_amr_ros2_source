@@ -49,10 +49,30 @@ void ImuCovariance::ChangeCovarianceValues(sensor_msgs::msg::Imu::SharedPtr imu_
   // imu_msg->orientation_covariance[4] = 1e-3;
   // imu_msg->orientation_covariance[8] = 1e-3;
 
+
+  static double angular_z_velocity_window_sum = 0;
+  z_angular_velocity_queue_for_variance.push_back(imu_msg_with_0_covariance->angular_velocity.z);
+  int queue_size = z_angular_velocity_queue_for_variance.size();
+  if(queue_size>VARIANCE_WINDOW_SIZE){
+    angular_z_velocity_window_sum-=z_angular_velocity_queue_for_variance.front();
+    z_angular_velocity_queue_for_variance.pop_front();
+  }
+  angular_z_velocity_window_sum+=imu_msg_with_0_covariance->angular_velocity.z;
+  double mean = angular_z_velocity_window_sum/queue_size;
+
+  // sum of 0 to N of (xi - mean)^2
+  double angular_velocity_z_variance = 0;
+  if(queue_size>1){
+    for (int z: z_angular_velocity_queue_for_variance){
+      angular_velocity_z_variance+= (z-mean)*(z-mean);
+    }
+    angular_velocity_z_variance/=(queue_size-1);
+  }
+
   imu_msg_with_0_covariance->angular_velocity_covariance[0] = 1e-2;
   imu_msg_with_0_covariance->angular_velocity_covariance[4] = 1e-2;
-  imu_msg_with_0_covariance->angular_velocity_covariance[8] = 1e-3;
-
+  imu_msg_with_0_covariance->angular_velocity_covariance[8] = angular_velocity_z_variance;
+  
   imu_msg_with_0_covariance->linear_acceleration_covariance[0] = 1e-2;
   imu_msg_with_0_covariance->linear_acceleration_covariance[4] = 1e-2;
   imu_msg_with_0_covariance->linear_acceleration_covariance[8] = 1e-4;
@@ -85,10 +105,9 @@ void ImuCovariance::RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_ms
     sum_of_z_angular_velocities-=z_angular_velocity_queue.front();
     z_angular_velocity_queue.pop();
   }
-  //RCLCPP_INFO(this->get_logger(),"size_of_queue %d",z_angular_velocity_queue.size());
+ 
   if(use_bias && z_angular_velocity_queue.size()==WINDOW_SIZE){
     filtered_data[2]-=sum_of_z_angular_velocities/(double)WINDOW_SIZE;
-    //RCLCPP_INFO(this->get_logger(), "Filtered data: %lf. Removed bias: %lf",filtered_data[2],sum_of_z_angular_velocities/20.0);
   }
 
   imu_msg_with_bias->angular_velocity.x = filtered_data[0];
