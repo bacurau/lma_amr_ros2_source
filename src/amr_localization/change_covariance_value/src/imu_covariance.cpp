@@ -81,7 +81,7 @@ void ImuCovariance::ChangeCovarianceValues(sensor_msgs::msg::Imu::SharedPtr imu_
 void ImuCovariance::RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_bias){
    static double sum_of_z_angular_velocities = 0;
 
-  std::vector<double> raw_data = {
+ /** std::vector<double> raw_data = {
   imu_msg_with_bias->angular_velocity.x,
   imu_msg_with_bias->angular_velocity.y,
   imu_msg_with_bias->angular_velocity.z
@@ -97,22 +97,24 @@ void ImuCovariance::RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_ms
       RCLCPP_ERROR(get_logger(), "Low-pass filter error: %s", e.what());
       return;
     }
-
+*/
   // remove bias when robot is static.
-  sum_of_z_angular_velocities+=filtered_data[2];
-  z_angular_velocity_queue.push(filtered_data[2]);
+  sum_of_z_angular_velocities+=imu_msg_with_bias->angular_velocity.z;
+  z_angular_velocity_queue.push(imu_msg_with_bias->angular_velocity.z);
   if(z_angular_velocity_queue.size()>WINDOW_SIZE){
     sum_of_z_angular_velocities-=z_angular_velocity_queue.front();
     z_angular_velocity_queue.pop();
   }
  
   if(use_bias && z_angular_velocity_queue.size()==WINDOW_SIZE){
-    filtered_data[2]-=sum_of_z_angular_velocities/(double)WINDOW_SIZE;
+    imu_msg_with_bias->angular_velocity.z-=sum_of_z_angular_velocities/(double)WINDOW_SIZE;
+    //RCLCPP_INFO(this->get_logger(), "Filtered data: %lf. Removed bias: %lf",filtered_data[2],sum_of_z_angular_velocities/20.0);
   }
 
-  imu_msg_with_bias->angular_velocity.x = filtered_data[0];
+  /*imu_msg_with_bias->angular_velocity.x = filtered_data[0];
   imu_msg_with_bias->angular_velocity.y = filtered_data[1];
   imu_msg_with_bias->angular_velocity.z = filtered_data[2];
+*/
 }
 
 
@@ -164,14 +166,20 @@ void ImuCovariance::CalculateImuPose(const sensor_msgs::msg::Imu::SharedPtr imu_
   previous_x_linear_velocity = current_x_linear_velocity;
   last_time = time;
 }
+/*
 
+  Description:  This function is called when there is an update in the parameter odometry.start_bias_calculation_for_imu. 
+                It is responsible for locking or unlocking the bias recalculation for the imu.
+                This parameter is set by the odometry class in the function: Odometry::liberate_imu_bias_calculation.
+
+*/
 void ImuCovariance::LiberateNewBiasCalculation(const rclcpp::Parameter & p){
-   RCLCPP_INFO(
+ /*  RCLCPP_INFO(
           this->get_logger(), "Received an update to parameter \"%s\" of type %s: \"%ld\"",
           p.get_name().c_str(),
           p.get_type_name().c_str(),
           p.as_int());
-    
+   */ 
   use_bias=p.as_int();
 }
 

@@ -93,7 +93,7 @@ def generate_launch_description():
 
     ## Add action to the launch. Each action is a launch file or a node and will be executed in the order they were added.
     main_launch_description = LaunchDescription() ## Create launch description
-    main_launch_description.add_action(use_sim_time)
+    #main_launch_description.add_action(use_sim_time)
     main_launch_description.add_action(robot_state_publisher_node)
     main_launch_description.add_action(sensors_launch_file)
     main_launch_description.add_action(stm32_launch_file)

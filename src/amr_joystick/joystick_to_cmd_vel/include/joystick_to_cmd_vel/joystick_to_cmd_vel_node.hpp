@@ -77,8 +77,8 @@ private:
   double minimum_linear_velocity=0.0;
   double maximum_angular_velocity=1.5708/2.0; // 45 degrees in radians
   double minimum_angular_velocity=0.0;
-  double linear_velocity_increment= maximum_linear_velocity/20;
-  double angular_velocity_increment= maximum_angular_velocity/20;
+  double linear_velocity_increment= maximum_linear_velocity/100;
+  double angular_velocity_increment= maximum_angular_velocity/100;
   double linear_velocity_to_reach=0.0;
   double angular_velocity_to_reach=0.0;
   const double alpha=0.7; // the complementary filter parameter, change it as you see fit. It should be between 0 and 1.

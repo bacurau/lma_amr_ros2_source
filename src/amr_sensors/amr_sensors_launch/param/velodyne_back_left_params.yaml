@@ -1,6 +1,6 @@
 /velodyne_back_left/velodyne_driver_node:
     ros__parameters:
-        device_ip: 169.254.138.144 #192.200.253.202
+        device_ip: 192.200.253.202
         gps_time: false
         time_offset: 0.0
         enabled: true
