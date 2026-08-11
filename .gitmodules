@@ -19,3 +19,9 @@
 [submodule "src/amr_localization/robot_localization"]
 	path = src/amr_localization/robot_localization
 	url = git@github.com:cra-ros-pkg/robot_localization.git
+[submodule "src/amr_sensors/marvelmind_ros2_upstream"]
+	path = src/amr_sensors/marvelmind_ros2_upstream
+	url = https://github.com/MarvelmindRobotics/marvelmind_ros2_upstream
+[submodule "src/amr_sensors/marvelmind_ros2_msgs_upstream"]
+	path = src/amr_sensors/marvelmind_ros2_msgs_upstream
+	url = https://github.com/MarvelmindRobotics/marvelmind_ros2_msgs_upstream
