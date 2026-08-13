@@ -10,7 +10,7 @@ Current launch files being integrated:
 
 > [!IMPORTANT]
 > If you have not built the project with the scripts, the micro-ROS communication will fail.
-> Do not use the launch directly do launch the project. Use the scripts.
+> Do not use the launch directly to launch the project. Use the scripts.
 
 ## Use
 
