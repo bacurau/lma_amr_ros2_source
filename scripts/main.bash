@@ -16,9 +16,8 @@ set -eo pipefail
 
 export ROS_DOMAIN_ID=25
 build_type="${1:-Release}"
-scripts_path="./" # Path to the scripts folder
-path_to_root_of_project="../" # directory you can see src,build,install,log in a ros2 project.
-
+scripts_path=$(dirname "${BASH_SOURCE[0]}") # Path to the scripts folder
+cd "$scripts_path/.." # navigate to root of ros2 project. It is the directory where you can see src,build,install,log in a ros2 project.
 
 # Description:  Creates a menu
 #
@@ -55,7 +54,6 @@ create_menu(){
 #================================================================================================================
 #=====================  Build and run or just run ros2 project =================================================
 #================================================================================================================
-cd $path_to_root_of_project
 create_menu "Build And Run" "Just Run"
 
 if [[ $choosen_item -eq 0 ]]; then
