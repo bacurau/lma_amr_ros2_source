@@ -18,9 +18,9 @@ tmux new-session -d -s $session_name
 
 tmux split-window -h
 
-tmux send-keys -t $session_name:0.0 "./main.bash ; sleep 5; exit 0" ENTER
+tmux send-keys -t $session_name:0.1 "./main.bash ; sleep 5; exit 0" ENTER
 
-tmux send-keys -t $session_name:0.1 "export ROS_DOMAIN_ID=25  && ros2 bag play $bag_name --exclude-topics ${topics_to_exclude[*]} -p; sleep 5; exit 0" ENTER
+tmux send-keys -t $session_name:0.0 "export ROS_DOMAIN_ID=25  && ros2 bag play $bag_name --exclude-topics ${topics_to_exclude[*]} -p; sleep 5; exit 0" ENTER
 
 tmux attach -t $session_name
 
