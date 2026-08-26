@@ -39,11 +39,9 @@ class ImuCovariance: public rclcpp::Node
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscriber_imu_from_sensor;
         rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr publisher_imu_with_changed_covariance_values;
         rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publisher_odom_from_imu;
-        rclcpp::Publisher<geometry_msgs::msg::Vector3Stamped>::SharedPtr publisher_correct_angular_velocities_from_imu;
         std::shared_ptr<rclcpp::ParameterEventHandler> param_subscriber_for_start_bias_calculation_for_imu;
         std::shared_ptr<rclcpp::ParameterCallbackHandle> bias_parameter_call_back_handle;
         rclcpp::Time last_time = rclcpp::Time(0);
-        control_toolbox::LowPassFilter<std::vector<double>> low_pass_filter{400, 5, 1.0};
         double hypotenuse=0.0;
         double current_x_linear_acceleration=0.0;
         double current_yaw_rate=0.0;

@@ -10,8 +10,6 @@ ImuCovariance::ImuCovariance(): rclcpp::Node("imu_covariance_calculator_node"){
     "/imu/data", rclcpp::SensorDataQoS(), std::bind(&ImuCovariance::ProcessImuMsg,this, std::placeholders::_1));
   this->publisher_imu_with_changed_covariance_values = create_publisher<sensor_msgs::msg::Imu>("new_imu_data",rclcpp::SensorDataQoS());
   this->publisher_odom_from_imu = create_publisher<nav_msgs::msg::Odometry>("odom_from_imu",rclcpp::SensorDataQoS());
-  this->publisher_correct_angular_velocities_from_imu = create_publisher<geometry_msgs::msg::Vector3Stamped>("corrected_angular_velocities_from_imu",rclcpp::SensorDataQoS());
-  low_pass_filter.configure();
 
   this->param_subscriber_for_start_bias_calculation_for_imu = std::make_shared<rclcpp::ParameterEventHandler>(this);
   bias_parameter_call_back_handle = this->param_subscriber_for_start_bias_calculation_for_imu->add_parameter_callback("odometry.start_bias_calculation_for_imu",
@@ -20,21 +18,7 @@ ImuCovariance::ImuCovariance(): rclcpp::Node("imu_covariance_calculator_node"){
   
 }
 
-
-
 void ImuCovariance::ProcessImuMsg(sensor_msgs::msg::Imu::SharedPtr imu_msg_from_sensor ){
-  //RemoveBias_and_Drift(imu_msg_from_sensor);
-
- 
-
- 
-  // this->get_parameter_or<double>(
-  //   "bias",
-  //   z_angular_velocity_bias,
-  //   0.0);
-  //auto imu_msg = std::make_unique<sensor_msgs::msg::Imu>(*imu_msg_from_sensor);
- 
-
   ChangeCovarianceValues(imu_msg_from_sensor);
   RemoveBias_and_Drift(imu_msg_from_sensor);
   CalculateImuPose(imu_msg_from_sensor);
@@ -45,11 +29,6 @@ void ImuCovariance::ProcessImuMsg(sensor_msgs::msg::Imu::SharedPtr imu_msg_from_
 }
 
 void ImuCovariance::ChangeCovarianceValues(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_0_covariance){
-    // imu_msg->orientation_covariance[0] = 1e-3;
-  // imu_msg->orientation_covariance[4] = 1e-3;
-  // imu_msg->orientation_covariance[8] = 1e-3;
-
-
   static double angular_z_velocity_window_sum = 0;
   z_angular_velocity_queue_for_variance.push_back(imu_msg_with_0_covariance->angular_velocity.z);
   int queue_size = z_angular_velocity_queue_for_variance.size();
@@ -80,24 +59,6 @@ void ImuCovariance::ChangeCovarianceValues(sensor_msgs::msg::Imu::SharedPtr imu_
 
 void ImuCovariance::RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_msg_with_bias){
    static double sum_of_z_angular_velocities = 0;
-
- /** std::vector<double> raw_data = {
-  imu_msg_with_bias->angular_velocity.x,
-  imu_msg_with_bias->angular_velocity.y,
-  imu_msg_with_bias->angular_velocity.z
-  };
-  std::vector<double> filtered_data(raw_data.size(), 0.0);
-
-
-  // pass a low pass filter
-
-  try {
-      low_pass_filter.update(raw_data, filtered_data);
-    } catch (const std::exception & e) {
-      RCLCPP_ERROR(get_logger(), "Low-pass filter error: %s", e.what());
-      return;
-    }
-*/
   // remove bias when robot is static.
   sum_of_z_angular_velocities+=imu_msg_with_bias->angular_velocity.z;
   z_angular_velocity_queue.push(imu_msg_with_bias->angular_velocity.z);
@@ -110,11 +71,6 @@ void ImuCovariance::RemoveBias_and_Drift(sensor_msgs::msg::Imu::SharedPtr imu_ms
     imu_msg_with_bias->angular_velocity.z-=sum_of_z_angular_velocities/(double)WINDOW_SIZE;
     //RCLCPP_INFO(this->get_logger(), "Filtered data: %lf. Removed bias: %lf",filtered_data[2],sum_of_z_angular_velocities/20.0);
   }
-
-  /*imu_msg_with_bias->angular_velocity.x = filtered_data[0];
-  imu_msg_with_bias->angular_velocity.y = filtered_data[1];
-  imu_msg_with_bias->angular_velocity.z = filtered_data[2];
-*/
 }
 
 
@@ -173,13 +129,7 @@ void ImuCovariance::CalculateImuPose(const sensor_msgs::msg::Imu::SharedPtr imu_
                 This parameter is set by the odometry class in the function: Odometry::liberate_imu_bias_calculation.
 
 */
-void ImuCovariance::LiberateNewBiasCalculation(const rclcpp::Parameter & p){
- /*  RCLCPP_INFO(
-          this->get_logger(), "Received an update to parameter \"%s\" of type %s: \"%ld\"",
-          p.get_name().c_str(),
-          p.get_type_name().c_str(),
-          p.as_int());
-   */ 
+void ImuCovariance::LiberateNewBiasCalculation(const rclcpp::Parameter & p){ 
   use_bias=p.as_int();
 }
 
