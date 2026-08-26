@@ -15,8 +15,8 @@ export ROS_DOMAIN_ID=25
 YES=0
 NO=1
 RUN_IN_SIMULATION="${1:-$NO}"
-RUN_PROJECT="${2:-$YES}"
-build_type="${3:-Release}"
+RUN_PROJECT="${3:-$YES}"
+build_type="${2:-Release}"
 scripts_path="./scripts" # Path to the scripts folder
 
 

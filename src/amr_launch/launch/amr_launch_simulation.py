@@ -29,19 +29,19 @@ def generate_launch_description():
     joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path)
 
     # Find and include localization main launch file
-    share_folder_path_for_amr_simulation = FindPackageShare('amr_simulation')
-    amr_simulation_launch_file_path = PathJoinSubstitution([
-            share_folder_path_for_amr_simulation, 
+    share_folder_path_for_gz_sim_bringup = FindPackageShare('gz_sim_bringup')
+    gz_sim_bringup_launch_file_path = PathJoinSubstitution([
+            share_folder_path_for_gz_sim_bringup, 
             'launch', 
             'simulation_launch.py'
         ])
-    amr_simulation_launch_file = IncludeLaunchDescription(amr_simulation_launch_file_path)
+    gz_sim_bringup_launch_file = IncludeLaunchDescription(gz_sim_bringup_launch_file_path)
   
     # Find robot description urdf file, 
     # Using os.path.join returns a string with the filepath,
     # which is needed for reading the file.
-    description_package_share_dir = get_package_share_directory('amr_simulation')
-    vehicle_blue_sdf_file_path = os.path.join(description_package_share_dir, 'models', 'vehicle_blue', 'model.sdf')
+    gz_sim_description_package_share_dir = get_package_share_directory('gz_sim_description')
+    vehicle_blue_sdf_file_path = os.path.join(gz_sim_description_package_share_dir, 'models', 'diff_drive', 'model.sdf')
     
     # create string variable with the contents of the urdf file
     with open(vehicle_blue_sdf_file_path, 'r') as f:
@@ -67,7 +67,7 @@ def generate_launch_description():
     main_launch_description.add_action(use_sim_time)
     main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
-    main_launch_description.add_action(amr_simulation_launch_file)
+    main_launch_description.add_action(gz_sim_bringup_launch_file)
     main_launch_description.add_action(vehicle_blue_state_publisher_node_sdf)
     
     return main_launch_description

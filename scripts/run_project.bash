@@ -15,5 +15,11 @@ RUN_IN_SIMULATION=$1
 YES=0
 NO=1
 export ROS_DOMAIN_ID=25 # Use the same ROS_DOMAIN_ID as the one used in the STM32 board (micro-ROS).
-
-. ./install/local_setup.bash &&  [[ "$RUN_IN_SIMULATION" = "$YES" ]]  && ros2 launch amr_launch amr_launch_simulation.py || ros2 launch amr_launch amr_launch.py
+. ./install/local_setup.bash &&  
+if [[ "$RUN_IN_SIMULATION" = "$YES" ]];then 
+  export GZ_VERSION=harmonic
+  sudo apt install python3-vcstool python3-colcon-common-extensions git wget
+  ros2 launch amr_launch amr_launch_simulation.py
+else 
+ros2 launch amr_launch amr_launch.py
+fi
