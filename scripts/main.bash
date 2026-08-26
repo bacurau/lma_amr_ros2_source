@@ -16,28 +16,31 @@ trap handler SIGINT
 #===================== Var and function definition =================================================
 #================================================================================================================
 
+#    .---------- constant part!
+#    vvvv vvvv-- the code from above
+MAGENTA='\033[0;35m'
+NC='\033[0m' # No Color
+# Capture ctrl + c (SIGINT) and exists the code properly
 handler(){
-    echo "Exiting"
+    echo -e "${MAGENTA}Exiting${NC}"
     exit 0;
 }
 
 export ROS_DOMAIN_ID=25
-build_type="${1:-Release}"
+YES=0
+NO=1
+using_bag="${1:NO}"
+launch_file=("amr_launch.py" "amr_launch_simulation.py")
+build_types=("Release" "Debug")
 scripts_path=$(dirname "${BASH_SOURCE[0]}") # Path to the scripts folder
 cd "$scripts_path/.." # navigate to root of ros2 project. It is the directory where you can see src,build,install,log in a ros2 project.
 
 . ./scripts/menu.bash # imports menu function
-
-#================================================================================================================
-#=====================  Build and run or just run ros2 project =================================================
-#================================================================================================================
-create_menu "Build And Run" "Just Run"
-
-if [[ $choosen_item -eq 0 ]]; then
+install_dependencies_and_build_function(){
     # ========== Install the dependencies and build ros2 packages properly. ======
     sudo apt update && rosdep update && rosdep install --from-paths src --ignore-src -y 
     # # ========== Build ROS2 packages ===============
-    colcon build  --base-path "./src" --symlink-install  --cmake-args "-DCMAKE_BUILD_TYPE=$build_type"
+    colcon build  --base-path "./src" --symlink-install  --cmake-args "-DCMAKE_BUILD_TYPE=$1"
     # ##===================== Creates and Builds micro-ROS Agent =====================##
     # # The instructions were base on
     # # https://micro.ros.org/docs/tutorials/core/first_application_linux/.
@@ -46,21 +49,41 @@ if [[ $choosen_item -eq 0 ]]; then
     source ./install/local_setup.bash &&
         ros2 run micro_ros_setup create_agent_ws.sh &&             
             ros2 run micro_ros_setup build_agent.sh
-fi
+}
+
+
+#================================================================================================================
+#=====================  Build and run or just run ros2 project =================================================
+#================================================================================================================
+
+# Standard runs the real robot with all the sensors
+create_menu "Standard configuration" "Custom configuration"
+
+if [[ $choosen_item -eq 0 ]]; then
+    create_menu "Just Run" "Build and Run"
+    if [[ $choosen_item -eq 1 ]]; then
+        install_dependencies_and_build_function "${build_types[0]}"
+    fi
+    choosen_launch_file=${launch_file[0]}
+    run_launch_with_bags=false
+else 
+    create_menu "Just Run" "Build And Run"
+    if [[ $choosen_item -eq 1 ]]; then
+        build_types=("Release" "Debug")
+        create_menu "${build_types[@]}"
+        install_dependencies_and_build_function "${build_types[$choosen_item]}"
+    fi
+    create_menu "Run real robot" "Run simulation"
+    choosen_launch_file=${launch_file[$choosen_item]}
+    # When launch with bags is true, the launch file will exclude the sensors and joystick nodes.
+    [[ $using_bag -eq $YES ]] && run_launch_with_bags=true || run_launch_with_bags=false
 
 #===========================================================================
 ##===================== Launch the amr_launch file =========================
 #============================================================================
-
+fi
 . ./install/local_setup.bash
-create_menu "Run real robot" "Run simulation"
-[[ $choosen_item -eq 0 ]] && launch_file=amr_launch.py || launch_file=amr_launch_simulation.py
-create_menu "I am using a ros2 bag." "I am not using ros2 bags."
-[[ $choosen_item -eq 0 ]] && run_launch_with_bags=true || run_launch_with_bags=false
-
-echo $run_launch_with_bags
-echo $launch_file
-ros2 launch amr_launch $launch_file run_launch_with_bags:=$run_launch_with_bags 
+ros2 launch amr_launch $choosen_launch_file run_launch_with_bags:=$run_launch_with_bags 
 
 
 
