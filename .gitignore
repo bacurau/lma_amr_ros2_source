@@ -17,3 +17,6 @@ src/ros2.repos
 .bash_history
 bags/
 .myvenv/
+LIO-SAM
+items_not_related_to_main_code/*
+frames_2026-*
