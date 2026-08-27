@@ -1,15 +1,22 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.substitutions import FindPackageShare
-from launch.substitutions import  PathJoinSubstitution
+from launch.substitutions import  LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import SetParameter
+from launch.conditions import IfCondition,UnlessCondition
 
 def generate_launch_description():
 
-   
+    run_launch_with_bags = LaunchConfiguration('run_launch_with_bags')
+
+    run_launch_with_bags_argument = DeclareLaunchArgument(
+          'run_launch_with_bags',
+          default_value='true',
+          description='Whether to run a launch file'
+    )
     # Find and include localization main launch file
     share_localization_launch_path = FindPackageShare('amr_localization_launch')
     localization_launch_file_path = PathJoinSubstitution([
@@ -26,7 +33,7 @@ def generate_launch_description():
             'launch', 
             'joystick_to_cmd_vel_launch.py'
         ])
-    joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path)
+    joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path,condition=UnlessCondition(run_launch_with_bags))
 
     # Find and include localization main launch file
     share_folder_path_for_amr_simulation = FindPackageShare('amr_simulation')
@@ -61,11 +68,6 @@ def generate_launch_description():
 
     #===========================================================================================================================================
 
-
-
-
-
-
     #======================== Create rviz2 node for visualizing localization results ==========================================================
     rviz2_node = Node(
             package='rviz2',
@@ -81,11 +83,13 @@ def generate_launch_description():
     ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
     main_launch_description.add_action(use_sim_time)
+    main_launch_description.add_action(run_launch_with_bags_argument)
     main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
     main_launch_description.add_action(amr_simulation_launch_file)
-    main_launch_description.add_action(rviz2_node)
     main_launch_description.add_action(vehicle_blue_state_publisher_node_sdf)
+    main_launch_description.add_action(rviz2_node)
+    
     
 
     
