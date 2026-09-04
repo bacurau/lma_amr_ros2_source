@@ -1,0 +1,142 @@
+
+#include <pcl/impl/point_types.hpp>
+#include <pcl/point_cloud.h>
+#include <pcl/visualization/cloud_viewer.h>
+int foo() {
+  // pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud;
+  // //... populate cloud
+  // pcl::visualization::CloudViewer viewer("Simple Cloud Viewer");
+  // viewer.showCloud(cloud);
+  // while (!viewer.wasStopped())
+  // {
+  // }
+}
+
+#include <iostream>
+#include <sstream>
+
+#include <pcl/io/pcd_io.h>
+
+#include <pcl/point_types.h>
+#include <pcl/point_types_conversion.h>
+
+pcl::PointCloud<pcl::PointXYZI>::Ptr load_cloud(std::string file_name) {
+  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(
+      new pcl::PointCloud<pcl::PointXYZI>);
+
+  if (pcl::io::loadPCDFile<pcl::PointXYZI>(file_name, *cloud) ==
+      -1) //* load the file
+  {
+    std::stringstream a;
+    a << "Couldn't read file %s \n" << file_name;
+    PCL_ERROR(a.str().c_str());
+    // TODO generate better error.
+    throw std::system_error(EFAULT, std::generic_category());
+  }
+
+  std::cout << "Loaded " << cloud->width * cloud->height << " data points"
+            << file_name << "with the following fields : " << std::endl;
+
+  return cloud;
+}
+
+pcl::PointCloud<pcl::PointXYZRGB>::Ptr
+cloud_xyzi2xyzrgb_sus(pcl::PointCloud<pcl::PointXYZI>::Ptr mono_cloud,
+                      uint8_t r = 0, uint8_t g = 0, uint8_t b = 0) {
+  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(
+      new pcl::PointCloud<pcl::PointXYZI>);
+
+  auto cloud_rgb = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(
+      new pcl::PointCloud<pcl::PointXYZRGB>);
+
+  for (auto &point : mono_cloud->points) {
+    pcl::PointXYZRGB temp;
+
+    // std::cout << point.intensity << std::endl;
+
+    temp.x = point.x;
+    temp.y = point.y;
+    temp.z = point.z;
+    temp.r = r;
+    temp.g = g;
+    temp.b = b;
+    cloud_rgb->push_back(temp);
+  }
+  return cloud_rgb;
+}
+
+int main() {
+  auto cloud_back = load_cloud("data/Sick_Cloud_Back.pcd");
+  auto cloud_front = load_cloud("data/Sick_Cloud_Front.pcd");
+
+  auto front_rgb = cloud_xyzi2xyzrgb_sus(cloud_front, 255, 0, 0);
+  auto back_rgb = cloud_xyzi2xyzrgb_sus(cloud_back, 0, 255, 0);
+
+  // for (const auto &point : *cloud)
+  // {
+  //     std::cout << "    " << point.x
+  //               << " " << point.y
+  //               << " " << point.z << std::endl;
+  // }
+
+  pcl::visualization::CloudViewer viewer("Simple Cloud Viewer");
+  viewer.showCloud(front_rgb, "Cloud front");
+  // viewer.showCloud(cloud_back, "Cloud back");
+  viewer.showCloud(back_rgb, "Cloud back");
+  while (!viewer.wasStopped()) {
+  }
+
+  return (0);
+}
+
+
+
+
+//  1#include <iostream>
+//  2#include <pcl/io/pcd_io.h>
+//  3#include <pcl/point_types.h>
+//  4#include <pcl/registration/icp.h>
+//  5
+//  6int
+//  7 main ()
+//  8{
+//  9  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in (new pcl::PointCloud<pcl::PointXYZ>(5,1));
+// 10  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_out (new pcl::PointCloud<pcl::PointXYZ>);
+// 11
+// 12  // Fill in the CloudIn data
+// 13  for (auto& point : *cloud_in)
+// 14  {
+// 15    point.x = 1024 * rand() / (RAND_MAX + 1.0f);
+// 16    point.y = 1024 * rand() / (RAND_MAX + 1.0f);
+// 17    point.z = 1024 * rand() / (RAND_MAX + 1.0f);
+// 18  }
+// 19  
+// 20  std::cout << "Saved " << cloud_in->size () << " data points to input:" << std::endl;
+// 21      
+// 22  for (auto& point : *cloud_in)
+// 23    std::cout << point << std::endl;
+// 24      
+// 25  *cloud_out = *cloud_in;
+// 26  
+// 27  std::cout << "size:" << cloud_out->size() << std::endl;
+// 28  for (auto& point : *cloud_out)
+// 29    point.x += 0.7f;
+// 30
+// 31  std::cout << "Transformed " << cloud_in->size () << " data points:" << std::endl;
+// 32      
+// 33  for (auto& point : *cloud_out)
+// 34    std::cout << point << std::endl;
+// 35
+// 36  pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
+// 37  icp.setInputSource(cloud_in);
+// 38  icp.setInputTarget(cloud_out);
+// 39  
+// 40  pcl::PointCloud<pcl::PointXYZ> Final;
+// 41  icp.align(Final);
+// 42
+// 43  std::cout << "has converged:" << icp.hasConverged() << " score: " <<
+// 44  icp.getFitnessScore() << std::endl;
+// 45  std::cout << icp.getFinalTransformation() << std::endl;
+// 46
+// 47 return (0);
+// 48}
