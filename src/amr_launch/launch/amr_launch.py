@@ -9,10 +9,10 @@ from launch_ros.actions import SetParameter
 from launch.conditions import IfCondition,UnlessCondition
 def generate_launch_description():
 
-    run_launch_with_bags = LaunchConfiguration('run_launch_with_bags')
+    run_launch_with_bag = LaunchConfiguration('run_launch_with_bag')
 
-    run_launch_with_bags_argument = DeclareLaunchArgument(
-          'run_launch_with_bags',
+    run_launch_with_bag_argument = DeclareLaunchArgument(
+          'run_launch_with_bag',
           default_value='true',
           description='Whether to run a launch file'
     )
@@ -26,7 +26,7 @@ def generate_launch_description():
             'launch', 
             'stm32_launch.xml'
         ])
-    stm32_launch_file = IncludeLaunchDescription(stm32_launch_file_path,condition=UnlessCondition(run_launch_with_bags))
+    stm32_launch_file = IncludeLaunchDescription(stm32_launch_file_path,condition=UnlessCondition(run_launch_with_bag))
 
 
     #================= Find and include sensors main launch file ============================================================================
@@ -36,7 +36,7 @@ def generate_launch_description():
             'launch', 
             'sensors_main_launch.py'
         ])
-    sensors_launch_file = IncludeLaunchDescription(sensors_launch_file_path,condition=UnlessCondition(run_launch_with_bags))
+    sensors_launch_file = IncludeLaunchDescription(sensors_launch_file_path,condition=UnlessCondition(run_launch_with_bag))
 
     # ====================== Creates robot_state_publisher node ==============================================================================
  
@@ -77,7 +77,7 @@ def generate_launch_description():
             'launch', 
             'joystick_to_cmd_vel_launch.py'
         ])
-    joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path,condition=UnlessCondition(run_launch_with_bags))
+    joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path,condition=UnlessCondition(run_launch_with_bag))
 
 
 
@@ -97,15 +97,15 @@ def generate_launch_description():
 
 
 
-    use_sim_time = SetParameter(name='use_sim_time', value=True,condition=IfCondition(run_launch_with_bags))
+    use_sim_time = SetParameter(name='use_sim_time', value=True,condition=IfCondition(run_launch_with_bag))
 
 
 
 
     ## Add action to the launch. Each action is a launch file or a node and will be executed in the order they were added.
     main_launch_description = LaunchDescription() ## Create launch description
+    main_launch_description.add_action(run_launch_with_bag_argument)
     main_launch_description.add_action(use_sim_time)
-    main_launch_description.add_action(run_launch_with_bags_argument)
     main_launch_description.add_action(robot_state_publisher_node)
     main_launch_description.add_action(sensors_launch_file)
     main_launch_description.add_action(stm32_launch_file)

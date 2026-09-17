@@ -138,7 +138,7 @@ ekf_filter_node:
         imu0_relative: false
         imu0_queue_size: 5
         # imu0_pose_rejection_threshold: 2.0                # Note the difference in parameter names
-        # imu0_twist_rejection_threshold: 2.0              #
+        imu0_twist_rejection_threshold: 5.0              #
         # imu0_linear_acceleration_rejection_threshold: 2.0  #
 
         # [ADVANCED] Some IMUs automatically remove acceleration due to gravity, and others don't. If yours doesn't, please set

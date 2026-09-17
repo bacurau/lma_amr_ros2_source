@@ -40,6 +40,16 @@ def generate_launch_description():
         parameters=[PathJoinSubstitution([FindPackageShare('amr_localization_launch'),'params','ekf.yaml'])]
     )
 
+    ekf_node_gps = LifecycleNode(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node_gps',
+        namespace='',
+        output='screen',
+        autostart=LaunchConfiguration('autostart'),
+        parameters=[PathJoinSubstitution([FindPackageShare('amr_localization_launch'),'params','ekf_gps.yaml'])]
+    )
+
 
 
 
@@ -49,7 +59,8 @@ def generate_launch_description():
     main_launch_description.add_action(autostart)
     main_launch_description.add_action(odometry_launch_file)
     main_launch_description.add_action(imu_cov_node)
-    main_launch_description.add_action(ekf_node)
+   # main_launch_description.add_action(ekf_node)
+    main_launch_description.add_action(ekf_node_gps)
 
     
     return main_launch_description

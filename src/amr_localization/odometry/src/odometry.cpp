@@ -33,7 +33,7 @@ using namespace scooby;
  */
 Odometry::Odometry(): 
   Node("snoopy_odom", rclcpp::NodeOptions().use_intra_process_comms(true)),
-  publish_tf_(true)
+  publish_tf_(false)
 {
 
   // Initialize robot pose and velocity
@@ -172,8 +172,8 @@ void Odometry::publish(const rclcpp::Time & now)
 
   odom_pub_->publish(std::move(odom_msg));
 
- if (publish_tf_)
-   tf_broadcaster_->sendTransform(odom_tf);
+//  if (publish_tf_)
+//    tf_broadcaster_->sendTransform(odom_tf);
 }
 
 

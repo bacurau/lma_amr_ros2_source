@@ -10,10 +10,10 @@ from launch.conditions import IfCondition,UnlessCondition
 
 def generate_launch_description():
 
-    run_launch_with_bags = LaunchConfiguration('run_launch_with_bags')
+    run_launch_with_bag = LaunchConfiguration('run_launch_with_bag')
 
-    run_launch_with_bags_argument = DeclareLaunchArgument(
-          'run_launch_with_bags',
+    run_launch_with_bag_argument = DeclareLaunchArgument(
+          'run_launch_with_bag',
           default_value='true',
           description='Whether to run a launch file'
     )
@@ -33,7 +33,7 @@ def generate_launch_description():
             'launch', 
             'joystick_to_cmd_vel_launch.py'
         ])
-    joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path,condition=UnlessCondition(run_launch_with_bags))
+    joystick_to_cmd_vel_launch_file = IncludeLaunchDescription(joystick_to_cmd_vel_launch_file_path,condition=UnlessCondition(run_launch_with_bag))
 
     # Find and include localization main launch file
     share_folder_path_for_amr_simulation = FindPackageShare('amr_simulation')
@@ -82,8 +82,8 @@ def generate_launch_description():
     ## Create launch description and add actions, each action is a launch file or a node and
     ## will be executed in the order of addition.
     main_launch_description = LaunchDescription()
+    main_launch_description.add_action(run_launch_with_bag_argument)
     main_launch_description.add_action(use_sim_time)
-    main_launch_description.add_action(run_launch_with_bags_argument)
     main_launch_description.add_action(localization_launch_file)
     main_launch_description.add_action(joystick_to_cmd_vel_launch_file)
     main_launch_description.add_action(amr_simulation_launch_file)
