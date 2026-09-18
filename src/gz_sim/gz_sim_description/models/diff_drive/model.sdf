@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <sdf version="1.8">
     <!-- I could not find any instance of gazebo or ros using this name, ignore it. -->
-    <model name="amr_robot_model_file_name" canonical_link="chassis">
+    <model name="amr_robot_model_file_name" canonical_link="Base_Link">
         <!-- Plugins required -->
         <plugin
             filename="gz-sim-imu-system"
@@ -9,7 +9,7 @@
         </plugin>
 
 
-        <link name="chassis">
+        <link name="Base_Link">
             <pose relative_to="__model__"> 0 0 0.4 0 0 0 </pose>
             <inertial>
                 <mass> 1.14395 </mass>
@@ -52,7 +52,7 @@
         | |  | | | (_) | | | | |_  | |___| (_| \__ \ ||  __/ |       \  /\  /  | | | |  __/  __/ |
         |_|  |_|  \___/|_| |_|\__|  \_____\__,_|___/\__\___|_|        \/  \/   |_| |_|\___|\___|_|
         -->
-        <frame name="front_caster_wheel_frame" attached_to="chassis">
+        <frame name="front_caster_wheel_frame" attached_to="Base_Link">
             <pose> 1 0 -0.2 0 0 0 </pose>
         </frame>
         <link name="front_caster_wheel_link">
@@ -79,7 +79,7 @@
         </link>
 
         <joint name="front_caster_wheel_wheel" type="ball">
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> front_caster_wheel_link </child>
         </joint>
         <!--
@@ -91,7 +91,7 @@
         |____/ \__,_|\___|_|\_\  \_____\__,_|___/\__\___|_|        \/  \/   |_| |_|\___|\___|_|
         -->
 
-        <frame name="back_caster_wheel_frame" attached_to="chassis">
+        <frame name="back_caster_wheel_frame" attached_to="Base_Link">
             <pose> -1 0 -0.2 0 0 0 </pose>
         </frame>
         <link name="back_caster_wheel_link">
@@ -118,7 +118,7 @@
         </link>
 
         <joint name="back_caster_wheel_wheel" type="ball">
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> back_caster_wheel_link </child>
         </joint>
 
@@ -137,7 +137,7 @@
 
         <!-- Left wheel -->
         <link name="left_wheel">
-            <pose relative_to="chassis"> 0 0.6 0 -1.5707 0 0 </pose>
+            <pose relative_to="Base_Link"> 0 0.6 0 -1.5707 0 0 </pose>
             <visual name="visual">
                 <geometry>
                     <cylinder>
@@ -163,7 +163,7 @@
 
         <joint name="left_wheel_joint" type="revolute">
             <pose relative_to="left_wheel" />
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> left_wheel </child>
             <axis>
                 <xyz expressed_in="__model__"> 0 1 0 </xyz>
@@ -176,7 +176,7 @@
 
         <!-- Right wheel -->
         <link name="right_wheel">
-            <pose relative_to="chassis"> 0 -0.6 0 -1.5707 0 0 </pose>
+            <pose relative_to="Base_Link"> 0 -0.6 0 -1.5707 0 0 </pose>
             <visual name="visual">
                 <geometry>
                     <cylinder>
@@ -202,7 +202,7 @@
 
         <joint name="right_wheel_joint" type="revolute">
             <pose relative_to="right_wheel" />
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> right_wheel </child>
             <axis>
                 <xyz expressed_in="__model__"> 0 1 0 </xyz>
@@ -270,7 +270,7 @@
             <pose> 0 0 0 0 0 0 </pose>
         </frame>
         <link name="front_lidar_link">
-            <pose relative_to="chassis"> 1 1 0 0 0 0 </pose>
+            <pose relative_to="Base_Link"> 1 1 0 0 0 0 </pose>
             <visual name="visual">
                 <geometry>
                     <cylinder>
@@ -326,7 +326,7 @@
 
         <joint name="front_lidar_joint" type="fixed">
             <pose relative_to="front_lidar_link" />
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> front_lidar_link </child>
         </joint>
 
@@ -343,7 +343,7 @@
             <pose> 0 0 0 0 0 0 </pose>
         </frame>
         <link name="back_lidar_link">
-            <pose relative_to="chassis"> -1 -1 0 0 0 0 </pose>
+            <pose relative_to="Base_Link"> -1 -1 0 0 0 0 </pose>
             <visual name="visual">
                 <geometry>
                     <cylinder>
@@ -399,7 +399,7 @@
 
         <joint name="back_lidar_joint" type="fixed">
             <pose relative_to="back_lidar_link" />
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> back_lidar_link </child>
         </joint>
 
@@ -416,11 +416,11 @@
         </frame>
         <joint name="imu_joint" type="fixed">
             <pose relative_to="imu_link" />
-            <parent> chassis </parent>
+            <parent> Base_Link </parent>
             <child> imu_link </child>
         </joint>
         <link name="imu_link">
-            <pose relative_to="chassis"> 0 0 1 0 0 0 </pose>
+            <pose relative_to="Base_Link"> 0 0 1 0 0 0 </pose>
             <visual name="visual">
                 <geometry>
                     <box>

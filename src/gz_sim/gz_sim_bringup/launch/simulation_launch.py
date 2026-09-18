@@ -84,7 +84,7 @@ def generate_launch_description():
             'file': [
                 PathJoinSubstitution([pkg_project_description, 'models/diff_drive/model.sdf'])
             ],
-            'entity_name': 'my_vehicle',
+            'entity_name': 'amr_robot_model_name',
             **robot_position,
         }.items(),
     )
