@@ -11,35 +11,78 @@
 #include <filesystem>
 #include <iostream>
 #include <vector>
+#include <mutex>
 
 using namespace std::chrono_literals;
 
-void main_2(void);
+// void main_2();
+int main_2(pcl::PointCloud<pcl::PointXYZ> &cloud_back, pcl::PointCloud<pcl::PointXYZ> &cloud_front);
 
 class PointCloudSubscriber : public rclcpp::Node
 {
 public:
   PointCloudSubscriber() : Node("lidar_calibration")
   {
+
     // TODO move this
 
     pcl::PointCloud<pcl::PointXYZ> out_msg;
-
-    auto topic_callback =
-        [&, this](sensor_msgs::msg::PointCloud2::UniquePtr msg) -> void
     {
-      RCLCPP_INFO(this->get_logger(), "Captured point cloud");
-      pcl::fromROSMsg(*(msg.get()), out_msg);
-    };
-    subscription_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
-        "topic", 10, topic_callback);
+      std::scoped_lock lock(this->storage_mutex_);
+      this->point_clouds_.resize(2);
+    }
+    // Maybe change this to a message_filter.
+
+    auto cloud_1_topic = "/Sick_Cloud_Back";
+    auto cloud_2_topic = "/Sick_Cloud_Front";
+
+    subscriptions_.push_back(this->create_subscription<sensor_msgs::msg::PointCloud2>(
+        cloud_1_topic, 10,
+        [this](sensor_msgs::msg::PointCloud2::UniquePtr msg)
+        { this->topic_callback(0, std::move(msg)); }));
+
+    subscriptions_.push_back(this->create_subscription<sensor_msgs::msg::PointCloud2>(
+        cloud_2_topic, 10,
+        [this](sensor_msgs::msg::PointCloud2::UniquePtr msg)
+        { this->topic_callback(1, std::move(msg)); }));
+
+    timer_ = this->create_wall_timer(1s, [this]()
+                                     { this->timer_callback(); });
   }
 
 private:
-  rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr subscription_;
+  void topic_callback(size_t idx, sensor_msgs::msg::PointCloud2::UniquePtr msg)
+  {
+    std::scoped_lock lock(this->storage_mutex_);
+    this->point_clouds_[idx] = std::move(msg);
+    RCLCPP_INFO(this->get_logger(), "Captured point cloud in index %d", idx);
+    // pcl::fromROSMsg(*(msg.get()), out_msg);
+  };
+
+  void timer_callback()
+  {
+    std::cout << "I'm in the timer" << std::endl;
+    // Work as a single shot, for debugging
+    this->timer_->cancel();
+
+    pcl::PointCloud<pcl::PointXYZ> cloud_back;
+    pcl::PointCloud<pcl::PointXYZ> cloud_front;
+
+    {
+      std::scoped_lock lock(this->storage_mutex_);
+      pcl::fromROSMsg(*(this->point_clouds_[0].get()), cloud_back);
+      pcl::fromROSMsg(*(this->point_clouds_[1].get()), cloud_front);
+    }
+    main_2(cloud_back, cloud_front);
+  };
 
   std::vector<rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr>
       subscriptions_;
+  std::vector<sensor_msgs::msg::PointCloud2::UniquePtr>
+      point_clouds_;
+  std::mutex storage_mutex_;
+
+  rclcpp::TimerBase::SharedPtr timer_;
 };
 
 int main(int argc, char *argv[])
