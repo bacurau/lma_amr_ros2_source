@@ -36,6 +36,9 @@ target_compile_definitions(lidar_cal PRIVATE ${PCL_DEFINITIONS})
 target_link_libraries(lidar_cal OpenMP::OpenMP_CXX)
 target_link_libraries(lidar_cal ${PCL_LIBRARIES})
 
+target_precompile_headers(lidar_cal PRIVATE
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/pch.hpp"
+)
 
 install(TARGETS
   lidar_cal
