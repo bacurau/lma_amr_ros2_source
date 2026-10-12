@@ -30,4 +30,4 @@ std::unique_ptr<std::vector<Thing>> into_lines(CloudPtr cloud);
 
 float dist_p(PointType a, PointType b);
 
-std::pair<Line, Line> find_corner(const std::vector<Line> lines);
+std::optional<std::pair<Line, Line>> find_corner(const std::vector<Line> lines);

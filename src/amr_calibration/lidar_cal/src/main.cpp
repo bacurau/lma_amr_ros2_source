@@ -55,25 +55,30 @@ private:
   {
     std::scoped_lock lock(this->storage_mutex_);
     this->point_clouds_[idx] = std::move(msg);
-    RCLCPP_INFO(this->get_logger(), "Captured point cloud in index %d", idx);
-    // pcl::fromROSMsg(*(msg.get()), out_msg);
   };
 
   void timer_callback()
   {
-    std::cout << "I'm in the timer" << std::endl;
-    // Work as a single shot, for debugging
-    this->timer_->cancel();
-
     pcl::PointCloud<pcl::PointXYZ> cloud_back;
     pcl::PointCloud<pcl::PointXYZ> cloud_front;
 
+    std::scoped_lock lock(this->storage_mutex_);
+    if (this->point_clouds_[0] && this->point_clouds_[1])
     {
-      std::scoped_lock lock(this->storage_mutex_);
       pcl::fromROSMsg(*(this->point_clouds_[0].get()), cloud_back);
       pcl::fromROSMsg(*(this->point_clouds_[1].get()), cloud_front);
+
+      if (main_2(cloud_back, cloud_front) == 0)
+      {
+        // this->timer_->cancel(); // Work as a single shot if it didn't fail, for debugging
+        std::abort();
+      }
+      this->timer_->cancel(); // Work as a single shot if it didn't fail, for debugging
     }
-    main_2(cloud_back, cloud_front);
+    else
+    {
+      RCLCPP_WARN(this->get_logger(), "Not all cloud msgs have been heard yet, skipping this iteration");
+    }
   };
 
   std::vector<rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr>

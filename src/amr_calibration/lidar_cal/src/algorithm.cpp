@@ -7,6 +7,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <optional>
 
 #include <pcl/ModelCoefficients.h>
 #include <pcl/PointIndices.h>
@@ -174,7 +175,7 @@ float dist_p(PointType a, PointType b)
 }
 
 // TODO make this return a option instead of crashing
-std::pair<Line, Line> find_corner(const std::vector<Line> lines)
+std::optional<std::pair<Line, Line>> find_corner(const std::vector<Line> lines)
 {
   const float eps_ang = DEG2RAD(10);
   const float tgt_ang = DEG2RAD(90);
@@ -186,9 +187,9 @@ std::pair<Line, Line> find_corner(const std::vector<Line> lines)
     std::cerr << "Not enough lines to find a corner" << std::endl;
     throw std::system_error(EFAULT, std::generic_category());
   }
-  for (auto i{0}; i < lines.size(); i++)
+  for (size_t i = 0; i < lines.size(); i++)
   {
-    for (auto j{i}; j < lines.size(); j++)
+    for (size_t j = i; j < lines.size(); j++)
     {
       if (j == i)
       {
@@ -220,5 +221,5 @@ std::pair<Line, Line> find_corner(const std::vector<Line> lines)
 
   std::cerr << "Didn't find any corner" << std::endl;
 
-  throw std::system_error(EFAULT, std::generic_category());
+  return std::nullopt;
 }
