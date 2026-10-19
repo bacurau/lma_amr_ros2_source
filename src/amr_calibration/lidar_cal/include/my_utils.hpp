@@ -105,10 +105,11 @@ public:
   {
     pcl::PointIndices::Ptr to_remove(new pcl::PointIndices());
 
-    for (auto i = 0; i < B->points.size(); i++)
+    for (std::size_t i = 0; i < B->points.size(); i++)
     {
-      bool in = false;
-      for (auto j = 0; j < A->points.size(); j++)
+      // TODO clean up
+      // bool in = false;
+      for (std::size_t j = 0; j < A->points.size(); j++)
       {
         auto point = B->points[i];
         auto other = A->points[j];

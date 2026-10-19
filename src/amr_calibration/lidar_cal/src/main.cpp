@@ -59,6 +59,8 @@ private:
 
   void timer_callback()
   {
+    std::cout << "Start of timer callback" << std::endl;
+
     pcl::PointCloud<pcl::PointXYZ> cloud_back;
     pcl::PointCloud<pcl::PointXYZ> cloud_front;
 
@@ -68,17 +70,21 @@ private:
       pcl::fromROSMsg(*(this->point_clouds_[0].get()), cloud_back);
       pcl::fromROSMsg(*(this->point_clouds_[1].get()), cloud_front);
 
+      // TODO rewrite this, it is scuffed. It kind of resembles a move.
+      this->point_clouds_[0] = nullptr;
+      this->point_clouds_[1] = nullptr;
+
       if (main_2(cloud_back, cloud_front) == 0)
       {
+        std::cout << "main_2 returned 0" << std::endl;
         // this->timer_->cancel(); // Work as a single shot if it didn't fail, for debugging
-        std::abort();
       }
-      this->timer_->cancel(); // Work as a single shot if it didn't fail, for debugging
     }
     else
     {
       RCLCPP_WARN(this->get_logger(), "Not all cloud msgs have been heard yet, skipping this iteration");
     }
+    std::cout << "End of timer callback" << std::endl;
   };
 
   std::vector<rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr>
