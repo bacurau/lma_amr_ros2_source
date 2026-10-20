@@ -236,56 +236,16 @@
       <static>true</static>
       <self_collide>false</self_collide>
     </model>
-    <include>
-      <name>Obstacle Scenario</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>0 0 0 0 0 0</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario2</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>30 0 0 0 0 0</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario3</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>0 30 0 0 0 0</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario4</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>0 -30 0 0 0 0</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario5</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>-30 0 0 0 0 0</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario6</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>-25 -25 0 0 0 10</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario7</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose> 25 25 0 0 0 -10</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario8</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>-25 -25 0 0 0 10</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario9</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>25 -25 0 0 0 -10</pose>
-    </include>
-    <include>
-      <name>Obstacle Scenario10</name>
-      <uri>package://gz_sim_description/scenarios/obstacle_scenario</uri>
-      <pose>-25 25 0 0 0 10</pose>
-    </include>
+    <!-- <xacro:include_model name="Obstacle Scenario" model="obstacle_scenario" pose="0 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario2" model="obstacle_scenario" pose="30 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario3" model="obstacle_scenario" pose="0 30 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario4" model="obstacle_scenario" pose="0 -30 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario5" model="obstacle_scenario" pose="-30 0 0 0 0 0"/>
+        <xacro:include_model name="Obstacle Scenario6" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
+        <xacro:include_model name="Obstacle Scenario7" model="obstacle_scenario" pose=" 25 25 0 0 0 -10"/>
+        <xacro:include_model name="Obstacle Scenario8" model="obstacle_scenario" pose="-25 -25 0 0 0 10"/>
+        <xacro:include_model name="Obstacle Scenario9" model="obstacle_scenario" pose="25 -25 0 0 0 -10"/>
+        <xacro:include_model name="Obstacle Scenario10" model="obstacle_scenario" pose="-25 25 0 0 0 10"/> -->
     <!-- <xacro:include_model name="vehicle" model="vehicle_blue" pose="2 4 0.05 0 0 0"/> -->
   </world>
 </sdf>

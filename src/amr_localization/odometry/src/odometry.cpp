@@ -14,7 +14,7 @@
 * limitations under the License.
 *******************************************************************************/
 
-/* Author: Olmerg */
+// https://aleksandarhaber.com/clear-and-detailed-explanation-of-kinematics-equations-and-geometry-of-motion-of-differential-wheeled-robot-differential-drive-robot/
 
 #include "odometry.hpp"
 
@@ -33,7 +33,7 @@ using namespace scooby;
  */
 Odometry::Odometry(): 
   Node("snoopy_odom", rclcpp::NodeOptions().use_intra_process_comms(true)),
-  publish_tf_(true)
+  publish_tf_(false)
 {
 
   // Initialize robot pose and velocity
@@ -54,6 +54,7 @@ Odometry::Odometry():
   this->declare_parameter("wheels.separation", 0.74361);
   this->declare_parameter("wheels.radius_left", 0.102873);
   this->declare_parameter("wheels.radius_right", 0.102759);
+  this->declare_parameter("odometry.start_bias_calculation_for_imu",0);
 //TODO:: Trocar valores!!
   // Fator de escala obtido a partir do erro identificado após 10 voltas para cada sentido. Erro: 18 graus. Fs = 18/3600
   //float fs = (1.00506 / 1.00211) * 1.0012;
@@ -112,14 +113,10 @@ void Odometry::joint_state_callback(const sensor_msgs::msg::JointState::SharedPt
  // 1- Calculate the duration since the last callback was called or since initialization with the contructor Odometry::Odometry().
   rclcpp::Time time = joint_state_msg->header.stamp;
   auto duration = rclcpp::Duration::from_nanoseconds(time.nanoseconds() - last_time.nanoseconds());
-  
-  // 2- Update the wheels joint states.
-  update_joint_state(joint_state_msg);
+  // 2- Calculate the odometry based on the duration since last callback.
+  calculate_odometry(duration,joint_state_msg);
 
-  // 3- Calculate the odometry based on the duration since last callback.
-  calculate_odometry(duration);
-
-  //4- Call Odometry publisher
+  //3- Call Odometry publisher
   publish(time);
   last_time = time;
 }
@@ -157,19 +154,10 @@ void Odometry::publish(const rclcpp::Time & now)
   odom_msg->twist.twist.angular.z = robot_vel_[2];
 
   // TODO: Find more accurate covariance.
-  odom_msg->pose.covariance[0] = 0.05;
-  odom_msg->pose.covariance[7] = 0.05;
-  odom_msg->pose.covariance[14] = 1.0e-9;
-  odom_msg->pose.covariance[21] = 1.0e-9;
-  odom_msg->pose.covariance[28] = 1.0e-9;
-  odom_msg->pose.covariance[35] = 0.0872665;
 
-  odom_msg->twist.covariance[0] = 1.0e-9;
-  odom_msg->twist.covariance[7] = 1.0e-9;
-  odom_msg->twist.covariance[14] = 1.0e-9;
-  odom_msg->twist.covariance[21] = 1.0e-9;
-  odom_msg->twist.covariance[28] = 1.0e-9;
-  odom_msg->twist.covariance[35] = 0.0001;
+
+  odom_msg->twist.covariance[0] = 1e-2;
+  odom_msg->twist.covariance[35] = 0.005;
 
   geometry_msgs::msg::TransformStamped odom_tf;
 
@@ -184,47 +172,15 @@ void Odometry::publish(const rclcpp::Time & now)
 
   odom_pub_->publish(std::move(odom_msg));
 
- if (publish_tf_)
-   tf_broadcaster_->sendTransform(odom_tf);
+  if (publish_tf_)
+    tf_broadcaster_->sendTransform(odom_tf);
 }
 
-/**
- * \brief Calculate v_x, w_z, wheel joint displacement compared to previous state and update wheel joint position.
- * \details-# Calculates joint displacement since last update for both wheels.
- *-# Calculate the linear velocity for the right and left wheels.
- *-# Calculate the linear velocity in x for the robot.
- *-# Calculate the angular velocity in z for the robot. 
- *-# Updates last joint positions for both wheels.
- * \param[in] joint_state The joint state message containing the current joint positions and velocities. 
- */
-void Odometry::update_joint_state(
-  const std::shared_ptr<sensor_msgs::msg::JointState const> &joint_state)
-{
-  static std::array<double, 2> last_joint_positions = {0.0f, 0.0f};
-  // 1- Calculate joint displacement since last update for both wheels.
-  diff_joint_positions_[0] = joint_state->position[0] - last_joint_positions[0];
-  diff_joint_positions_[1] = joint_state->position[1] - last_joint_positions[1];
-
-  // 2- Calculate the linear velocity for the right and left wheels.
-  double linear_velocity_for_right_wheel = wheels_radius_right * joint_state->velocity[1]; // Vr = w_r * radius of right wheel
-  double linear_velocity_for_left_wheel = wheels_radius_left * joint_state->velocity[0]; // Vl = w_l * radius of left wheel
-  
-  // 3- Calculate the linear velocity in x for the robot.
-  v_x = (linear_velocity_for_left_wheel + linear_velocity_for_right_wheel)/2; // Robot linear velocity in x.
-  //TODO:change direction for real robot
-
-  // 4- Calculate the angular velocity in z for the robot.
-  // w_z = Vr - Vl / wheels_separation
-  w_z = (linear_velocity_for_right_wheel-linear_velocity_for_left_wheel)/(wheels_separation_);
-
-  // 5- Updates last joint positions for both wheels.'
-  last_joint_positions[0] = joint_state->position[0];
-  last_joint_positions[1] = joint_state->position[1];
-}
 
 /**
  * \brief Calculate odometry based on wheel joint displacements
- * \details 
+ * \details
+ *-# Calculates wheel joint displacement. 
  *-# Calculates the linear displacement (delta_s) and angular displacement (delta_theta).
  *-# Updates the robot's pose (x, y, theta).
  *-# If time step was < 0.1 and >0, recalculate Odometry::vx and Odometry::wz
@@ -232,49 +188,99 @@ void Odometry::update_joint_state(
  * \param[in] duration The time duration since the last odometry calculation.
  * \return Returns false if time step was 0 and true otherwise, i.e., if odometry was successfully calculated.
  */
-bool Odometry::calculate_odometry(const rclcpp::Duration &duration)
+
+void Odometry::calculate_odometry(const rclcpp::Duration &duration,const sensor_msgs::msg::JointState::SharedPtr joint_state_msg)
 {
-
-  // rotation value of wheel [rad]
-  //TODO: change for real robot
-  double wheel_l = diff_joint_positions_[0];
-  double wheel_r = diff_joint_positions_[1];
-  double delta_s = 0.0;
-  double delta_theta = 0.0;
-  double theta = 0.0;
   double step_time = duration.seconds();
+  if (step_time == 0.0) return;
 
-  if (step_time == 0.0)
-    return false;
 
-  if (std::isnan(wheel_l))
-    wheel_l = 0.0;
+  //========================= Update joint position ===================================================
+  // 1- Calculate joint displacement since last update for both wheels.
+  // rotation value of wheel [rad]
+  double diff_joint_positions_left_wheel = joint_state_msg->position[0] - last_joint_positions[0];
+  double diff_joint_positions_right_wheel = joint_state_msg->position[1] - last_joint_positions[1];
 
-  if (std::isnan(wheel_r))
-    wheel_r = 0.0;
+  if (std::isnan(diff_joint_positions_left_wheel)) diff_joint_positions_left_wheel = 0.0;
+  if (std::isnan(diff_joint_positions_right_wheel)) diff_joint_positions_right_wheel = 0.0;
 
-  delta_s = ( wheels_radius_right * wheel_r + wheels_radius_left * wheel_l) / 2.0;
-  theta = (wheels_radius_right * wheel_r - wheels_radius_left * wheel_l) / wheels_separation_;
+  // 2- Updates last joint positions for both wheels.'
+  last_joint_positions[0] = joint_state_msg->position[0];
+  last_joint_positions[1] = joint_state_msg->position[1];
 
-  delta_theta = theta;
-  if(delta_theta>10){
-    delta_theta=0;
-  }
+  liberate_imu_bias_calculation(diff_joint_positions_left_wheel, diff_joint_positions_right_wheel);
+
+  //========================= Calculate linear and angular velocities ================================
+  // 1- Calculate the linear velocity for the right and left wheels.
+  double linear_velocity_for_right_wheel = wheels_radius_right * joint_state_msg->velocity[1]; // Vr = w_r * radius of right wheel
+  double linear_velocity_for_left_wheel = wheels_radius_left * joint_state_msg->velocity[0]; // Vl = w_l * radius of left wheel
+  
+  // 2- Calculate the linear velocity in x for the robot.
+  // V_x = (Vr + Vl)/2
+  double v_x = (linear_velocity_for_left_wheel + linear_velocity_for_right_wheel)/2; // Robot linear velocity in x.
+
+  // 3- Calculate the angular velocity in z for the robot.
+  // w_z = Vr - Vl / wheels_separation
+  double w_z = (linear_velocity_for_right_wheel-linear_velocity_for_left_wheel)/(wheels_separation_);
+  
+  //========================== Calculate pose and orientation ============================================
+  double delta_s = ( wheels_radius_right * diff_joint_positions_right_wheel + wheels_radius_left * diff_joint_positions_left_wheel) / 2.0;
+  double delta_theta = (wheels_radius_right * diff_joint_positions_right_wheel - wheels_radius_left * diff_joint_positions_left_wheel) / wheels_separation_;
+  
+  //========================== Update robot pose and velocities array =====================================
 
   robot_pose_[0] += delta_s * cos(robot_pose_[2] + (delta_theta / 2.0));
   robot_pose_[1] += delta_s * sin(robot_pose_[2] + (delta_theta / 2.0));
   robot_pose_[2] += delta_theta;
 
- 
-  // compute odometric instantaneouse velocity
-  if (step_time<0.1 && step_time>0.0){
-    v_x =(delta_s / step_time);
-    w_z =(delta_theta / step_time);
-  }
-
   robot_vel_[0] = v_x;
   robot_vel_[1] = 0.0;
   robot_vel_[2] = w_z;
 
-  return true;
+  return ;
 }
+
+
+void Odometry::liberate_imu_bias_calculation(double diff_joint_positions_left_wheel, double diff_joint_positions_right_wheel){
+  static int number_of_callbacks_the_robot_did_not_move=0;
+  static int calculate_bias=0;
+  static int previous_calculate_bias=0;
+  if(std::abs(diff_joint_positions_left_wheel) < 1e-5 && std::abs(diff_joint_positions_right_wheel) < 1e-5){
+    number_of_callbacks_the_robot_did_not_move++;
+    if(number_of_callbacks_the_robot_did_not_move == WINDOW_TO_CHECK_IF_THE_ROBOT_IS_NOT_MOVING){
+      number_of_callbacks_the_robot_did_not_move=0;
+      calculate_bias=1;
+    }
+  } else {
+      number_of_callbacks_the_robot_did_not_move=0;
+      calculate_bias=0;
+  }
+
+  if(previous_calculate_bias != calculate_bias){
+    std::vector<rclcpp::Parameter> all_new_parameters{rclcpp::Parameter("odometry.start_bias_calculation_for_imu", calculate_bias)};
+    this->set_parameters(all_new_parameters);
+    previous_calculate_bias = calculate_bias;
+  }
+  
+}
+
+// void Odometry::CalculateConfidenceInterval(double vl, double vr){
+//   // using the theorem of triangle inequality, and replacing a=vl and b=-vl
+//   // you will be able to realize that x is always <=1.
+//   // https://www.stat.ubc.ca/~saif.syed/math100V/Math%20100V%20-%20Triangle%20inequality.pdf
+//   double x = std::abs(vl -vr)/(std::abs(vl)+std::abs(vr)) ; 
+  
+//   // linear equation create by using 2 points (0,10) and (1,90)
+//   // Confidence is a value used to reduce the variance of the odometry, and thus, making the kalman filter
+//   // really on in it more. Example: if we have 90% confidence on the odometry, we want to reduce its variance
+//   // by 90%, keeping only 10% of the original value.  odom_msg->twist.covariance[35] = 0.005*0.1; 
+
+
+//   // when the robot is moving in a straight line, we give the odometry 90% confidence.
+//   //  vl = vr, then x =0
+//   // when the robot is turning in the same axis, we give the odometry 10% confidence vl = - vr, then x = 1
+//   double confidence = 80*x+10; 
+
+
+
+// }

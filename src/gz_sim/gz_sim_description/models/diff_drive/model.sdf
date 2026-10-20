@@ -43,86 +43,7 @@
             </collision>
         </link>
 
-
-        <!--
-         ______               _      _____          _             __          ___               _
-        |  ____|             | |    / ____|        | |            \ \        / / |             | |
-        | |__ _ __ ___  _ __ | |_  | |     __ _ ___| |_ ___ _ __   \ \  /\  / /| |__   ___  ___| |
-        |  __| '__/ _ \| '_ \| __| | |    / _` / __| __/ _ \ '__|   \ \/  \/ / | '_ \ / _ \/ _ \ |
-        | |  | | | (_) | | | | |_  | |___| (_| \__ \ ||  __/ |       \  /\  /  | | | |  __/  __/ |
-        |_|  |_|  \___/|_| |_|\__|  \_____\__,_|___/\__\___|_|        \/  \/   |_| |_|\___|\___|_|
-        -->
-        <frame name="front_caster_wheel_frame" attached_to="Base_Link">
-            <pose> 1 0 -0.2 0 0 0 </pose>
-        </frame>
-        <link name="front_caster_wheel_link">
-            <pose relative_to="front_caster_wheel_frame" />
-            <visual name="visual">
-                <geometry>
-                    <sphere>
-                        <radius> 0.2 </radius>
-                    </sphere>
-                </geometry>
-                <material>
-                    <ambient> 0.0 1 0.0 1 </ambient>
-                    <diffuse> 0.0 1 0.0 1 </diffuse>
-                    <specular> 0.0 1 0.0 1 </specular>
-                </material>
-            </visual>
-            <collision name="collision">
-                <geometry>
-                    <sphere>
-                        <radius> 0.2 </radius>
-                    </sphere>
-                </geometry>
-            </collision>
-        </link>
-
-        <joint name="front_caster_wheel_wheel" type="ball">
-            <parent> Base_Link </parent>
-            <child> front_caster_wheel_link </child>
-        </joint>
-        <!--
-         ____             _       _____          _             __          ___               _
-        |  _ \           | |     / ____|        | |            \ \        / / |             | |
-        | |_) | __ _  ___| | __ | |     __ _ ___| |_ ___ _ __   \ \  /\  / /| |__   ___  ___| |
-        |  _ < / _` |/ __| |/ / | |    / _` / __| __/ _ \ '__|   \ \/  \/ / | '_ \ / _ \/ _ \ |
-        | |_) | (_| | (__|   <  | |___| (_| \__ \ ||  __/ |       \  /\  /  | | | |  __/  __/ |
-        |____/ \__,_|\___|_|\_\  \_____\__,_|___/\__\___|_|        \/  \/   |_| |_|\___|\___|_|
-        -->
-
-        <frame name="back_caster_wheel_frame" attached_to="Base_Link">
-            <pose> -1 0 -0.2 0 0 0 </pose>
-        </frame>
-        <link name="back_caster_wheel_link">
-            <pose relative_to="back_caster_wheel_frame" />
-            <visual name="visual">
-                <geometry>
-                    <sphere>
-                        <radius> 0.2 </radius>
-                    </sphere>
-                </geometry>
-                <material>
-                    <ambient> 0.0 1 0.0 1 </ambient>
-                    <diffuse> 0.0 1 0.0 1 </diffuse>
-                    <specular> 0.0 1 0.0 1 </specular>
-                </material>
-            </visual>
-            <collision name="collision">
-                <geometry>
-                    <sphere>
-                        <radius> 0.2 </radius>
-                    </sphere>
-                </geometry>
-            </collision>
-        </link>
-
-        <joint name="back_caster_wheel_wheel" type="ball">
-            <parent> Base_Link </parent>
-            <child> back_caster_wheel_link </child>
-        </joint>
-
-        <!--
+          <!--
          _____       _                      _               _
         |  __ \     (_)                    | |             | |
         | |  | |_ __ ___   _____  __      _| |__   ___  ___| |___
@@ -213,6 +134,85 @@
             </axis>
         </joint>
 
+        <!--
+         ______               _      _____          _             __          ___               _
+        |  ____|             | |    / ____|        | |            \ \        / / |             | |
+        | |__ _ __ ___  _ __ | |_  | |     __ _ ___| |_ ___ _ __   \ \  /\  / /| |__   ___  ___| |
+        |  __| '__/ _ \| '_ \| __| | |    / _` / __| __/ _ \ '__|   \ \/  \/ / | '_ \ / _ \/ _ \ |
+        | |  | | | (_) | | | | |_  | |___| (_| \__ \ ||  __/ |       \  /\  /  | | | |  __/  __/ |
+        |_|  |_|  \___/|_| |_|\__|  \_____\__,_|___/\__\___|_|        \/  \/   |_| |_|\___|\___|_|
+        -->
+        <frame name="front_caster_wheel_frame" attached_to="Base_Link">
+            <pose> 1 0 -0.2 0 0 0 </pose>
+        </frame>
+        <link name="front_caster_wheel_link">
+            <pose relative_to="front_caster_wheel_frame" />
+            <visual name="visual">
+                <geometry>
+                    <sphere>
+                        <radius> 0.2 </radius>
+                    </sphere>
+                </geometry>
+                <material>
+                    <ambient> 0.0 1 0.0 1 </ambient>
+                    <diffuse> 0.0 1 0.0 1 </diffuse>
+                    <specular> 0.0 1 0.0 1 </specular>
+                </material>
+            </visual>
+            <collision name="collision">
+                <geometry>
+                    <sphere>
+                        <radius> 0.2 </radius>
+                    </sphere>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="front_caster_wheel_wheel" type="ball">
+            <parent> Base_Link </parent>
+            <child> front_caster_wheel_link </child>
+        </joint>
+        <!--
+         ____             _       _____          _             __          ___               _
+        |  _ \           | |     / ____|        | |            \ \        / / |             | |
+        | |_) | __ _  ___| | __ | |     __ _ ___| |_ ___ _ __   \ \  /\  / /| |__   ___  ___| |
+        |  _ < / _` |/ __| |/ / | |    / _` / __| __/ _ \ '__|   \ \/  \/ / | '_ \ / _ \/ _ \ |
+        | |_) | (_| | (__|   <  | |___| (_| \__ \ ||  __/ |       \  /\  /  | | | |  __/  __/ |
+        |____/ \__,_|\___|_|\_\  \_____\__,_|___/\__\___|_|        \/  \/   |_| |_|\___|\___|_|
+        -->
+
+        <frame name="back_caster_wheel_frame" attached_to="Base_Link">
+            <pose> -1 0 -0.2 0 0 0 </pose>
+        </frame>
+        <link name="back_caster_wheel_link">
+            <pose relative_to="back_caster_wheel_frame" />
+            <visual name="visual">
+                <geometry>
+                    <sphere>
+                        <radius> 0.2 </radius>
+                    </sphere>
+                </geometry>
+                <material>
+                    <ambient> 0.0 1 0.0 1 </ambient>
+                    <diffuse> 0.0 1 0.0 1 </diffuse>
+                    <specular> 0.0 1 0.0 1 </specular>
+                </material>
+            </visual>
+            <collision name="collision">
+                <geometry>
+                    <sphere>
+                        <radius> 0.2 </radius>
+                    </sphere>
+                </geometry>
+            </collision>
+        </link>
+
+        <joint name="back_caster_wheel_wheel" type="ball">
+            <parent> Base_Link </parent>
+            <child> back_caster_wheel_link </child>
+        </joint>
+
+      
 
         <!-- diff drive plugin -->
         <plugin

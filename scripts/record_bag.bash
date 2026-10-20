@@ -6,7 +6,7 @@
 #===================================================================================
 
 
-set -eo pipefail
+set -euo pipefail
 
 #===================== Define variables =================================================
 scripts_path=$(dirname "${BASH_SOURCE[0]}") # Path to the scripts folder

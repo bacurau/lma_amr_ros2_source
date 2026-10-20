@@ -10,38 +10,43 @@
 # It might no close on the first execution, but it can close on later executions.
 
 
-set -eo pipefail
+set -euo pipefail
 scripts_path=$(dirname "${BASH_SOURCE[0]}") # Path to the scripts folder
 cd "$scripts_path/.." # navigate to root of ros2 project. It is the directory where you can see src,build,install,log in a ros2 project.
 . ./scripts/config.bash # imports menu function
 
-###===================== Creates and Builds micro-ROS Agent =====================##
-    # # The instructions were base on
-    # # https://micro.ros.org/docs/tutorials/core/first_application_linux/.
-    # # However, we just needed to create and build the agent, the firmware is not needed here.
-    # # The micro-ROS agent is run in the launch file amr_launch.py
-Build_Microros(){
-    source ./install/local_setup.bash &&
-        ros2 run micro_ros_setup create_agent_ws.sh &&             
-            ros2 run micro_ros_setup build_agent.sh
-}
-
 #===========================================================================
-#===================== Build project and micro ros files =========================
+#===================== Build project =========================
 #============================================================================
 if [[ "$BUILD_PROJECT" = true ]]; then
   # ========== Install the dependencies and build ros2 packages properly. ======
   sudo apt update && rosdep update && rosdep install --from-paths src --ignore-src -y 
   # # ========== Build ROS2 packages ===============
   colcon build  --base-path "./src" --symlink-install  --cmake-args "-DCMAKE_BUILD_TYPE=$BUILD_TYPE"
-  [[ "$BUILD_MICROROS" = true ]] && Build_Microros
+fi
+
+###===================== Creates and Builds micro-ROS Agent =====================##
+    # # The instructions were base on
+    # # https://micro.ros.org/docs/tutorials/core/first_application_linux/.
+    # # However, we just needed to create and build the agent, the firmware is not needed here.
+    # # The micro-ROS agent is run in the launch file amr_launch.py
+if [[ "$BUILD_MICROROS" = true ]]; then
+  # the local_setup or setup scripts or ros have an unbound variable COLCON_CURRENT_PREFIX. That is why we need to +u and -u.
+  set +u
+  source ./install/local_setup.bash &&
+    ros2 run micro_ros_setup create_agent_ws.sh &&             
+      ros2 run micro_ros_setup build_agent.sh
+  set -u
 fi
 
 #===========================================================================
 #===================== Launch the amr_launch file =========================
 #============================================================================
 if [[ "$RUN_PROJECT" = true ]]; then
+  # the local_setup or setup scripts or ros have an unbound variable COLCON_CURRENT_PREFIX. That is why we need to +u and -u.
+  set +u
   . ./install/local_setup.bash
+  set -u
   : ${RUN_LAUNCH_WITH_BAG:=false} # if null or unset, set run_launch_with_bag false. https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
   ros2 launch amr_launch $LAUNCH_FILE run_launch_with_bag:=$RUN_LAUNCH_WITH_BAG 
 fi

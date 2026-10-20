@@ -29,7 +29,10 @@
 #include "geometry_msgs/msg/transform_stamped.hpp" 
 #include <memory>
 
-
+#define WINDOW_TO_CHECK_IF_THE_ROBOT_IS_NOT_MOVING 4
+// imu is at 400 hz and odometry is at 40 hz (microros sends joints positions every 25 ms).
+// Detection of stopped movement for 0.1 seconds.
+// 40*0.1 = 4. This is the window size.
 namespace lma
 {
 namespace scooby
@@ -47,10 +50,10 @@ class Odometry : public rclcpp::Node
  private:
 
   //================================== Methods ======================================================//
-  bool calculate_odometry(const rclcpp::Duration & duration);
+  void calculate_odometry(const rclcpp::Duration & duration, const sensor_msgs::msg::JointState::SharedPtr joint_state_msg);
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state_msg);
-  void update_joint_state(const std::shared_ptr<sensor_msgs::msg::JointState const> & joint_state);
   void publish(const rclcpp::Time & now);
+  void liberate_imu_bias_calculation(double diff_joint_positions_left_wheel, double diff_joint_positions_right_wheel);
   
   
   //================================== Publihers ==================================//
@@ -104,13 +107,9 @@ class Odometry : public rclcpp::Node
    * This variable is only updated at the end of the Odometry::joint_state_callback function. <br>
    */
   rclcpp::Time last_time;
-  // v = translational velocity [m/s]
-  // w = rotational velocity [rad/s]
-  double v_x; /*!< linear velocity along the x axis.*/
-  double w_z; /*!< angular velocity around the z axis.*/
-
   std::array<double,3> robot_pose_; /*!<Is the robot pose. <br> robot_pose_[0]: position in the x axis,<br>robot_pose_[1]: position in the y axis,<br>robot_pose_[2]: yaw angle (spin around the z axis) */
   std::array<double,3> robot_vel_; /*!<Is the robot velocity. <br> robot_vel_[0]: velocity in the x axis,<br>robot_vel_[1]: velocity in the y axis,<br>robot_vel_[2]: yaw angle velocity (spin around the z axis)*/
+  std::array<double, 2> last_joint_positions = {0.0f, 0.0f};
 };
 } // scooby
 } // lma

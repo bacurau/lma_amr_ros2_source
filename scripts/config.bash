@@ -6,15 +6,16 @@
 # Author: Ivan Diniz Dobbin
 #===================================================================================
 
+set -euo pipefail
 trap Handler SIGINT
-export ROS_DOMAIN_ID=25
-export BUILD_PROJECT=false # true: builds ros2 project | false: does not build ros2 project
+
+export BUILD_PROJECT=true # true: builds ros2 project | false: does not build ros2 project
 export RUN_PROJECT=true # true: runs ros2 project with a launch file | false: does not run the ros2 project
-export USE_SIMULATION=true # true: runs project with a gazebo simulation | false: runs project with the real robot.
-export BUILD_MICROROS=false # true: build and configurate micro-ROS for communication with stm32board| false: will not build and configurate the micro-ROS,
+export USE_SIMULATION=false # true: runs project with a gazebo simulation | false: runs project with the real robot.
+export BUILD_MICROROS=true # true: build and configurate micro-ROS for communication with stm32board| false: will not build and configurate the micro-ROS,
 # however, if this was already done before, the micro-ROS communication will probably work after the ros2 launch.
 export BAGS_PATH="/persistent/items_not_related_to_main_code/process_data/bags" # pass the full path of the location of your bags. This will be used to play and record bags to this place.
-
+export BUILD_TYPE="Release"
 # true: use the ros2 launch file for simulations and define correct gazebo version| false: use the ros2 launch file for the real robot
 if [[ "$USE_SIMULATION" = true ]]; then
     export LAUNCH_FILE="amr_launch_simulation.py"
