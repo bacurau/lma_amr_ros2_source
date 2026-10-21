@@ -1,23 +1,18 @@
 # Instruction for scripts execution
 
 This scripts were created to facilitate the build and execution of this ros2 project.
-This script opens a menu that allows the user to:
-
-    1. Build and then run the project **OR** just run a project you have already built.
-    2. Run the real robot or the simulation.
-
-Scripts:
-- main.bash: installs the dependencies; builds ros2 project; creates and builds micro-ROS agent; change ROS_DOMAIN_ID to 25; and runs this ros2 project.
-- config.bash: configuration file. Used to determine if you are going to build, run, use simulation and other options for your ros2 project.
-- play_bag.bash: starts the ros2 project and plays a ros2 bag of your choosing.
-- record_bag.bash: starts the ros2 project and records a ros2 bag.
 
 > [!IMPORTANT]  
 > You have to be inside the docker container. The repository for the docker container is https://github.com/bacurau/lma_amr_ros2_docker_environment.
 
+
 > [!IMPORTANT]  
 > Give the scripts execution permission. 
 > - ```chmod +x main.bash``` 
+> - ```chmod +x config.bash```
+> - ```chmod +x play_bag.bash```
+> - ```chmod +x record_bag.bash```
+> - ```chmod +x signal_handler.bash```
 
 
 > [!WARNING]  
@@ -28,14 +23,35 @@ Scripts:
 
 ## Execution
 
-First execution:
-```bash
-./main.sh
+1- Choose your configuration in the config.bash file.
+A shortened configuration example to build the project, build micro-ros, and then run the real robot:
+
+```
+export BUILD_PROJECT=true 
+export RUN_PROJECT=true
+export USE_SIMULATION=false 
+export BUILD_MICROROS=true
 ```
 
+2- Execute:
+```bash
+./main.bash
+```
+## Organization
+
+Scripts:
+- main.bash: installs the dependencies; builds ros2 project; creates and  builds micro-ROS agent; 
+change ROS_DOMAIN_ID to 25; and runs this ros2  project. Change options in the config.bash file.
+- config.bash: configuration file. This file is used to determine if you are going to build, run, use simulation and other options for your ros2 project.
+- play_bag.bash: starts the ros2 project and plays a ros2 bag of your choosing.
+- record_bag.bash: starts the ros2 project and records a ros2 bag.
+- signal_handler.bash: creates handlers for signals.
+
+
+
 ## Notes
-1. Remember that if you change the code, you have to execute the command
+1. Remember that if you change the ros2 code (ros2 packages), you have to execute the command
 ```bash
 colcon build
 ```
-For the python files, ```colcon build --symlink-install``` ensures that you don't need to build again for alterations to take effect.
+For the python files, ```colcon build --symlink-install``` ensures that you don't need to build again for the alterations to take effect.
