@@ -1,6 +1,9 @@
-#!/bin/bash
+# !/bin/bash
 
-set -euo pipefail
+#===================================================================================
+# Description: creates handlers for signals.
+# Author: Ivan Diniz Dobbin
+#===================================================================================
 
 # defining colors
 MAGENTA='\033[0;35m'

@@ -9,9 +9,10 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 > [!IMPORTANT]  
 > Give the scripts execution permission. 
 > - ```chmod +x main.bash``` 
-> - ```chmod +x install_dependencies.bash```
-> - ```chmod +x create_and_build_microROS_agent.bash```
-> - ```chmod +x run_project.bash```
+> - ```chmod +x config.bash```
+> - ```chmod +x play_bag.bash```
+> - ```chmod +x record_bag.bash```
+> - ```chmod +x signal_handler.bash```
 
 
 > [!WARNING]  
@@ -22,50 +23,34 @@ This scripts were created to facilitate the build and execution of this ros2 pro
 
 ## Execution
 
-First execution:
-```bash
-./main.bash [0: To use simulation | 1: To use the actual robot (default 1)] [ Type of build (default Release) ] [1:for not running after building  | 0: To run after building (default 0)]
+1- Choose your configuration in the config.bash file.
+A shortened configuration example to build the project, build micro-ros, and then run the real robot:
+
 ```
-> [!NOTE]
-> [] indicates optional argument.
-
-Examples:
-- ```./main.bash ``` builds in the standard mode (Release) and then runs.
-- ```./main.bash 0 ``` builds in the standard mode (Release), and then runs in simulation mode.
-- ```./main.bash 1 "Debug"```builds in Debug mode and then runs.
-- ```./main.bash 1 "Debug" 1```builds in Debug mode, but does not run the project.
-- ```./main.bash 1 Release 1``` builds in the standard mode (Release), but does not run the project..
-
-
-
-
-After the first execution of main.sh, to re-run the project, just execute run_project.sh.
-```bash
-./run_project.bash [0: To use simulation | 1: To use the actual robot (default 1)] 
+export BUILD_PROJECT=true 
+export RUN_PROJECT=true
+export USE_SIMULATION=false 
+export BUILD_MICROROS=true
 ```
 
-Examples:
-- ```./run_project.bash ``` runs the actual robot.
-- ```./run_project.bash 0 ``` runs the simulation.
-- ```./run_project.bash 1 ``` runs the actual robot.
-
+2- Execute:
+```bash
+./main.bash
+```
 ## Organization
 
 Scripts:
-- main.bash: installs the dependencies; builds ros2 project; creates and builds micro-ROS agent; change ROS_DOMAIN_ID to 25; and runs this ros2 project. This script calls run_project.bash.
-
-- run_project.bash: Changes ROS_DOMAIN_ID to 25 and runs amr ros2 project without building.
+- main.bash: installs the dependencies; builds ros2 project; creates and  builds micro-ROS agent; 
+change ROS_DOMAIN_ID to 25; and runs this ros2  project. Change options in the config.bash file.
+- config.bash: configuration file. This file is used to determine if you are going to build, run, use simulation and other options for your ros2 project.
+- play_bag.bash: starts the ros2 project and plays a ros2 bag of your choosing.
+- record_bag.bash: starts the ros2 project and records a ros2 bag.
+- signal_handler.bash: creates handlers for signals.
 
 
 
 ## Notes
-1. Before any command is executed the scripts navigates to the root of the workspace. Properly executing the ros2 commands in the correct folder.
-
-```bash
-cd .. # Navigate to the root of the workspace, so you can install the dependencies and build ros2 packages properly.
-```
-
-2. Remember that if you change the code, you have to execute the command
+1. Remember that if you change the ros2 code (ros2 packages), you have to execute the command
 ```bash
 colcon build
 ```
