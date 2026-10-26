@@ -15,10 +15,9 @@ set -euo pipefail
 scripts_path=$(dirname "${BASH_SOURCE[0]}") # Path to the scripts folder
 cd "$scripts_path" # navigate to scripts folder.
 . ./config.bash # imports menu function
-
 export RUN_LAUNCH_WITH_BAG=true
 session_name="bag_playing"
-
+mkdir -p ./bags
 #================================================================================================================
 #===================== Define functions =================================================
 #================================================================================================================
@@ -50,15 +49,17 @@ Create_Menu(){
     [[ $status -eq 1 ]] && exit 0
     choosen_item=$((item - 1))
 }
-
 #================================================================================================================
 #===================== Body =====================================================================================
 #================================================================================================================
+
 # ====== Creates a menu list with all the bags in the path you passed to BAGS_PATH ===============
-mapfile -t list_of_bags_with_path < <(ls -d "$BAGS_PATH"/*/) 
+mapfile -t list_of_bags_with_path < <(find "bags" -type d -links 2)  #https://stackoverflow.com/questions/4269798/use-gnu-find-to-show-only-the-leaf-directories
 mapfile -t list_of_bags_without_path < <(basename -a ${list_of_bags_with_path[@]})
 Create_Menu "${list_of_bags_without_path[@]}"
 bag_name="${list_of_bags_with_path[$choosen_item]}"
+
+
 
 # =========== Creates a command to exclude or choose some topic from the bag ============================
 # flag to exclude topics, followed by the topics, and then add a clock with 50 hz
@@ -67,6 +68,7 @@ if [[ "$USE_SIMULATION" = true ]]; then
   # flag to choose topics, followed by choosen topics.
   topics_string_command=("--topics" "/cmd_vel")
 fi
+
 
 # ========== Plays bag in a tmux session ==================
 # === Creates a tmux session and splits screen in two terminal, one for playing the bag and the other for executing the ros2 project 

@@ -15,3 +15,4 @@ for x,y,p in zip(X, Y,P):
 
 
 plt.show()
+
