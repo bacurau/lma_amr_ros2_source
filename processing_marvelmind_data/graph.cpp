@@ -63,11 +63,11 @@ int main(){
   double fixed_beacon3_and_4_correction_to_mobile=0.0045; // y
 
   //push_edge(1,1.1,0,fixed_beacon1_to_wall_correction);
-  //push_edge(1,1.2,0,fixed_beacon1_correction_to_mobile);
+  push_edge(1,1.2,0,fixed_beacon1_correction_to_mobile);
   push_edge(1,5,0,fixed_beacon1_to_pose5);
   
   //push_edge(4,4.1,0,fixed_beacon3_and_4_to_wall_correction);
-  //push_edge(4,4.2,0,fixed_beacon3_and_4_correction_to_mobile);
+  push_edge(4,4.2,0,-fixed_beacon3_and_4_correction_to_mobile); // negative because of the sense.
   double wall4_to_pose5=1.862;
   double fixed_beacon4_to_pose5 = wall4_to_pose5 - fixed_beacon3_and_4_to_wall_correction;
   push_edge(5,4,0,fixed_beacon4_to_pose5);
@@ -83,13 +83,14 @@ int main(){
   double x_distance_1_and_2 = sqrt((distance_between_fixed_beacon1_and_2*distance_between_fixed_beacon1_and_2) - (y_distance_1_and_2*y_distance_1_and_2)); // 10.250 is the hypotenuse
   push_edge(1,2,x_distance_1_and_2,y_distance_1_and_2);
   //push_edge(2,2.1,0,fixed_beacon2_to_wall_correction);
-  //push_edge(2.1,2.2,0,fixed_beacon2_correction_to_mobile);
+  push_edge(2,2.2,0,fixed_beacon2_correction_to_mobile);
   double fixed_beacon2_to_pose8 = wall2_to_pose8 - fixed_beacon2_to_wall_correction;
   push_edge(2,8,0,fixed_beacon2_to_pose8);
   double wall3_to_pose8=1.8620;
   double fixed_beacon3_to_pose8 = wall3_to_pose8 - fixed_beacon3_and_4_to_wall_correction;
 
   push_edge(8,3,0,fixed_beacon3_to_pose8);
+  push_edge(3,3.2,0,-fixed_beacon3_and_4_correction_to_mobile); // negative because of the sense.
   push_edge(8,8.1,2.0000,0);
   push_edge(8.1,8.2,2.0000,0);
   push_edge(8.2,8.3,13.5380,0);
@@ -110,13 +111,13 @@ int main(){
   double distance_pose_7_3_and_6_in_x=(distance_pose_8_and_7_3_in_x - distance_pose_8_and_6_in_x);
   push_edge(7,6,distance_pose_7_3_and_6_in_x,2.0330); // 7.3 and 7 are aligned in x
 
-  // for (auto i:graph_a){
-  //   cout << i.first << "=>";
-  //   for (auto j:i.second){
-  //      cout << "\t" << j.node << "(" << j.x <<"," << j.y << ")" << endl;
-  //   }
-  //   cout << endl;
-  // }
+  for (auto i:graph_a){
+    cout << i.first << "=>";
+     for (auto j:i.second){
+        cout << "\t" << j.node << "(" << j.x <<"," << j.y << ")" << endl;
+     }
+     cout << endl;
+  }
 
   set<pair<double,double>>used_edge;
   
