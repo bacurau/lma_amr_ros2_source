@@ -411,16 +411,17 @@
           _| |_| |  | | |__| |
         |_____|_|  |_|\____/
         -->
-        <frame name="imu_frame" attached_to="imu_link">
+        <frame name="imu_frame" attached_to="IMU_MTI_680g_Link">
             <pose> 0 0 0 0 0 0 </pose>
         </frame>
         <joint name="imu_joint" type="fixed">
-            <pose relative_to="imu_link" />
+            <pose relative_to="IMU_MTI_680g_Link" />
             <parent> Base_Link </parent>
-            <child> imu_link </child>
+            <child> IMU_MTI_680g_Link </child>
         </joint>
-        <link name="imu_link">
-            <pose relative_to="Base_Link"> 0 0 1 0 0 0 </pose>
+        <!-- Same name and pose as IMU_MTI_680g_Link in amr.urdf, so the frame matches the real robot. -->
+        <link name="IMU_MTI_680g_Link">
+            <pose relative_to="Base_Link"> 0 0 0.087925 0 0 0 </pose>
             <visual name="visual">
                 <geometry>
                     <box>
@@ -443,9 +444,70 @@
 
             <sensor name="imu_sensor" type="imu">
                 <always_on> 1 </always_on>
-                <update_rate> 1 </update_rate>
-                <visualize> true </visualize>
+                <update_rate> 400 </update_rate> <!-- Xsens MTi-680G output_data_rate -->
+                <visualize> false </visualize>
                 <topic> /model/amr_robot_model_name/imu </topic>
+                <!-- Noise measured on the real Xsens MTi-680G with the robot stationary
+                     (/imu/data, robot_not_moving and robot_not_moving3 bags, n = 43474 and 99856).
+                     Gyro: stddev and constant bias per axis. Accel: stddev only; the accel mean also
+                     contains the mounting tilt, so no bias is simulated. The gz IMU has no orientation
+                     noise, so orientation_covariance stays zero.
+                     Gazebo draws the sign of bias_mean at random on each run, so only the bias
+                     magnitude is reproducible, not its sign. -->
+                <imu>
+                    <angular_velocity>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.00197</stddev>
+                                <bias_mean>0.00057</bias_mean>
+                                <bias_stddev>0.0</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.00178</stddev>
+                                <bias_mean>-0.0001</bias_mean>
+                                <bias_stddev>0.0</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.00167</stddev>
+                                <bias_mean>-0.00305</bias_mean>
+                                <bias_stddev>0.0</bias_stddev>
+                            </noise>
+                        </z>
+                    </angular_velocity>
+                    <linear_acceleration>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.0100</stddev>
+                                <bias_mean>0.0</bias_mean>
+                                <bias_stddev>0.0</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.0101</stddev>
+                                <bias_mean>0.0</bias_mean>
+                                <bias_stddev>0.0</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.0100</stddev>
+                                <bias_mean>0.0</bias_mean>
+                                <bias_stddev>0.0</bias_stddev>
+                            </noise>
+                        </z>
+                    </linear_acceleration>
+                </imu>
             </sensor>
         </link>
 

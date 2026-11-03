@@ -47,6 +47,14 @@
   direction: GZ_TO_ROS
   frame_id: "front_lidar_link"
 
+# Same topic, type and frame as the real robot's Xsens driver (/imu/data).
+- ros_topic_name: "/imu/data"
+  gz_topic_name: "/model/amr_robot_model_name/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
+  frame_id: "IMU_MTI_680g_Link"
+
 - ros_topic_name: "/joint_states"
   gz_topic_name: "world/default/model/amr_robot_model_name/joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
