@@ -25,6 +25,7 @@ Every package will have one or more of the following folders.
 - src/amr_description (p): contains urdf and other files about the robot model.
 - src/amr_localization (f): contains a package for odometry and a launch package to launch all packages in this folder. Currently, the only package (besides the launch one) is odometry. Other packages will probably be implemented in the future.
 - src/amr_sensors (f): contains a launch package to launch all packages in this folder, and 3 ros2 sensor drivers packages: velodyne (3D-lidar), sick(2D-lidar) and IMU.
+- src/amr_slam (p): 2D mapping with slam_toolbox, same launch for simulation and real robot.
 - src/amr_stm32 (f): contains the micro-ROS package and a package for resetting the stm32 board so a proper connection can be made via micro-ROS.
 
 
