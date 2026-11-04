@@ -47,7 +47,7 @@ int main(){
   // Example: 
   // - 1 representes fixed beacon 1 pose.  
   // - 1.1 represents the wall 1 pose.
-  // - 1.2 represents hedhog beacon 1 pose.
+  // - 1.2 represents mobile beacon 1 pose.
 
 
  
