@@ -20,6 +20,7 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/src/my_utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/algorithm.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/temp.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/debug_viewer.cpp
 )
 
 target_include_directories(lidar_cal PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

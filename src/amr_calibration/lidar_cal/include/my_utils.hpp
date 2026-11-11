@@ -23,55 +23,6 @@ public:
   cloudXYZ2XYZRGB(pcl::PointCloud<pcl::PointXYZ>::Ptr mono_cloud, uint8_t r = 0,
                   uint8_t g = 0, uint8_t b = 0);
 
-  static void
-  add_cloud_with_color(pcl::visualization::PCLVisualizer::Ptr viewer,
-                       pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
-                       const RGB &color, const std::string &label = "")
-  {
-
-    static uint32_t id;
-    auto cloud_label =
-        label.empty() ? "auto_cloud_" + std::to_string(id++) : label;
-
-    viewer->addPointCloud<pcl::PointXYZRGB>(
-        my_utils::cloudXYZ2XYZRGB(cloud, color.r, color.g, color.b),
-        cloud_label);
-
-    viewer->setPointCloudRenderingProperties(
-        pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 5, cloud_label);
-  }
-
-  static void add_line_with_color(pcl::visualization::PCLVisualizer::Ptr viewer,
-                                  const Line &line, const RGB &color,
-                                  const std::string &label = "")
-  {
-    static uint32_t id;
-    auto line_label =
-        label.empty() ? "auto_line_" + std::to_string(id++) : label;
-
-    viewer->addLine(line.m_p1, line.m_p2, color.r / 255.0, color.g / 255.0,
-                    color.b / 255.0, line_label);
-  }
-
-  static void add_circle(pcl::visualization::PCLVisualizer::Ptr viewer, float x,
-                         float y, float r, const std::string &label = "")
-  {
-    static uint32_t id;
-    auto circle_label =
-        label.empty() ? "auto_circle_" + std::to_string(id++) : label;
-
-    pcl::ModelCoefficients circle_coeff;
-    circle_coeff.values.resize(3); // We need 3 values
-    circle_coeff.values[0] = x;
-    circle_coeff.values[1] = y;
-    circle_coeff.values[2] = r;
-
-    viewer->addCircle(circle_coeff, circle_label);
-
-    viewer->setShapeRenderingProperties(
-        pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 8000, circle_label);
-  }
-
   static CloudPtr cloud_without_indices(CloudPtr cloud,
                                         pcl::PointIndices::Ptr inliers)
   {
