@@ -98,11 +98,6 @@ private:
 
 int main(int argc, char *argv[])
 {
-  sensor_msgs::msg::PointCloud2 cloud_msg;
-  auto cwd = std::filesystem::current_path();
-  std::cout << "Hello world! " << std::endl;
-  std::cout << "I'm in: " << cwd << std::endl;
-
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<PointCloudSubscriber>());
   rclcpp::shutdown();

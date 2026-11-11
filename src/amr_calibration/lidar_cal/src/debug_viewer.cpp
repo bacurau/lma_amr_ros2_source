@@ -25,6 +25,7 @@ void ViewerSingleton::spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::
 
     while (!viewer->wasStopped())
     {
+        // TODO add mutex
         if (!command_queue.empty())
         {
             (command_queue.front())();
@@ -102,6 +103,7 @@ void ViewerSingleton::add_circle(float x,
 
 void ViewerSingleton::clear()
 {
+    // TODO add mutex
     command_queue_.emplace(
         [&]()
         {
