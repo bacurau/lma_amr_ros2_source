@@ -14,7 +14,7 @@ ViewerSingleton &ViewerSingleton::GetInstance()
     return instance;
 }
 
-void ViewerSingleton::spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::atomic_bool &viewer_built)
+void ViewerSingleton::spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::atomic_bool &viewer_built, std::queue<std::function<void()>> &command_queue)
 {
     // The visualizer must be created in the same thread as it is spun,
     // otherwise there are problems with OpenGL context sharing.
@@ -25,19 +25,25 @@ void ViewerSingleton::spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::
 
     while (!viewer->wasStopped())
     {
+        if (!command_queue.empty())
+        {
+            (command_queue.front())();
+            command_queue.pop();
+        }
         viewer->spinOnce(100);
     }
+
     std::cout << "I'm out" << std::endl;
     std::abort();
 }
 
-ViewerSingleton::ViewerSingleton()
+ViewerSingleton::ViewerSingleton() : viewer_(), command_queue_()
 {
     using namespace std::chrono_literals;
 
     std::atomic_bool viewer_built = false;
 
-    static std::thread spinner_thread_ = std::thread(spin, std::ref(viewer_), std::ref(viewer_built));
+    static std::thread spinner_thread_ = std::thread(spin, std::ref(viewer_), std::ref(viewer_built), std::ref(command_queue_));
 
     while (!viewer_built)
     {
@@ -92,4 +98,15 @@ void ViewerSingleton::add_circle(float x,
 
     viewer_->setShapeRenderingProperties(
         pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 8000, circle_label);
+}
+
+void ViewerSingleton::clear()
+{
+    command_queue_.emplace(
+        [&]()
+        {
+            viewer_->removeAllPointClouds();
+            viewer_->removeAllShapes();
+            viewer_->removeAllCoordinateSystems();
+        });
 }

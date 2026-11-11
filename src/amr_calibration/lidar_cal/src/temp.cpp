@@ -3,7 +3,6 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include <pcl/common/transforms.h>
-#include <pcl/visualization/pcl_visualizer.h>
 
 #include "algorithm.hpp"
 #include "debug_viewer.hpp"
@@ -22,6 +21,8 @@ int main_2(
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_front_ptr = cloud_front.makeShared();
 
     ViewerSingleton &viewer = ViewerSingleton::GetInstance();
+
+    viewer.clear();
 
     // my_utils::add_cloud_with_color(viewer, cloud_front_ptr, RGB(255, 0, 0),
     //                                "cloud front");
@@ -74,11 +75,6 @@ int main_2(
     viewer.add_cloud_with_color(cloud_filtered_2, RGB(0, 255, 0),
                                 "cloud back");
 
-    // while (!viewer.viewer_->wasStopped())
-    // {
-    //     viewer.viewer_->spinOnce(100);
-    // }
-
     std::cout << "Debug 3" << std::endl;
 
     auto b_corner_lines = find_corner(lines_back);
@@ -101,6 +97,7 @@ int main_2(
         std::cout << "Could not find any corner, bailing" << std::endl;
         return -1;
     }
+
     auto f_line_1 = f_corner_lines->first;
     auto f_line_2 = f_corner_lines->second;
     auto f_corner = f_line_1.intersection_with(f_line_2);
@@ -123,6 +120,9 @@ int main_2(
     viewer.add_cloud_with_color(transformed_cloud, RGB(0, 255, 255));
 
     MY_DEBUG("Reached end of algorithm");
+
+    // using namespace std::chrono_literals;
+    // std::this_thread::sleep_for(20s);
 
     return 0;
 }

@@ -2,7 +2,7 @@
 
 #include <thread>
 #include <iostream>
-#include <mutex>
+#include <queue>
 
 #include <pcl/visualization/pcl_visualizer.h>
 
@@ -14,6 +14,7 @@ class ViewerSingleton
 public:
 private:
     pcl::visualization::PCLVisualizer::Ptr viewer_;
+    std::queue<std::function<void()>> command_queue_;
 
 public:
     ViewerSingleton(ViewerSingleton &other) = delete;
@@ -32,8 +33,10 @@ public:
     void add_circle(float x,
                     float y, float r, const std::string &label = "");
 
+    void clear();
+
 private:
-    static void spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::atomic_bool &viewer_built);
+    static void spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::atomic_bool &viewer_built, std::queue<std::function<void()>> &command_queue);
 
     ViewerSingleton();
 
