@@ -3,6 +3,7 @@
 #include <thread>
 #include <iostream>
 #include <queue>
+#include <mutex>
 
 #include <pcl/visualization/pcl_visualizer.h>
 
@@ -15,6 +16,7 @@ public:
 private:
     pcl::visualization::PCLVisualizer::Ptr viewer_;
     std::queue<std::function<void()>> command_queue_;
+    std::mutex command_queue_mutex_;
 
 public:
     ViewerSingleton(ViewerSingleton &other) = delete;
@@ -36,7 +38,9 @@ public:
     void clear();
 
 private:
-    static void spin(pcl::visualization::PCLVisualizer::Ptr &viewer, std::atomic_bool &viewer_built, std::queue<std::function<void()>> &command_queue);
+    void spin(std::atomic_bool &viewer_built);
+
+    void enqueue_viewer_command(std::function<void()> f);
 
     ViewerSingleton();
 

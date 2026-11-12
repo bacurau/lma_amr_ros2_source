@@ -40,8 +40,10 @@ int main_2(
     auto things = into_lines(cloud_filtered_1);
     for (const auto &thing : *things)
     {
+        MY_DEBUG("1.1");
         lines_back.push_back(thing.line);
 
+        MY_DEBUG("1.2");
         // For plotting
         auto color = RGB::random();
         viewer.add_cloud_with_color(thing.cloud, color);
@@ -122,7 +124,7 @@ int main_2(
     MY_DEBUG("Reached end of algorithm");
 
     // using namespace std::chrono_literals;
-    // std::this_thread::sleep_for(20s);
+    // std::this_thread::sleep_for(2s);
 
     return 0;
 }
