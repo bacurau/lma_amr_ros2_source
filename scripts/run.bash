@@ -9,13 +9,14 @@ set -u
 export GZ_VERSION="harmonic" # This is required for detection of which version of gazebo will be used.
 
 build_type=DEBUG
+build_type=Release
 
 # eval "$(register-python-argcomplete ros2)"
 # eval "$(register-python-argcomplete colcon)"
 
 ##===================== Build ros2 project =======================##
 # colcon build --base-path "./src" --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=$build_type" --packages-select lidar_cal
-colcon build --base-path "./src" --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=Release" --packages-select lidar_cal
+colcon build --base-path "./src" --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=${build_type}" --packages-select lidar_cal
 
 set +u
 source ./install/local_setup.bash
