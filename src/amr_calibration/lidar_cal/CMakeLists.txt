@@ -16,11 +16,11 @@ find_package(pcl_conversions REQUIRED)
 
 add_executable(
   lidar_cal
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/algorithm.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/debug_viewer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/my_utils.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/algorithm.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/temp.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/debug_viewer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/run_algorithm.cpp
 )
 
 target_include_directories(lidar_cal PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

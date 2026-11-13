@@ -1,27 +1,27 @@
 #include "algorithm.hpp"
-#include "my_utils.hpp"
 
 #include <cstdint>
-#include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
-#include <optional>
 
-#include <pcl/ModelCoefficients.h>
-#include <pcl/PointIndices.h>
 #include <pcl/common/transforms.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/impl/point_types.hpp>
 #include <pcl/memory.h>
+#include <pcl/ModelCoefficients.h>
 #include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
 #include <pcl/point_types_conversion.h>
+#include <pcl/point_types.h>
+#include <pcl/PointIndices.h>
 #include <pcl/search/kdtree.h>
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/types.h>
+
+#include "my_utils.hpp"
 
 // Computa os pontos iniciais e finais da linha a partir dos model coefficients
 // e da nuvem que os gerou.
