@@ -2,9 +2,6 @@
 
 #include <pcl/io/pcd_io.h>
 
-using std::cout;
-using std::endl;
-
 pcl::PointCloud<pcl::PointXYZ>::Ptr
 my_utils::load_cloud(std::string file_name)
 {
@@ -21,9 +18,8 @@ my_utils::load_cloud(std::string file_name)
     throw std::system_error(EFAULT, std::generic_category());
   }
 
-  cout << "Loaded " << cloud->width * cloud->height << " data points"
-       << file_name << endl;
-  // << "with the following fields : " << std::endl;
+  std::cout << "Loaded " << cloud->width * cloud->height << " data points"
+            << file_name << std::endl;
 
   return cloud;
 }
@@ -40,8 +36,6 @@ my_utils::cloudXYZ2XYZRGB(pcl::PointCloud<pcl::PointXYZ>::Ptr mono_cloud,
   for (auto &point : mono_cloud->points)
   {
     pcl::PointXYZRGB temp;
-
-    // std::cout << point.intensity << std::endl;
 
     temp.x = point.x;
     temp.y = point.y;

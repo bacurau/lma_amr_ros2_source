@@ -17,7 +17,7 @@
 using namespace std::chrono_literals;
 
 // void main_2();
-int main_2(pcl::PointCloud<pcl::PointXYZ> &cloud_back, pcl::PointCloud<pcl::PointXYZ> &cloud_front);
+int main_2(rclcpp::Logger logger, pcl::PointCloud<pcl::PointXYZ> &cloud_back, pcl::PointCloud<pcl::PointXYZ> &cloud_front);
 
 class PointCloudSubscriber : public rclcpp::Node
 {
@@ -60,8 +60,6 @@ private:
 
   void timer_callback()
   {
-    std::cout << "Start of timer callback" << std::endl;
-
     pcl::PointCloud<pcl::PointXYZ> cloud_back;
     pcl::PointCloud<pcl::PointXYZ> cloud_front;
 
@@ -75,17 +73,12 @@ private:
       this->point_clouds_[0] = nullptr;
       this->point_clouds_[1] = nullptr;
 
-      if (main_2(cloud_back, cloud_front) == 0)
-      {
-        std::cout << "main_2 returned 0" << std::endl;
-        // this->timer_->cancel(); // Work as a single shot if it didn't fail, for debugging
-      }
+      main_2(this->get_logger(), cloud_back, cloud_front);
     }
     else
     {
       RCLCPP_WARN(this->get_logger(), "Not all cloud msgs have been heard yet, skipping this iteration");
     }
-    std::cout << "End of timer callback" << std::endl;
   };
 
   std::vector<rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr>
@@ -99,7 +92,7 @@ private:
 
 int main(int argc, char *argv[])
 {
-
+  rclcpp::NodeOptions opt;
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<PointCloudSubscriber>());
   rclcpp::shutdown();

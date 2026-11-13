@@ -134,7 +134,7 @@ std::unique_ptr<std::vector<Thing>> into_lines(CloudPtr cloud)
   {
     if (old_cloud->points.size() < 5)
     {
-      std::cout << "Low on points, bailing" << std::endl;
+      // Should do some kind of logging here?
       break;
     }
     auto new_cloud = old_cloud;

@@ -22,4 +22,4 @@ set +u
 source ./install/local_setup.bash
 set -u
 
-ros2 run lidar_cal lidar_cal
+ros2 run lidar_cal lidar_cal --ros-args --log-level lidar_calibration:=DEBUG
