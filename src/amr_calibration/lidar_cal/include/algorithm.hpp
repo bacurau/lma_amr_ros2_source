@@ -1,8 +1,12 @@
-#include "line.hpp"
+#pragma once
 
 #include <pcl/ModelCoefficients.h>
 #include <pcl/PointIndices.h>
 #include <pcl/point_cloud.h>
+
+#include <optional>
+
+#include "line.hpp"
 
 using PointType = pcl::PointXYZ;
 using PointRGBType = pcl::PointXYZRGB;
