@@ -1,6 +1,22 @@
+#pragma once
+
+// STL includes
+#include <cstdint>
+#include <filesystem>
+#include <iostream>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <thread>
+#include <utility>
+#include <vector>
+
+// ROS2 includes
 #include "pcl_conversions/pcl_conversions.h"
+#include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
+// PCL includes
 #include <pcl/ModelCoefficients.h>
 #include <pcl/PointIndices.h>
 #include <pcl/common/transforms.h>

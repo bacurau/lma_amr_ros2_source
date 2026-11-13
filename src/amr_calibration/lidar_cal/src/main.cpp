@@ -1,17 +1,18 @@
 // Documentation for the point cloud
 // https://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/PointCloud2.html
 
-#include "rclcpp/rclcpp.hpp"
-
-#include "pcl_conversions/pcl_conversions.h"
-#include "sensor_msgs/msg/point_cloud2.hpp"
-#include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
-
 #include <filesystem>
 #include <iostream>
 #include <vector>
 #include <mutex>
+
+#include "rclcpp/rclcpp.hpp"
+
+#include "pcl_conversions/pcl_conversions.h"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
 
 using namespace std::chrono_literals;
 
@@ -98,6 +99,7 @@ private:
 
 int main(int argc, char *argv[])
 {
+
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<PointCloudSubscriber>());
   rclcpp::shutdown();
