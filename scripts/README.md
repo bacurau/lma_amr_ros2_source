@@ -55,3 +55,11 @@ change ROS_DOMAIN_ID to 25; and runs this ros2  project. Change options in the c
 colcon build
 ```
 For the python files, ```colcon build --symlink-install``` ensures that you don't need to build again for the alterations to take effect.
+
+
+## Troubleshooting
+
+- Authorization required, but no authorization protocol specified
+    - If you get this error when opening any app that need a gui inside docker, use xhost to solve the issue.
+    The easiest solution is to run in terminal of the host pc (pc that creates the docker container): ```xhost +```
+    - Sources: https://wiki.archlinux.org/title/Xhost, https://forums.developer.nvidia.com/t/unable-to-run-deepstream-6-1-via-docker-on-ubuntu-20-04-w-latest-nvidia-driver/236369, https://www.reddit.com/r/linux4noobs/comments/lu1plx/hi_i_get_this_authorization_required_but_no/, https://robotics.stackexchange.com/questions/110925/qt-qpa-xcb-could-not-connect-to-display-1.
