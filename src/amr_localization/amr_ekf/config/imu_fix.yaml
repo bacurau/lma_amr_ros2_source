@@ -1,0 +1,16 @@
+# imu_fix_node. Values used in the mini_test2 validation (see README.md).
+imu_fix:
+  ros__parameters:
+    restamp: true             # mini_test2 headers are device time (~54 s), not ROS time
+    bias_mode: online         # online | const
+    bias_value: -0.00249      # [rad/s] const mode: mean over the last 15 s at rest of mini_test2
+    bias_init: -0.00305       # [rad/s] online mode: start value
+    bias_init_std: 0.001      # [rad/s]
+    q_rw: 1.0e-5              # [rad/s/sqrt(s)] bias random walk
+    sigma_wheel: 0.016        # [rad/s] measured stddev of gyro - wheel yaw rate, straight driving
+    w_max: 0.05               # [rad/s] straight driving: |wheel yaw rate| below this
+    v_min: 0.05               # [m/s]   straight driving: |speed| above this
+    still_eps: 1.0e-4         # encoders do not move at all when the robot is stopped
+    settle: 0.5               # [s]
+    gyro_stddev: [0.00197, 0.00178, 0.00167]    # [rad/s] same as xsens_params.yaml
+    accel_stddev: [0.0100, 0.0101, 0.0100]      # [m/s^2] same as xsens_params.yaml
