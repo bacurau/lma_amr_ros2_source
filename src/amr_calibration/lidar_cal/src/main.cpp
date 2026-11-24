@@ -79,6 +79,10 @@ private:
 
       geometry_msgs::msg::TransformStamped t;
 
+      t.header.stamp = this->get_clock()->now();
+      t.header.frame_id = "cal_Sick_Back_D_Link";
+      t.child_frame_id = "cal_Sick_Front_D_Link";
+
       Eigen::Affine3d transform;
 
       if (main_2(this->get_logger(), cloud_back, cloud_front, transform) != 0)
