@@ -8,6 +8,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+#include "tf2_ros/transform_broadcaster.hpp"
 #include "pcl_conversions/pcl_conversions.h"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 
@@ -17,7 +18,7 @@
 using namespace std::chrono_literals;
 
 // void main_2();
-int main_2(rclcpp::Logger logger, pcl::PointCloud<pcl::PointXYZ> &cloud_back, pcl::PointCloud<pcl::PointXYZ> &cloud_front);
+int main_2(rclcpp::Logger logger, pcl::PointCloud<pcl::PointXYZ> &cloud_back, pcl::PointCloud<pcl::PointXYZ> &cloud_front, Eigen::Affine3d &transform);
 
 class PointCloudSubscriber : public rclcpp::Node
 {
@@ -49,6 +50,9 @@ public:
 
     timer_ = this->create_wall_timer(1s, [this]()
                                      { this->timer_callback(); });
+
+    tf_broadcaster_ =
+        std::make_unique<tf2_ros::TransformBroadcaster>(*this);
   }
 
 private:
@@ -73,7 +77,29 @@ private:
       this->point_clouds_[0] = nullptr;
       this->point_clouds_[1] = nullptr;
 
-      main_2(this->get_logger(), cloud_back, cloud_front);
+      geometry_msgs::msg::TransformStamped t;
+
+      Eigen::Affine3d transform;
+
+      if (main_2(this->get_logger(), cloud_back, cloud_front, transform) != 0)
+      {
+        transform = Eigen::Affine3d::Identity();
+      }
+
+      auto translation = transform.translation();
+
+      t.transform.translation.x = translation.x();
+      t.transform.translation.y = translation.y();
+      t.transform.translation.z = translation.z();
+
+      auto rotation = Eigen::Quaterniond(transform.rotation());
+
+      t.transform.rotation.x = rotation.x();
+      t.transform.rotation.y = rotation.y();
+      t.transform.rotation.z = rotation.z();
+      t.transform.rotation.w = rotation.w();
+
+      tf_broadcaster_->sendTransform(t);
     }
     else
     {
@@ -88,6 +114,8 @@ private:
   std::mutex storage_mutex_;
 
   rclcpp::TimerBase::SharedPtr timer_;
+
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 };
 
 int main(int argc, char *argv[])

@@ -13,6 +13,8 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED) # TODO is this required
 find_package(sensor_msgs REQUIRED)
 find_package(pcl_conversions REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 add_executable(
   lidar_cal
@@ -24,7 +26,15 @@ add_executable(
 )
 
 target_include_directories(lidar_cal PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-ament_target_dependencies(lidar_cal rclcpp std_msgs sensor_msgs pcl_conversions)
+ament_target_dependencies(
+  lidar_cal
+  rclcpp
+  std_msgs
+  sensor_msgs
+  pcl_conversions
+  tf2
+  tf2_ros
+)
 
 find_package(OpenMP REQUIRED)
 find_package(PCL REQUIRED)

@@ -13,7 +13,8 @@
 int main_2(
     rclcpp::Logger logger,
     pcl::PointCloud<pcl::PointXYZ> &cloud_back,
-    pcl::PointCloud<pcl::PointXYZ> &cloud_front)
+    pcl::PointCloud<pcl::PointXYZ> &cloud_front,
+    Eigen::Affine3d &transform)
 {
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_back_ptr = cloud_back.makeShared();
@@ -119,6 +120,8 @@ int main_2(
     viewer.add_cloud_with_color(transformed_cloud, RGB(0, 255, 255));
 
     RCLCPP_DEBUG(logger, "Reached end of algorithm");
+
+    transform = H_fb;
 
     // using namespace std::chrono_literals;
     // std::this_thread::sleep_for(2s);

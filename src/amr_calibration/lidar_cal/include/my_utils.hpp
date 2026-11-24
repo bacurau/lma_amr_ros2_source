@@ -77,11 +77,11 @@ public:
 
   // Create a homogenous transformation, from a angle of rotation, and a point
   // as a translation.
-  static Eigen::Affine3f homogeneous(double angle, PointType translation)
+  static Eigen::Affine3d homogeneous(double angle, PointType translation)
   {
-    auto T = Eigen::Affine3f::Identity();
+    auto T = Eigen::Affine3d::Identity();
     T.translation() << translation.x, translation.y, translation.z;
-    T.rotate(Eigen::AngleAxisf(angle, Eigen::Vector3f::UnitZ()));
+    T.rotate(Eigen::AngleAxisd(angle, Eigen::Vector3d::UnitZ()));
     return T;
   }
 };
